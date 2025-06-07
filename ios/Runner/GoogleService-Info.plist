@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>859943339060-ashva4ed6eblqc3ju61gbcajsm6hi9eh.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.859943339060-ashva4ed6eblqc3ju61gbcajsm6hi9eh</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDWQ3OWoXIKI4iiXX22Rv-gzsimoWH4EhU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>859943339060</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.lighthouseglobal.yourdailylight</string>
+	<key>PROJECT_ID</key>
+	<string>mychurch-f40f8</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mychurch-f40f8.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:859943339060:ios:0da9b47008cc30833bb661</string>
+</dict>
+</plist>

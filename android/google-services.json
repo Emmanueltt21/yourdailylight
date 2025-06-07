@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "859943339060",
+    "project_id": "mychurch-f40f8",
+    "storage_bucket": "mychurch-f40f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859943339060:android:d1ee79cb75cdf8673bb661",
+        "android_client_info": {
+          "package_name": "com.kottland.thechurch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "859943339060-9e8bka08b7hcuqdftibaj8ucmj2mbu8s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWo7wYS7q6qcTNAajgHnxt5-C2fkqUKVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "859943339060-9e8bka08b7hcuqdftibaj8ucmj2mbu8s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "859943339060-o32utn2rq1jtg0shnjtp5u0edtsavlpv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lighthouse.yourdailylight"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859943339060:android:e4844adee321db653bb661",
+        "android_client_info": {
+          "package_name": "com.lighthouse.yourdailylight"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "859943339060-9e8bka08b7hcuqdftibaj8ucmj2mbu8s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWo7wYS7q6qcTNAajgHnxt5-C2fkqUKVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "859943339060-9e8bka08b7hcuqdftibaj8ucmj2mbu8s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "859943339060-o32utn2rq1jtg0shnjtp5u0edtsavlpv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lighthouse.yourdailylight"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
