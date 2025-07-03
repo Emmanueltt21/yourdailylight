@@ -80,25 +80,40 @@ class _PrayerRequestState extends State<PrayerRequest> {
         ): Center(
           child: Text(t.login_request, style: TextStyle(fontSize: 18),),
         ),
-        floatingActionButton: isUserLogin ? FloatingActionButton(
-          backgroundColor: MyColors.accentDark,
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => AddPrayerRequest()));
-          },
-          child: Icon(Icons.add, color: Colors.white),
-        ) : Container(
+        bottomNavigationBar:
+        isUserLogin ?
+        Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: sSAppButton(
+                  color: MyColors.accentDark,
+                  context: context,
+                  title: 'Create prayer Request ',
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AddPrayerRequest()));
+                  },
+                ),
+              ),
+            ],
+          ),
+        )
+
+            : Container(
           padding: EdgeInsets.only(left: 32, right: 16),
           child: sSAppButton(
             color: MyColors.accentDark,
             context: context,
             title: t.login_request,
             onPressed: () {
-             // Navigator.of(context).pop();
+              // Navigator.of(context).pop();
               Navigator.pushNamed(
                   context, LoginScreen.routeName);
             },
           ),
         ),
+
       ),
     );
   }

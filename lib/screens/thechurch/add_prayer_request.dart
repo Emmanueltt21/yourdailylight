@@ -185,7 +185,7 @@ class _AddPrayerRequestState extends State<AddPrayerRequest> {
                 //BackGroundLayer(name: AppConfigData.backG),
                 Center(
                     child:Padding(
-                      padding: const EdgeInsets.only(left: 32.0, right: 32),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16),
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Form(
@@ -315,7 +315,7 @@ class _AddPrayerRequestState extends State<AddPrayerRequest> {
                                                 border:
                                                 Border.all(color: Colors.white, width: 2)
                                             ),
-                                            child:  Text('Send',
+                                            child:  Text('Submit Request',
                                                 textAlign: TextAlign.center,
                                                 style:  primaryTextStyle(color: Colors.white) )
                                         )

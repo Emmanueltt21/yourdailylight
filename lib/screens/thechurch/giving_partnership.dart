@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yourdailylight/utils/ApiUrl.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:yourdailylight/utils/my_colors.dart';
@@ -14,6 +16,7 @@ import '../../auth/LoginScreen.dart';
 import '../../i18n/strings.g.dart';
 import '../../models/Userdata.dart';
 import '../../providers/AppStateManager.dart';
+import '../BrowserTabScreen.dart';
 import '../SearchScreen.dart';
  class GivingPartnerShip extends StatefulWidget {
    const GivingPartnerShip({Key? key}) : super(key: key);
@@ -69,24 +72,44 @@ import '../SearchScreen.dart';
              mainAxisAlignment: MainAxisAlignment.start,
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
-               rowContainer(Icons.wallet, "MTN Mobile Money ", "Name: Your Daily Light"),
-               rowContainer(Icons.wallet, "Orange Mobile Money ", "Name: Your Daily Light"),
+              // rowContainer(Icons.wallet, "MTN Mobile Money ", "Name: Your Daily Light"),
+              // rowContainer(Icons.wallet, "Orange Mobile Money ", "Name: Your Daily Light"),
              //  rowContainer(Icons.paypal, " pastorsimon@lgmissions.org ", "Motive: Your Daily Light  "),
               // Text('Giving and partnership view '),
-              /* Padding(
+               Padding(
                  padding: const EdgeInsets.all(16.0),
                  child: ListTile(
-                   leading: Icon(Icons.payment),
-                   title: const Text('Donate with PayPal or Card ',
+                   leading: Icon(Icons.paypal),
+                   title: const Text('Support Us link ',
                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                    trailing: Icon(Icons.arrow_forward_ios),
                    onTap: (){
-                     Navigator.push(context, MaterialPageRoute(builder: (context) => PayPAlDonation()));
+                     //Navigator.push(context, MaterialPageRoute(builder: (context) => PayPAlDonation()));
                      //Navigator.pushNamed(context, PayPAlDonation.routeName);
+                     openBrowserTab(context, t.facebook, ApiUrl.appPaypal_Url);
                    },
                  ),
-               )*/
+               ),
 
+               Padding(
+                 padding: const EdgeInsets.only(top: 16.0, bottom: 16),
+                 child: ListTile(
+                   leading: Icon(Icons.account_balance),
+                   title: const Text('Support via Bank Contact Us via ${ApiUrl.supportEmail}',
+                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                  // trailing: Icon(Icons.arrow_forward_ios),
+                   onTap: (){
+                    // openEmailApp();
+                     Clipboard.setData(const ClipboardData(text: '${ApiUrl.supportEmail}'));
+                     ScaffoldMessenger.of(context).showSnackBar(
+                       const SnackBar(content: Text('Mail Copied to clipboard')),
+                     );
+                     //Navigator.push(context, MaterialPageRoute(builder: (context) => PayPAlDonation()));
+                     //Navigator.pushNamed(context,Avez-vous vu le 6500 ? PayPAlDonation.routeName);
+                     //openBrowserTab(context, t.facebook, ApiUrl.appInstagramLink);
+                   },
+                 ),
+               )
 
              ],
            ),
@@ -98,6 +121,29 @@ import '../SearchScreen.dart';
                  context, LoginScreen.routeName);
            },
              child: Text('Login to View Request', style: TextStyle(fontSize: 18),)),
+       ),
+     );
+   }
+
+   Future<void> openEmailApp() async {
+     final Uri emailLaunchUri = Uri(
+       scheme: 'mailto',
+       path: '${ApiUrl.supportEmail}',
+       query: Uri.encodeFull('subject=HelloYourDailylight&body=How can I support the Ministry? '),
+     );
+
+     if (await canLaunchUrl(emailLaunchUri)) {
+       await launchUrl(emailLaunchUri);
+     } else {
+       throw 'Could not launch mail app';
+     }
+   }
+
+   void openBrowserTab(BuildContext context, String title, String url) {
+     Navigator.push(
+       context,
+       MaterialPageRoute(
+         builder: (context) => BrowserTabScreen(title: title, url: url),
        ),
      );
    }

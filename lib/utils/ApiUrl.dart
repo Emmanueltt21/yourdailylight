@@ -12,7 +12,7 @@ class ApiUrl {
 
 
   static const String donationPage = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3G57JHYW9RNG6&source=url";
-  static const String supportEmail = "testmail@gmail.com";
+  static const String supportEmail = "PastorSimon@LGmissions.org";
   static const String appName = "Your Daily Light";
 
   static String? appPackageName = "com.lighthouse.yourdailylight";
@@ -29,6 +29,8 @@ class ApiUrl {
   static String appYoutubeLink = "https://www.facebook.com/YourDailyLight";
   static String appInstagramLink = "https://instagram.com/yourdailylight_devotional?igshid=OGQ5ZDc2ODk2ZA==";
   static String appContactDeleteAcc = "https://sites.google.com/view/dailylight01/home";
+
+  static String appPaypal_Url = "https://www.paypal.com/paypalme/LGmissions";
 
 
   static const NBProfileImage = 'assets/images/bible.jpg';

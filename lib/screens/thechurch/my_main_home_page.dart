@@ -245,8 +245,11 @@ class _MyMainHomePageState extends State<MyMainHomePage> {
 
 
   Container buildMyNavBar(BuildContext context) {
+    double bottomInset = MediaQuery.of(context).viewPadding.bottom;
+
     return Container(
-      height: 60,
+      padding: EdgeInsets.only(bottom: bottomInset), // Add safe padding
+      height: 60 + bottomInset, // Increase height to make space
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         borderRadius: const BorderRadius.only(
@@ -265,16 +268,8 @@ class _MyMainHomePageState extends State<MyMainHomePage> {
               });
             },
             icon: pageIndex == 0
-                ? const Icon(
-              Icons.home_filled,
-              color: Colors.white,
-              size: 35,
-            )
-                : const Icon(
-              Icons.home_outlined,
-              color: Colors.white,
-              size: 35,
-            ),
+                ? const Icon(Icons.home_filled, color: Colors.white, size: 35)
+                : const Icon(Icons.home_outlined, color: Colors.white, size: 35),
           ),
           IconButton(
             enableFeedback: false,
@@ -284,16 +279,8 @@ class _MyMainHomePageState extends State<MyMainHomePage> {
               });
             },
             icon: pageIndex == 1
-                ? const Icon(
-              Icons.calendar_month,
-              color: Colors.white,
-              size: 35,
-            )
-                : const Icon(
-              Icons.calendar_month_outlined,
-              color: Colors.white,
-              size: 35,
-            ),
+                ? const Icon(Icons.calendar_month, color: Colors.white, size: 35)
+                : const Icon(Icons.calendar_month_outlined, color: Colors.white, size: 35),
           ),
           IconButton(
             enableFeedback: false,
@@ -303,16 +290,8 @@ class _MyMainHomePageState extends State<MyMainHomePage> {
               });
             },
             icon: pageIndex == 2
-                ? const Icon(
-              Icons.play_arrow,
-              color: Colors.white,
-              size: 35,
-            )
-                : const Icon(
-              Icons.play_arrow_outlined,
-              color: Colors.white,
-              size: 35,
-            ),
+                ? const Icon(Icons.play_arrow, color: Colors.white, size: 35)
+                : const Icon(Icons.play_arrow_outlined, color: Colors.white, size: 35),
           ),
           IconButton(
             enableFeedback: false,
@@ -322,16 +301,8 @@ class _MyMainHomePageState extends State<MyMainHomePage> {
               });
             },
             icon: pageIndex == 3
-                ? const Icon(
-              Icons.work_rounded,
-              color: Colors.white,
-              size: 35,
-            )
-                : const Icon(
-              Icons.work_outline,
-              color: Colors.white,
-              size: 35,
-            ),
+                ? const Icon(Icons.work_rounded, color: Colors.white, size: 35)
+                : const Icon(Icons.work_outline, color: Colors.white, size: 35),
           ),
           IconButton(
             enableFeedback: false,
@@ -341,19 +312,12 @@ class _MyMainHomePageState extends State<MyMainHomePage> {
               });
             },
             icon: pageIndex == 4
-                ? const Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 35,
-            )
-                : const Icon(
-              Icons.person_outline,
-              color: Colors.white,
-              size: 35,
-            ),
+                ? const Icon(Icons.person, color: Colors.white, size: 35)
+                : const Icon(Icons.person_outline, color: Colors.white, size: 35),
           ),
         ],
       ),
     );
   }
+
 }
