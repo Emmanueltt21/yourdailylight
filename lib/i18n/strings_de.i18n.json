@@ -27,7 +27,7 @@
   "onboardingpagetitles": [
     "DEIN TÄGLICHES LICHT ",
     "EIN KONTO ERSTELLEN",
-    "AKTIE ",
+    "Teilen ",
     " AUF DEM LAUFENDEN BLEIBEN "
   ],
   "onboardingpagehints": [
@@ -77,7 +77,7 @@
   "addplaylist": "Zur Wiedergabeliste hinzufügen",
   "bookmark": "Lesezeichen",
   "unbookmark": "Lesezeichen aufheben",
-  "share": "Aktie",
+  "share": "Teilen",
   "deletemedia": "Datei löschen",
   "deletemediahint": "Möchten Sie diese heruntergeladene Datei löschen? ",
   "searchhint": "Suchen Sie nach Audio- und Videonachrichten",

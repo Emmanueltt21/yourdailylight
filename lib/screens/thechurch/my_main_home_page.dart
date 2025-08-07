@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:yourdailylight/screens/thechurch/bookstore_home.dart';
@@ -11,110 +12,146 @@ import 'package:yourdailylight/screens/thechurch/podcast_home.dart';
 import 'package:yourdailylight/screens/thechurch/profile_home.dart';
 
 import '../../i18n/strings.g.dart';
+import '../../main.dart';
 import '../../providers/AudioPlayerModel.dart';
+import '../../providers/DevotionalAlarmService.dart';
 import '../../providers/HomeProvider.dart';
+import '../../service/notification_service.dart';
+import '../../widgets/PermissionDialog.dart';
 
 class MyMainHomePage extends StatefulWidget {
- // const MyMainHomePage({Key? key}) : super(key: key);
   static const routeName = "/myhomepage";
-  MyMainHomePage();
+  final int initialPageIndex;
+
+  const MyMainHomePage({super.key, this.initialPageIndex = 0});
+  //MyMainHomePage({this.initialPageIndex = 0});
 
   @override
   State<MyMainHomePage> createState() => _MyMainHomePageState();
 }
-
-class _MyMainHomePageState extends State<MyMainHomePage> {
-  final FlutterLocalNotificationsPlugin _notificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-  int pageIndex = 0;
+class _MyMainHomePageState extends State<MyMainHomePage>
+    with WidgetsBindingObserver {
+  late int pageIndex;
+  int numberCheckPermission = 0;
 
   final pages = [
-     NewsHomeFragment(),
-     DevotionHome(),
-     PodcastHome(),
-     BookStoreHome(),
-     ProfileHome(),
+    NewsHomeFragment(),
+    DevotionHome(),
+    PodcastHome(),
+    BookStoreHome(),
+    ProfileHome(),
   ];
 
   @override
   void initState() {
     super.initState();
-    _checkNotificationPermission();
+    WidgetsBinding.instance.addObserver(this);
+    pageIndex = widget.initialPageIndex;
+    numberCheckPermission = 0;
+  /*  Future.delayed(const Duration(seconds: 3), () {
+      _checkPermissionsAndShowDialogIfNeeded();
+    });*/
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
-  /// Check if notification permission is granted
-  Future<void> _checkNotificationPermission() async {
-    final bool? granted = await _notificationsPlugin
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
-        ?.areNotificationsEnabled();
-
-    if (granted == null || !granted) {
-      await _requestNotificationPermission();
+/*
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkPermissionsAndShowDialogIfNeeded(onResume: true);
     }
   }
 
-  /// Request notification permission
-  Future<void> _requestNotificationPermission() async {
-    final PermissionStatus status = await Permission.notification.request();
+  void _checkPermissionsAndShowDialogIfNeeded({bool onResume = false}) async {
+    final prefs = await SharedPreferences.getInstance();
 
-    if (status.isDenied) {
-      // If denied, show a dialog to guide user to settings
-      _showPermissionDialog();
+    bool notificationGranted =
+    await NotificationService.areNotificationsGranted();
+    bool alarmGranted = await areExactAlarmsPermitted();
+
+    bool notificationStored =
+        prefs.getBool("permission_notification_granted") ?? false;
+    bool alarmStored = prefs.getBool("permission_alarm_granted") ?? false;
+
+    if (notificationGranted && alarmGranted) {
+      if (!notificationStored || !alarmStored) {
+        await prefs.setBool("permission_notification_granted", true);
+        await prefs.setBool("permission_alarm_granted", true);
+
+        await DevotionalAlarmService.scheduleDailyReminder();
+        await prefs.setBool("alarm_set", true);
+
+        if (onResume && context.mounted) {
+          toast("✅ Permissions granted. Daily reminder enabled.");
+        }
+      }
+      return;
+    }
+
+    if ((!notificationStored || !alarmStored) && context.mounted) {
+      if (numberCheckPermission < 2) {
+        numberCheckPermission++;
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => PermissionDialog(
+          ),
+        );
+      } else {
+        if (!notificationStored && !alarmStored) {
+          toasty(context,
+              "Permission has not been granted to Receive All Notifications");
+        } else if (!notificationStored) {
+          toasty(context,
+              "Permission has not been granted to Receive Custom Notifications");
+        } else if (!alarmStored) {
+          toasty(context,
+              "Permission has not been granted to Receive Daily Notifications");
+        }
+      }
+    }
+  }
+*/
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is int) {
+      pageIndex = args;
     }
   }
 
-  /// Show a dialog to manually enable notifications in settings
-  void _showPermissionDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Enable Notifications"),
-        content: const Text(
-            "Notifications are disabled. Please enable them in Settings to receive alerts."),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () async {
-              await openAppSettings(); // Open app settings
-              Navigator.pop(context);
-            },
-            child: const Text("Open Settings"),
-          ),
-        ],
-      ),
-    );
-  }
-
-
-  void exitAppFx(){
+  void exitAppFx() {
     print('Exit app ----------> ');
   }
 
-  void exitAppAlert(){
-    if (Provider.of<AudioPlayerModel>(context, listen: false).currentMedia != null) {
+  void exitAppAlert() {
+    if (Provider.of<AudioPlayerModel>(context, listen: false).currentMedia !=
+        null) {
       showDialog(
         context: context,
         builder: (context) => CupertinoAlertDialog(
-          title: new Text(t.quitapp),
-          content: new Text(t.quitappaudiowarning),
+          title: Text(t.quitapp),
+          content: Text(t.quitappaudiowarning),
           actions: <Widget>[
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: new Text(t.cancel),
+              child: Text(t.cancel),
             ),
             ElevatedButton(
               onPressed: () {
-                Provider.of<AudioPlayerModel>(context, listen: false).cleanUpResources();
+                Provider.of<AudioPlayerModel>(context, listen: false)
+                    .cleanUpResources();
                 Navigator.of(context).pop(true);
-                //Navigator.of(context).pop(true);
                 exitAppFx();
               },
-              child: new Text(t.ok),
+              child: Text(t.ok),
             ),
           ],
         ),
@@ -123,8 +160,8 @@ class _MyMainHomePageState extends State<MyMainHomePage> {
       showDialog(
         context: context,
         builder: (context) => CupertinoAlertDialog(
-          title: new Text(t.quitapp),
-          content: new Text(t.quitappwarning),
+          title: Text(t.quitapp),
+          content: Text(t.quitappwarning),
           actions: <Widget>[
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -134,17 +171,16 @@ class _MyMainHomePageState extends State<MyMainHomePage> {
               onPressed: () {
                 print("i was clicked");
                 Navigator.of(context).pop(true);
-               // Navigator.of(context).pop(true);
                 exitAppFx();
-              //  SystemNavigator.pop();
               },
-              child: new Text(t.ok),
+              child: Text(t.ok),
             ),
           ],
         ),
       );
     }
   }
+
   DateTime? backPressTime;
 
   onWillPop() {
@@ -152,7 +188,6 @@ class _MyMainHomePageState extends State<MyMainHomePage> {
     if (backPressTime == null ||
         now.difference(backPressTime!) >= const Duration(seconds: 2)) {
       backPressTime = now;
-      //
       return false;
     } else {
       return true;
@@ -163,93 +198,71 @@ class _MyMainHomePageState extends State<MyMainHomePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (Provider.of<AudioPlayerModel>(context, listen: false)
-            .currentMedia !=
+        if (Provider.of<AudioPlayerModel>(context, listen: false).currentMedia !=
             null) {
-          return (await (showDialog(
+          return (await showDialog(
             context: context,
             builder: (context) => CupertinoAlertDialog(
-              title: new Text(t.quitapp),
-              content: new Text(t.quitappaudiowarning),
+              title: Text(t.quitapp),
+              content: Text(t.quitappaudiowarning),
               actions: <Widget>[
-                new ElevatedButton(
+                ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: new Text(t.cancel),
+                  child: Text(t.cancel),
                 ),
-                new ElevatedButton(
+                ElevatedButton(
                   onPressed: () {
                     Provider.of<AudioPlayerModel>(context, listen: false)
                         .cleanUpResources();
                     Navigator.of(context).pop(true);
                     exitAppFx();
                   },
-                  child: new Text(t.ok),
+                  child: Text(t.ok),
                 ),
               ],
             ),
-          ))) ??
+          )) ??
               false;
         } else {
-          return (await (
-              showDialog(
+          return (await showDialog(
             context: context,
-            builder: (context) => new CupertinoAlertDialog(
-              title: new Text(t.quitapp),
-              content: new Text(t.quitappwarning),
+            builder: (context) => CupertinoAlertDialog(
+              title: Text(t.quitapp),
+              content: Text(t.quitappwarning),
               actions: <Widget>[
-                new ElevatedButton(
+                ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: new Text(t.cancel),
+                  child: Text(t.cancel),
                 ),
-                new ElevatedButton(
+                ElevatedButton(
                   onPressed: () {
                     print("i was clicked");
                     Navigator.of(context).pop(true);
-                  //  Navigator.of(context).pop(true);
                     exitAppFx();
-                   // SystemNavigator.pop();
                   },
-                  child: new Text(t.ok),
+                  child: Text(t.ok),
                 ),
               ],
             ),
-          ))) ??
+          )) ??
               false;
         }
       },
       child: Scaffold(
         backgroundColor: const Color(0xffC4DFCB),
-       /* appBar: AppBar(
-          leading: Icon(
-            Icons.menu,
-            color: Theme.of(context).primaryColor,
-          ),
-          title: Text(
-            "Geeks For Geeks",
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontSize: 25,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-        ),*/
         body: ChangeNotifierProvider(
-            create: (context) => HomeProvider(),
-            child: pages[pageIndex]),
+            create: (context) => HomeProvider(), child: pages[pageIndex]),
         bottomNavigationBar: buildMyNavBar(context),
       ),
     );
   }
 
-
   Container buildMyNavBar(BuildContext context) {
     double bottomInset = MediaQuery.of(context).viewPadding.bottom;
 
     return Container(
-      padding: EdgeInsets.only(bottom: bottomInset), // Add safe padding
-      height: 60 + bottomInset, // Increase height to make space
+      padding: EdgeInsets.only(bottom: bottomInset),
+      height: 60 + bottomInset,
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         borderRadius: const BorderRadius.only(
@@ -260,64 +273,29 @@ class _MyMainHomePageState extends State<MyMainHomePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          IconButton(
-            enableFeedback: false,
-            onPressed: () {
-              setState(() {
-                pageIndex = 0;
-              });
-            },
-            icon: pageIndex == 0
-                ? const Icon(Icons.home_filled, color: Colors.white, size: 35)
-                : const Icon(Icons.home_outlined, color: Colors.white, size: 35),
-          ),
-          IconButton(
-            enableFeedback: false,
-            onPressed: () {
-              setState(() {
-                pageIndex = 1;
-              });
-            },
-            icon: pageIndex == 1
-                ? const Icon(Icons.calendar_month, color: Colors.white, size: 35)
-                : const Icon(Icons.calendar_month_outlined, color: Colors.white, size: 35),
-          ),
-          IconButton(
-            enableFeedback: false,
-            onPressed: () {
-              setState(() {
-                pageIndex = 2;
-              });
-            },
-            icon: pageIndex == 2
-                ? const Icon(Icons.play_arrow, color: Colors.white, size: 35)
-                : const Icon(Icons.play_arrow_outlined, color: Colors.white, size: 35),
-          ),
-          IconButton(
-            enableFeedback: false,
-            onPressed: () {
-              setState(() {
-                pageIndex = 3;
-              });
-            },
-            icon: pageIndex == 3
-                ? const Icon(Icons.work_rounded, color: Colors.white, size: 35)
-                : const Icon(Icons.work_outline, color: Colors.white, size: 35),
-          ),
-          IconButton(
-            enableFeedback: false,
-            onPressed: () {
-              setState(() {
-                pageIndex = 4;
-              });
-            },
-            icon: pageIndex == 4
-                ? const Icon(Icons.person, color: Colors.white, size: 35)
-                : const Icon(Icons.person_outline, color: Colors.white, size: 35),
-          ),
+          buildNavItem(0, Icons.home_filled, Icons.home_outlined),
+          buildNavItem(1, Icons.calendar_month, Icons.calendar_month_outlined),
+          buildNavItem(2, Icons.play_arrow, Icons.play_arrow_outlined),
+          buildNavItem(3, Icons.work_rounded, Icons.work_outline),
+          buildNavItem(4, Icons.person, Icons.person_outline),
         ],
       ),
     );
   }
 
+  Widget buildNavItem(int index, IconData active, IconData inactive) {
+    return IconButton(
+      enableFeedback: false,
+      onPressed: () {
+        setState(() {
+          pageIndex = index;
+        });
+      },
+      icon: Icon(
+        pageIndex == index ? active : inactive,
+        color: Colors.white,
+        size: 35,
+      ),
+    );
+  }
 }

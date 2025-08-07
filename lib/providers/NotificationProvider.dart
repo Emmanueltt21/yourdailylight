@@ -18,7 +18,7 @@ class NotificationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleNotifications(bool value) async {
+ /* Future<void> toggleNotifications(bool value) async {
     _isNotificationEnabled = value;
     notifyListeners();
 
@@ -30,5 +30,5 @@ class NotificationProvider extends ChangeNotifier {
     } else {
       await NotificationService.cancelNotifications();
     }
-  }
+  }*/
 }

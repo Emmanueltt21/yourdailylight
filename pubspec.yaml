@@ -2,7 +2,7 @@ name: yourdailylight
 description: "Your Daily Light App"
 
 
-version: 1.1.39+39
+version: 1.1.50+50
 
 environment:
   #sdk: ^3.6.1
@@ -32,7 +32,7 @@ dependencies:
   firebase_messaging: ^15.1.2
   firebase_auth: ^5.3.3
   #firebase_messaging: ^13.0.0
-  flutter_local_notifications: ^19.0.0
+  flutter_local_notifications: ^19.4.0
   #google_mobile_ads: ^2.0.1
   shared_preferences: ^2.0.13
   #sign_in_apple: ^2.0.0    ---TO SETUP
@@ -92,7 +92,7 @@ dependencies:
   #epub_parser: ^3.0.1
   #flutter_html: ^2.0.0
   #pdf: ^3.8.4
-  syncfusion_flutter_pdfviewer: ^29.1.35
+  syncfusion_flutter_pdfviewer: ^30.1.41
   #audioplayers: ^1.1.1
   just_audio_background: ^0.0.1-beta.7
   flutter_native_splash: ^2.4.6
@@ -129,6 +129,11 @@ dependencies:
   # To Auto push update on Live
   shorebird_code_push: ^2.0.4
   audio_service: ^0.18.18
+  workmanager: ^0.8.0
+  #alarm: ^5.1.4
+ # android_alarm_manager_plus: ^4.0.7
+  android_intent_plus: ^5.3.0
+  device_info_plus: ^11.5.0
 
 
 
@@ -147,6 +152,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/raw/
     - assets/images/landing.png
     - assets/images/logo_android12.png
     - assets/lottie/

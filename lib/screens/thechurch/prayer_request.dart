@@ -90,7 +90,7 @@ class _PrayerRequestState extends State<PrayerRequest> {
                 child: sSAppButton(
                   color: MyColors.accentDark,
                   context: context,
-                  title: 'Create prayer Request ',
+                  title: 'Create Prayer or Testimony ',
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => AddPrayerRequest()));
                   },

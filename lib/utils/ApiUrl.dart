@@ -30,7 +30,10 @@ class ApiUrl {
   static String appInstagramLink = "https://instagram.com/yourdailylight_devotional?igshid=OGQ5ZDc2ODk2ZA==";
   static String appContactDeleteAcc = "https://sites.google.com/view/dailylight01/home";
 
-  static String appPaypal_Url = "https://www.paypal.com/paypalme/LGmissions";
+  static String appPaypal_Url = "https://paypal.me/LGmissions?country.x=DE&locale.x=en_US";
+
+
+  static String appDescriptionSupport = "Your partnership through giving to Lighthouse Global Missions enables us to accomplish more in fulfilling God’s call in bringing His life changing word and the miracle working power of the Holy Spirit around the world. And your every sacrifice will be richly rewarded and replenished with multiplication by the Lord, even as He guaranteed by His word (Scripture References: Mark 10:29-30, Luke 6:38).";
 
 
   static const NBProfileImage = 'assets/images/bible.jpg';

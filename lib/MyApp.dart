@@ -81,8 +81,10 @@ import './providers/events.dart';
 import './models/UserEvents.dart';
 
 class MyApp extends StatefulWidget {
-  const MyApp({
+   GlobalKey<NavigatorState>?  navKey;
+   MyApp({
     Key? key,
+    required  GlobalKey<NavigatorState> navKey ,
     required Widget? defaultHome,
   })  : _defaultHome = defaultHome,
         super(key: key);
@@ -96,8 +98,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late AppStateManager appStateManager;
   AppLifecycleState? state;
   bool isChatOpen = false;
-  final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey(debugLabel: "Main Navigator");
+ var navigatorKey = null;
+ // final GlobalKey<NavigatorState> navigatorKey = GlobalKey(debugLabel: "Main Navigator");
+
 
   navigateMedia(Media media) {
     print("push notification media = " + media.title!);
@@ -167,6 +170,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    navigatorKey = widget.navKey ??  GlobalKey(debugLabel: "Main Navigator");
     Firebase(
       navigateMedia,
       navigateSocials,
@@ -784,6 +788,16 @@ void initialization() async {
             return MaterialPageRoute(
               builder: (context) {
                 return SubscriptionScreen();
+              },
+            );
+          }
+
+          if (settings.name == MyMainHomePage.routeName) {
+            // Handle navigation arguments for MyMainHomePage
+            final int? initialPageIndex = settings.arguments as int?;
+            return MaterialPageRoute(
+              builder: (context) {
+                return MyMainHomePage(initialPageIndex: initialPageIndex ?? 0);
               },
             );
           }

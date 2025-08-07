@@ -1068,7 +1068,7 @@ class _StringsDe implements _StringsEn {
 	@override String get addplaylist => 'Zur Wiedergabeliste hinzufügen';
 	@override String get bookmark => 'Lesezeichen';
 	@override String get unbookmark => 'Lesezeichen aufheben';
-	@override String get share => 'Aktie';
+	@override String get share => 'Teilen';
 	@override String get deletemedia => 'Datei löschen';
 	@override String get deletemediahint => 'Möchten Sie diese heruntergeladene Datei löschen? ';
 	@override String get searchhint => 'Suchen Sie nach Audio- und Videonachrichten';
@@ -1977,7 +1977,7 @@ extension on _StringsDe {
 			"onboardingpagetitles": [
 				"DEIN TÄGLICHES LICHT ",
 				"EIN KONTO ERSTELLEN",
-				"AKTIE ",
+				"Teilen ",
 				" AUF DEM LAUFENDEN BLEIBEN "
 			],
 			"onboardingpagehints": [
@@ -2027,7 +2027,7 @@ extension on _StringsDe {
 			"addplaylist": "Zur Wiedergabeliste hinzufügen",
 			"bookmark": "Lesezeichen",
 			"unbookmark": "Lesezeichen aufheben",
-			"share": "Aktie",
+			"share": "Teilen",
 			"deletemedia": "Datei löschen",
 			"deletemediahint": "Möchten Sie diese heruntergeladene Datei löschen? ",
 			"searchhint": "Suchen Sie nach Audio- und Videonachrichten",

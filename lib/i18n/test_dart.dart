@@ -66,7 +66,7 @@
 	@override String get addplaylist => 'Zur Wiedergabeliste hinzufügen';
 	@override String get bookmark => 'Lesezeichen';
 	@override String get unbookmark => 'Lesezeichen aufheben';
-	@override String get share => 'Aktie';
+	@override String get share => 'Teilen';
 	@override String get deletemedia => 'Datei löschen';
 	@override String get deletemediahint => 'Möchten Sie diese heruntergeladene Datei löschen? ';
 	@override String get searchhint => 'Suchen Sie nach Audio- und Videonachrichten';

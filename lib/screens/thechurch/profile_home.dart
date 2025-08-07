@@ -179,7 +179,7 @@ class _ProfileHomeState extends State<ProfileHome> {
       }
 
       // Schedule the daily notification (assuming NotificationService exists)
-      await NotificationService.scheduleDailyNotification();
+     // await NotificationService.scheduleDailyNotification();
       setState(() {
         _isLoading = false;
         _statusMessage = 'Daily notification scheduled successfully!';

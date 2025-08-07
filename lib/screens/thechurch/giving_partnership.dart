@@ -16,6 +16,7 @@ import '../../auth/LoginScreen.dart';
 import '../../i18n/strings.g.dart';
 import '../../models/Userdata.dart';
 import '../../providers/AppStateManager.dart';
+import '../../widgets/widget_church.dart';
 import '../BrowserTabScreen.dart';
 import '../SearchScreen.dart';
  class GivingPartnerShip extends StatefulWidget {
@@ -34,7 +35,6 @@ import '../SearchScreen.dart';
    @override
    void initState() {
      // TODO: implement initState
-     init();
      super.initState();
    }
    void init() async {
@@ -62,21 +62,48 @@ import '../SearchScreen.dart';
      init();
      return Scaffold(
        appBar: AppBar(
-         title:  Text(t.giveandpart),
+         title:  Text(t.giveandpart, style: TextStyle(color: Colors.white),),
          centerTitle: true,
        ),
-       body: isUserLogin ? SingleChildScrollView(
+       body: SingleChildScrollView(
          child: Padding(
            padding: const EdgeInsets.all(16.0),
            child: Column(
              mainAxisAlignment: MainAxisAlignment.start,
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
-              // rowContainer(Icons.wallet, "MTN Mobile Money ", "Name: Your Daily Light"),
-              // rowContainer(Icons.wallet, "Orange Mobile Money ", "Name: Your Daily Light"),
-             //  rowContainer(Icons.paypal, " pastorsimon@lgmissions.org ", "Motive: Your Daily Light  "),
-              // Text('Giving and partnership view '),
+               16.height,
+               commonCacheImageWidget(
+                 'assets/images/image_giftsv3.jpg',
+                 //  'assets/images/image_gift2.jpg',
+                 200,
+                 width: context.width(),
+                 fit: BoxFit.cover,
+               ).cornerRadiusWithClipRRect(16),
+               16.height,
+
                Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: Text('${ApiUrl.appDescriptionSupport}',
+                     style: primaryTextStyle(color: Colors.blueGrey.shade700)),
+               ),
+
+               8.height,
+               rowContainer(Icons.paypal, "Giving via PayPal", " Click to Give", (){
+                 openBrowserTab(context, "Giving via PayPal", ApiUrl.appPaypal_Url);
+               }),
+
+               rowContainer(Icons.account_balance, "Giving by Bank Transfer ", "Email: ${ApiUrl.supportEmail}", (){
+                 Clipboard.setData(const ClipboardData(text: '${ApiUrl.supportEmail}'));
+                 ScaffoldMessenger.of(context).showSnackBar(
+                   const SnackBar(content: Text('Mail Copied to clipboard')),
+                 );
+               }),
+
+               // rowContainer(Icons.wallet, "Orange Mobile Money ", "Name: Your Daily Light"),
+               //  rowContainer(Icons.paypal, " pastorsimon@lgmissions.org ", "Motive: Your Daily Light  "),
+               // Text('Giving and partnership view '),
+               /* Padding(
                  padding: const EdgeInsets.all(16.0),
                  child: ListTile(
                    leading: Icon(Icons.paypal),
@@ -109,18 +136,11 @@ import '../SearchScreen.dart';
                      //openBrowserTab(context, t.facebook, ApiUrl.appInstagramLink);
                    },
                  ),
-               )
+               )*/
 
              ],
            ),
          ),
-       ) : Center(
-         child: GestureDetector(
-           onTap: (){
-             Navigator.pushNamed(
-                 context, LoginScreen.routeName);
-           },
-             child: Text('Login to View Request', style: TextStyle(fontSize: 18),)),
        ),
      );
    }
@@ -148,30 +168,34 @@ import '../SearchScreen.dart';
      );
    }
 
-   Widget rowContainer (icon, String title, String subtitle){
-     return Container(
-       padding: EdgeInsets.all(16),
-       margin: const EdgeInsets.only(bottom: 8),
-       decoration: BoxDecoration(
-         color: Colors.white,
-         borderRadius: BorderRadius.circular(0),
-         border: Border.all(
-           width: 1.2,
-           color: Colors.grey.shade400,
-         ),
-       ),
-       child: Row(
-         children: [
-           Icon(icon, size: 40,color: MyColors.primaryDark,),
-           SizedBox(width: 8,),
-           Column(
-             mainAxisAlignment: MainAxisAlignment.start,
-             children: [
-               Text(title, style: boldTextStyle(size: 18),),
-               Text(subtitle, style: primaryTextStyle(size: 14),)
-             ],
+   Widget rowContainer (icon, String title, String subtitle, VoidCallback onTap){
+     return GestureDetector(
+       onTap: onTap,
+       child: Container(
+         padding: EdgeInsets.all(16),
+         margin: const EdgeInsets.only(bottom: 8),
+         decoration: BoxDecoration(
+           color: Colors.white,
+           borderRadius: BorderRadius.circular(0),
+           border: Border.all(
+             width: 1.2,
+             color: Colors.grey.shade400,
            ),
-         ],
+         ),
+         child: Row(
+           children: [
+             Icon(icon, size: 40,color: MyColors.primaryDark,),
+             SizedBox(width: 8,),
+             Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               mainAxisAlignment: MainAxisAlignment.start,
+               children: [
+                 Text(title, style: boldTextStyle(size: 18),),
+                 Text(subtitle, style: primaryTextStyle(size: 14),)
+               ],
+             ),
+           ],
+         ),
        ),
      );
    }
