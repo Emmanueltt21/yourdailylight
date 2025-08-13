@@ -2,7 +2,7 @@ name: yourdailylight
 description: "Your Daily Light App"
 
 
-version: 1.1.50+50
+version: 1.1.54+54
 
 environment:
   #sdk: ^3.6.1
@@ -129,8 +129,8 @@ dependencies:
   # To Auto push update on Live
   shorebird_code_push: ^2.0.4
   audio_service: ^0.18.18
-  workmanager: ^0.8.0
-  #alarm: ^5.1.4
+  #workmanager: ^0.8.0
+  alarm: ^5.1.4
  # android_alarm_manager_plus: ^4.0.7
   android_intent_plus: ^5.3.0
   device_info_plus: ^11.5.0

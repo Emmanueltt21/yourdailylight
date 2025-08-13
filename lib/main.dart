@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart' as fcm;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:nb_utils/nb_utils.dart' as PlatformUtils;
+import 'package:alarm/alarm.dart';
 
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -37,7 +38,6 @@ import 'package:yourdailylight/providers/ChatManager.dart';
 import 'package:yourdailylight/providers/cart_provider.dart';
 import 'package:yourdailylight/utils/ApiUrl.dart';
 import 'StartupPermissionGate.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -46,13 +46,10 @@ FlutterLocalNotificationsPlugin();
 
 
 
-// Workmanager callback
-@pragma('vm:entry-point')
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) {
-    _showDailyDevotionalNotification();
-    return Future.value(true);
-  });
+// Alarm callback for Android
+Future<void> alarmCallback() async {
+  print("🔔 Alarm triggered at 7 AM - showing notification");
+  await _showDailyDevotionalNotification();
 }
 
 // Notification types
@@ -99,10 +96,11 @@ Future<void> _createNotificationChannels() async {
     'Daily Devotional',
     description: 'Daily devotional notifications',
     importance: Importance.max,
-    enableVibration: true,
-    playSound: true,
+    enableVibration: false,
+    playSound: false,
   );
 
+  /*
   const AndroidNotificationChannel testChannel = AndroidNotificationChannel(
     'daily_devotional_test',
     'Daily Devotional Test',
@@ -112,19 +110,20 @@ Future<void> _createNotificationChannels() async {
     playSound: true,
   );
 
-  const AndroidNotificationChannel testGeneralChannel = AndroidNotificationChannel(
+ const AndroidNotificationChannel testGeneralChannel = AndroidNotificationChannel(
     'test_channel',
     'Test Notifications',
     description: 'Channel for testing notifications',
     importance: Importance.max,
     enableVibration: true,
     playSound: true,
-  );
+  );*/
 
   await notificationsPlugin
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(dailyDevotionalChannel);
 
+/*
   await notificationsPlugin
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(testChannel);
@@ -132,59 +131,145 @@ Future<void> _createNotificationChannels() async {
   await notificationsPlugin
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(testGeneralChannel);
+*/
 
   print("✅ Android notification channels created");
 }
 
-// Schedule daily notification using Workmanager only
+// Schedule daily notification at exactly 7 AM
 Future<void> scheduleDailyNotification() async {
   try {
-    print("🔔 Setting up daily notification with Workmanager...");
+    print("🔔 Setting up daily notification for 7 AM...");
     
-    // Calculate delay until next 7 AM
+    // Check if notification is already scheduled today
+    final prefs = await SharedPreferences.getInstance();
+    final lastScheduledDate = prefs.getString('last_scheduled_date');
+    final today = DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD format
+    
+    if (lastScheduledDate == today) {
+      print("✅ Daily notification already scheduled for today: $today");
+      return;
+    }
+    
+    // Calculate next 7 AM
     final now = DateTime.now();
     DateTime next7AM = DateTime(now.year, now.month, now.day, 7, 0, 0);
     if (now.isAfter(next7AM)) {
       next7AM = next7AM.add(Duration(days: 1));
     }
     
-    final delayUntilNext7AM = next7AM.difference(now);
-    print("⏰ Next 7 AM: $next7AM (in ${delayUntilNext7AM.inHours}h ${delayUntilNext7AM.inMinutes % 60}m)");
+    print("⏰ Next 7 AM: $next7AM");
     
-    // Setup Workmanager with calculated delay
-    await _setupWorkmanagerBackup(initialDelay: delayUntilNext7AM);
+    if (Platform.isAndroid) {
+      await _scheduleWithAlarm(next7AM);
+    } else {
+      await _scheduleWithZonedNotification(next7AM);
+    }
     
-    print("✅ Daily notification scheduled successfully with Workmanager");
+    // Save the scheduled date to prevent duplicates
+    await prefs.setString('last_scheduled_date', today);
+    print("✅ Daily notification scheduled successfully for $today");
   } catch (e) {
     print("❌ Daily notification scheduling failed: $e");
-    // Fallback with default 1-minute delay
-    await _setupWorkmanagerBackup();
   }
 }
 
 
 
-// Setup Workmanager backup
-Future<void> _setupWorkmanagerBackup({Duration? initialDelay}) async {
+// Schedule with Alarm package for Android
+Future<void> _scheduleWithAlarm(DateTime scheduledTime) async {
   try {
-    // Cancel any existing backup task before registering a new one
-    await Workmanager().cancelByUniqueName("daily_devotional_backup");
-    await Workmanager().registerPeriodicTask(
-      "daily_devotional_backup",
-      "show_daily_devotional",
-      frequency: const Duration(hours: 24),
-      initialDelay: initialDelay ?? const Duration(minutes: 1),
-      constraints: Constraints(
-        networkType: NetworkType.notRequired,
-        requiresBatteryNotLow: false,
-        requiresCharging: false,
-        requiresDeviceIdle: false,
-        requiresStorageNotLow: false,
-      ),
-    );
-    print("✅ Workmanager backup scheduled");
+    // Cancel any existing alarms with the same ID
+    await Alarm.stop(1);
+    
+    final alarmSettings = AlarmSettings(
+       id: 1,
+       dateTime: scheduledTime,
+       assetAudioPath: 'assets/alarm.mp3',
+       loopAudio: false,
+       vibrate: false,
+       volumeSettings: VolumeSettings.fade(fadeDuration: Duration(seconds: 3)),
+       notificationSettings: const NotificationSettings(
+         title: '📖 Your Daily Devotional',
+         body: 'Check out God\'s Word for you today! 🔥',
+         stopButton: 'Stop',
+         icon: 'notification_icon',
+       ),
+     );
+    
+    await Alarm.set(alarmSettings: alarmSettings);
+    print("✅ Android alarm scheduled for $scheduledTime");
+    
+    // Set up listener to reschedule for next day when alarm triggers
+    Alarm.ringStream.stream.listen((alarmSettings) {
+      if (alarmSettings.id == 1) {
+        print("🔔 Daily alarm triggered, rescheduling for tomorrow");
+        _rescheduleNextDayAlarm();
+      }
+    });
   } catch (e) {
-    print("❌ Failed to setup Workmanager backup: $e");
+    print("❌ Failed to schedule Android alarm: $e");
+    // Fallback to notification scheduling
+    await _scheduleWithZonedNotification(scheduledTime);
+  }
+}
+
+// Reschedule alarm for next day (Android)
+Future<void> _rescheduleNextDayAlarm() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final tomorrow = DateTime.now().add(Duration(days: 1));
+    final tomorrowDate = tomorrow.toIso8601String().split('T')[0];
+    
+    // Reset the scheduled date so it can be rescheduled
+    await prefs.setString('last_scheduled_date', tomorrowDate);
+    
+    // Schedule for tomorrow at 7 AM
+    final next7AM = DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 7, 0, 0);
+    await _scheduleWithAlarm(next7AM);
+    
+    print("✅ Rescheduled alarm for next day: $next7AM");
+  } catch (e) {
+    print("❌ Failed to reschedule alarm: $e");
+  }
+}
+
+// Schedule with zonedSchedule for iOS and fallback
+Future<void> _scheduleWithZonedNotification(DateTime scheduledTime) async {
+  try {
+    // Cancel any existing notifications with the same ID
+    await notificationsPlugin.cancel(1);
+    
+    // Convert to timezone-aware datetime
+    final tz.TZDateTime tzScheduledTime = tz.TZDateTime.from(scheduledTime, tz.local);
+    
+    await notificationsPlugin.zonedSchedule(
+       1,
+       '📖 Your Daily Devotional',
+       'Check out God\'s Word for you today! 🔥',
+       tzScheduledTime,
+       const NotificationDetails(
+         android: AndroidNotificationDetails(
+           'daily_devotional',
+           'Daily Devotional',
+           importance: Importance.max,
+           priority: Priority.high,
+           channelDescription: 'Daily devotional notifications',
+         ),
+         iOS: DarwinNotificationDetails(
+           presentAlert: true,
+           presentBadge: true,
+           presentSound: false,
+         ),
+       ),
+       payload: NotificationType.dailyDevotional.name,
+       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+       matchDateTimeComponents: DateTimeComponents.time, // Repeat daily at same time
+     );
+    
+    print("✅ Zoned notification scheduled for $scheduledTime (repeats daily)");
+  } catch (e) {
+    print("❌ Failed to schedule zoned notification: $e");
   }
 }
 
@@ -273,7 +358,7 @@ void _handleNotificationTap(String payload) {
 
 
 /// ✅ Handle background FCM
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+Future<void> _firebaseMessagingBackgroundHandler(fcm.RemoteMessage message) async {
   print("Handling a background message: \${message.messageId}");
 }
 
@@ -290,12 +375,14 @@ void main() async {
   await Firebase.initializeApp(
     options: Platform.isIOS ? DefaultFirebaseOptions.currentPlatform : null,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  fcm.FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await setupFCM();
 
-  // Initialize Workmanager
-  Workmanager().initialize(callbackDispatcher);
+  // Initialize Alarm for Android
+  if (Platform.isAndroid) {
+    await Alarm.init();
+  }
 
   // Initialize notifications
   await initNotifications();
@@ -333,14 +420,14 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AppStateManager()),
-        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+      //  ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => BookmarksModel()),
         ChangeNotifierProvider(create: (_) => PlaylistsModel()),
         ChangeNotifierProvider(create: (_) => AudioPlayerModel()),
-        ChangeNotifierProvider(create: (_) => DownloadsModel()),
-        ChangeNotifierProvider(create: (_) => HymnsBookmarksModel()),
-        ChangeNotifierProvider(create: (_) => NotesProvider()),
-        ChangeNotifierProvider(create: (_) => BibleModel()),
+       //  ChangeNotifierProvider(create: (_) => DownloadsModel()),
+      //  ChangeNotifierProvider(create: (_) => HymnsBookmarksModel()),
+      //  ChangeNotifierProvider(create: (_) => NotesProvider()),
+      //  ChangeNotifierProvider(create: (_) => BibleModel()),
         ChangeNotifierProvider(create: (_) => TranslateProvider()),
         ChangeNotifierProvider(create: (_) => ChatManager()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
@@ -368,99 +455,7 @@ Future<void> _requestPermissions() async {
   print("📱 Notification permission granted: $status");
 }
 
-/*
 
-/// ✅ Handle background FCM
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: \${message.messageId}");
-}
-*/
-
-
-
-void mainOLD() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  BindingBase.debugZoneErrorsAreFatal = true;
-
-
-  HttpOverrides.global = MyHttpOverrides();
-
-  await Firebase.initializeApp(
-    options: Platform.isIOS ? DefaultFirebaseOptions.currentPlatform : null,
-  );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  await setupFCM();
-
-  Workmanager().initialize(callbackDispatcher);
-  scheduleDailyNotification();
-
-  await JustAudioBackground.init(
-    androidNotificationChannelId: 'com.lighthouse.yourdailylight',
-    androidNotificationChannelName: 'Audio Playback',
-    androidNotificationOngoing: true,
-  );
-
-  await initNotifications();
-
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: MyColors.primaryDark,
-    statusBarBrightness: Brightness.light,
-  ));
-
-  final prefs = await SharedPreferences.getInstance();
-  final seen = prefs.getBool("user_seen_onboarding_page") ?? false;
-  final notificationStatus = await Permission.notification.status;
-
-  Widget firstScreen = StartupPermissionGate();
-  if (PlatformUtils.isAndroid) {
-    firstScreen = !notificationStatus.isGranted
-        ? StartupPermissionGate()
-        : (seen ? MyMainHomePage() : OnboardingPage());
-  } else {
-    firstScreen = seen ? MyMainHomePage() : OnboardingPage();
-  }
-
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AppStateManager()),
-        ChangeNotifierProvider(create: (_) => NotificationProvider()),
-        ChangeNotifierProvider(create: (_) => BookmarksModel()),
-        ChangeNotifierProvider(create: (_) => PlaylistsModel()),
-        ChangeNotifierProvider(create: (_) => AudioPlayerModel()),
-        ChangeNotifierProvider(create: (_) => DownloadsModel()),
-        ChangeNotifierProvider(create: (_) => HymnsBookmarksModel()),
-        ChangeNotifierProvider(create: (_) => NotesProvider()),
-        ChangeNotifierProvider(create: (_) => BibleModel()),
-        ChangeNotifierProvider(create: (_) => TranslateProvider()),
-        ChangeNotifierProvider(create: (_) => ChatManager()),
-        ChangeNotifierProvider(create: (_) => CartProvider()),
-      ],
-      child: MyApp(defaultHome: firstScreen, navKey: navigatorKey),
-    ),
-  );
-
-  // ✅ DEFER permissions AFTER runApp
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    _requestPermissions();
-  });
-}
-
-
-/*// Permission handling
-Future<void> _requestPermissions() async {
-  if (Platform.isAndroid) {
-    final androidInfo = await DeviceInfoPlugin().androidInfo;
-    if (androidInfo.version.sdkInt >= 31) {
-      await Permission.scheduleExactAlarm.request();
-    }
-    if (androidInfo.version.sdkInt >= 33) {
-      await Permission.notification.request();
-    }
-  }
-}*/
 
 
 
@@ -478,20 +473,20 @@ class MyHttpOverrides extends HttpOverrides {
 
 /// 🔔 Firebase Cloud Messaging setup
 Future<void> setupFCM() async {
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  fcm.FirebaseMessaging messaging = fcm.FirebaseMessaging.instance;
 
-  NotificationSettings settings = await messaging.requestPermission(
+  fcm.NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     badge: true,
     sound: true,
   );
 
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+  if (settings.authorizationStatus == fcm.AuthorizationStatus.authorized) {
     print("✅ User granted notification permission.");
     await messaging.subscribeToTopic("all_users");
     print("📩 Subscribed to 'all_users' topic");
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    fcm.FirebaseMessaging.onMessage.listen((fcm.RemoteMessage message) {
       print("📨 Foreground message: \${message.messageId}");
       if (message.notification != null) {
         print("🔔 Title: \${message.notification?.title}");
@@ -499,7 +494,7 @@ Future<void> setupFCM() async {
       }
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    fcm.FirebaseMessaging.onMessageOpenedApp.listen((fcm.RemoteMessage message) {
       print("📲 Notification clicked.");
     });
   } else {

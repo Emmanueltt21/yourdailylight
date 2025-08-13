@@ -51,6 +51,8 @@
 		<string>audio</string>
 		<string>fetch</string>
 	</array>
+	<key>NSLocalNotificationUsageDescription</key>
+    <string>We use notifications to remind you of daily tasks.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
