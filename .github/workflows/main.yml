@@ -1,0 +1,44 @@
+# Trigger this workflow when code is pushed to the dev branch
+on:
+  push:
+    branches:
+      - main
+
+# Name of the workflow displayed in GitHub Actions
+name: Build My Apps
+
+jobs:
+  build:
+    # Job name displayed in the workflow run
+    name: Build and Release new apk
+    # Use the latest Ubuntu runner for the build environment
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository code to the runner
+      - uses: actions/checkout@v3
+      
+      # Set up Java 17 environment required for Android Gradle plugin
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'  # Use Zulu OpenJDK distribution
+          java-version: '17'    # Java 17 required for latest Android Gradle plugin
+
+      # Set up Flutter SDK with stable channel
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'  # Use stable Flutter channel for production builds
+      
+      # Download and install Flutter dependencies from pubspec.yaml
+      - run: flutter pub get
+      
+      # Build release APK with ABI splitting for smaller file sizes
+      # --split-per-abi creates separate APKs for different CPU architectures
+      - run: flutter build apk --release --split-per-abi
+
+      # Create a GitHub release and upload the built APK files
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/release/*"  # Upload all APK files from release folder
+          tag: v0.0.1                                    # Release tag version
+          token: ${{ secrets.TOKEN }}                    # GitHub token for authentication

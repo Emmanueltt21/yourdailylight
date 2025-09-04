@@ -201,10 +201,12 @@ class _ProfileHomeState extends State<ProfileHome> {
       appBar: AppBar(
        // title: Text(t.profile),
         title: Text(t.profile, style: const TextStyle(color: Colors.white),),
-        leading: Icon(
-          Icons.person,
+        leading: IconButton(onPressed: (){
+          Navigator.pop(context);
+        }, icon: Icon(
+          Icons.arrow_back_ios,
           color: Colors.white,
-        ),
+        ))
       ),
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -289,7 +291,7 @@ class _ProfileHomeState extends State<ProfileHome> {
               child: Column(
                 children: <Widget>[
 
-                  profileOption(t.mylibrary, Icons.newspaper, MyColors.accentDark)
+                 /* profileOption(t.mylibrary, Icons.newspaper, MyColors.accentDark)
                       .onTap(() {
                      Navigator.push(context, MaterialPageRoute(builder: (context) => MyLibrary()));
                   }),
@@ -297,7 +299,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                       .onTap(() {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => PrayerRequest()));
 
-                  }),
+                  }),*/
                   /*profileOption(
                       t.mySubscription, Icons.payment, MyColors.accentDark)
                       .onTap(() {xx
@@ -323,7 +325,7 @@ class _ProfileHomeState extends State<ProfileHome> {
               child: Column(
                 children: <Widget>[
                   10.height,
-                  profileOption(
+                /*  profileOption(
                       t.settings, Icons.settings, MyColors.accentDark).onTap((){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
                       }),
@@ -336,14 +338,6 @@ class _ProfileHomeState extends State<ProfileHome> {
                         ? ApiUrl.iosAppShareUrlDesc
                         : ApiUrl.androidAppShareUrlDesc);
 
-                   /* PackageInfo.fromPlatform().then((value) {
-                      String package = '';
-                      if (isAndroid) package = value.packageName;
-                      String urlStore = storeBaseURL();
-
-                      Share.share( t.appname + "\n\n" + urlStore + package);
-                    });*/
-
                   }),
 
                   profileOption(
@@ -354,19 +348,19 @@ class _ProfileHomeState extends State<ProfileHome> {
 
                     rateAppNow(context);
 
-                    /*PackageInfo.fromPlatform().then((value) {
+                    *//*PackageInfo.fromPlatform().then((value) {
                       String package = '';
                       if (isAndroid) package = value.packageName;
 
                       launchUrl('${storeBaseURL()}$package');
-                    });*/
+                    });*//*
                   }),
 
                   profileOption(t.help_support, Icons.call, MyColors.accentDark)
                       .onTap(() async {
                    openEmailSupport(context);
 
-                  }),
+                  }),*/
 
                   profileOption(t.delete_account, Icons.delete, MyColors.accentDark)
                       .onTap(() async {
@@ -414,7 +408,7 @@ class _ProfileHomeState extends State<ProfileHome> {
               ),
             ),*/
            // 16.height,
-            Container(
+           /* Container(
               padding: const EdgeInsets.all(8),
               decoration: boxDecorationWithShadow(
                 borderRadius: BorderRadius.circular(10),
@@ -441,7 +435,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                   ),
                 ],
               ),
-            ),
+            ),*/
           ],
         ),
       ),

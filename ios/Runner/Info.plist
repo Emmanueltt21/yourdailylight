@@ -50,6 +50,7 @@
 	<array>
 		<string>audio</string>
 		<string>fetch</string>
+		<string>remote-notification</string>
 	</array>
 	<key>NSLocalNotificationUsageDescription</key>
     <string>We use notifications to remind you of daily tasks.</string>

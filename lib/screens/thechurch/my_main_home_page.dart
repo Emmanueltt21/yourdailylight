@@ -39,7 +39,6 @@ class _MyMainHomePageState extends State<MyMainHomePage>
     DevotionHome(),
     PodcastHome(),
     BookStoreHome(),
-    ProfileHome(),
   ];
 
   @override
@@ -277,7 +276,7 @@ class _MyMainHomePageState extends State<MyMainHomePage>
           buildNavItem(1, Icons.calendar_month, Icons.calendar_month_outlined),
           buildNavItem(2, Icons.play_arrow, Icons.play_arrow_outlined),
           buildNavItem(3, Icons.work_rounded, Icons.work_outline),
-          buildNavItem(4, Icons.person, Icons.person_outline),
+        //  buildNavItem(4, Icons.person, Icons.person_outline),
         ],
       ),
     );

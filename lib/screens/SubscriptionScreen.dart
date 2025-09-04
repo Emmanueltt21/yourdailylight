@@ -1,9 +1,9 @@
 import 'package:yourdailylight/i18n/strings.g.dart';
 import 'package:yourdailylight/providers/AppStateManager.dart';
+import 'package:yourdailylight/models/Userdata.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/Alerts.dart';
-import '../models/Userdata.dart';
 import '../providers/SubscriptionModel.dart';
 
 class SubscriptionScreen extends StatefulWidget {

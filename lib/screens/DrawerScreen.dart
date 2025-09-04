@@ -10,6 +10,7 @@ import 'package:yourdailylight/screens/thechurch/my_subscription.dart';
 import 'package:yourdailylight/screens/thechurch/mylibrary.dart';
 import 'package:yourdailylight/screens/thechurch/prayer_request.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:yourdailylight/screens/thechurch/profile_home.dart';
 import '../models/Userdata.dart';
 import 'package:flutter/cupertino.dart';
 import '../providers/AppStateManager.dart';
@@ -474,6 +475,59 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     Container(height: 15),
                     InkWell(
                       onTap: () async {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => GivingPartnerShip()));
+                      },
+                      child: Container(
+                        padding:
+                        EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.card_giftcard,
+                                size: 20.0, color: MyColors.accentDark),
+                            Container(width: 10),
+                            Text(t.giveandpart,
+                                // Text('Giving and PartnerShip',
+                                style: TextStyles.subhead(context).copyWith(
+                                  fontSize: 15,
+                                )),
+                            Spacer(),
+                            Icon(Icons.navigate_next,
+                                size: 25.0, color: Colors.grey[300]),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    Container(height: 15),
+                    InkWell(
+                      onTap: () async {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => PrayerRequest()));
+                      },
+                      child: Container(
+                        padding:
+                        EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.mail,
+                                size: 20.0, color: MyColors.accentDark),
+                            // Container(width: 10),
+                            Text(t.prayer_request,
+                                // Text('Prayer Request or Testimony',
+                                style: TextStyles.subhead(context).copyWith(
+                                  fontSize: 14,
+                                )).expand(),
+                            Spacer(),
+                            Icon(Icons.navigate_next,
+                                size: 25.0, color: Colors.grey[300]),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                     Container(height: 15),
+                    InkWell(
+                      onTap: () async {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => MyLibrary()));
                       },
                       child: Container(
@@ -495,24 +549,24 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         ),
                       ),
                     ),
+
                     Container(height: 15),
                     InkWell(
                       onTap: () async {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => PrayerRequest()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileHome()));
                       },
                       child: Container(
                         padding:
                         EdgeInsets.symmetric(horizontal: 15, vertical: 2),
                         child: Row(
                           children: <Widget>[
-                            Icon(Icons.mail,
-                                size: 20.0, color: MyColors.accentDark),
-                           // Container(width: 10),
-                            Text(t.prayer_request,
-                           // Text('Prayer Request or Testimony',
+                            const  Icon(Icons.person, size: 20.0, color: MyColors.accentDark),
+                            Container(width: 10),
+                            //  Text(t.mylibrary,
+                            Text('My Profile',
                                 style: TextStyles.subhead(context).copyWith(
-                                  fontSize: 14,
-                                )).expand(),
+                                  fontSize: 15,
+                                )),
                             Spacer(),
                             Icon(Icons.navigate_next,
                                 size: 25.0, color: Colors.grey[300]),
@@ -520,6 +574,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         ),
                       ),
                     ),
+
+
                    // Container(height: 15),
                   /*  InkWell(
                       onTap: () async {
@@ -545,32 +601,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         ),
                       ),
                     ),*/
-                    Container(height: 15),
-                    InkWell(
-                      onTap: () async {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => GivingPartnerShip()));
-                      },
-                      child: Container(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: 15, vertical: 2),
-                        child: Row(
-                          children: <Widget>[
-                            Icon(Icons.card_giftcard,
-                                size: 20.0, color: MyColors.accentDark),
-                            Container(width: 10),
-                           Text(t.giveandpart,
-                           // Text('Giving and PartnerShip',
-                                style: TextStyles.subhead(context).copyWith(
-                                  fontSize: 15,
-                                )),
-                            Spacer(),
-                            Icon(Icons.navigate_next,
-                                size: 25.0, color: Colors.grey[300]),
-                          ],
-                        ),
-                      ),
-                    ),
+
                     /*Container(height: 15),
                     InkWell(
                       onTap: () {
@@ -720,7 +751,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       ),
                     ),
 
-                    Container(height: 8),
+                   /* Container(height: 8),
                     InkWell(
                       onTap: () async {
                         if(appManager.userdata!=null){
@@ -748,7 +779,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                           ],
                         ),
                       ),
-                    ),
+                    ),*/
                     /*InkWell(
                       onTap: () {},
                       child: Container(

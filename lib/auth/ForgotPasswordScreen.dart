@@ -4,11 +4,14 @@ import '../utils/Alerts.dart';
 import '../utils/TextStyles.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'dart:io';
 import '../utils/my_colors.dart';
 import '../utils/ApiUrl.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:email_validator/email_validator.dart';
 import '../i18n/strings.g.dart';
+import '../service/AuthService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   static const routeName = "/forgotpassword";
@@ -35,30 +38,50 @@ class ForgotPasswordScreenRouteState extends State<ForgotPasswordScreen> {
   }
 
   Future<void> registerUser(String email) async {
+    print("Sending Firebase password reset email to: $email");
+    
     Alerts.showProgressDialog(context, t.processingpleasewait);
+    
     try {
-      final response = await http.post(Uri.parse(ApiUrl.RESETPASSWORD),
-          body: jsonEncode({
-            "data": {"email": email}
-          }));
-      if (response.statusCode == 200) {
-        // Navigator.pop(context);
-        // If the server did return a 200 OK response,
-        // then parse the JSON.
-        Navigator.of(context).pop();
-        print(response.body);
-        Map<String, dynamic> res = json.decode(response.body);
-        if (res["status"] == "error") {
-          Alerts.show(context, t.error, res["message"]);
-        } else {
-          Alerts.show(context, t.success, res["message"]);
-        }
-        print(res);
+      final AuthService authService = AuthService();
+      
+      await authService.sendPasswordResetEmail(email);
+      
+      Navigator.of(context).pop(); // Close progress dialog
+      
+      Alerts.show(context, t.success, 
+        "Password reset email sent successfully! Please check your inbox and follow the instructions to reset your password.");
+      
+    } on FirebaseAuthException catch (e) {
+      Navigator.of(context).pop(); // Close progress dialog
+      
+      String errorMessage;
+      
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = "No user found with this email address. Please check your email or create a new account.";
+          break;
+        case 'invalid-email':
+          errorMessage = "Invalid email address format. Please enter a valid email.";
+          break;
+        case 'too-many-requests':
+          errorMessage = "Too many password reset requests. Please wait a moment before trying again.";
+          break;
+        case 'network-request-failed':
+          errorMessage = "Network error. Please check your internet connection and try again.";
+          break;
+        default:
+          errorMessage = e.message ?? "An error occurred while sending the password reset email.";
       }
-    } catch (exception) {
-      // Navigator.pop(context);
-      // I get no exception here
-      print(exception);
+      
+      print("Firebase Auth error: ${e.code} - ${e.message}");
+      Alerts.show(context, t.error, errorMessage);
+      
+    } catch (e) {
+      Navigator.of(context).pop(); // Close progress dialog
+      
+      print("Unexpected error: $e");
+      Alerts.show(context, t.error, "An unexpected error occurred. Please try again.");
     }
   }
 

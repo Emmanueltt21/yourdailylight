@@ -64,6 +64,6 @@ class DefaultFirebaseOptions {
     projectId: 'mychurch-f40f8',
     storageBucket: 'mychurch-f40f8.appspot.com',
     iosClientId: '859943339060-o32utn2rq1jtg0shnjtp5u0edtsavlpv.apps.googleusercontent.com',
-    iosBundleId: 'com.lighthouse.yourdailylight',
+    iosBundleId: 'com.lighthouseglobal.yourdailylight',
   );
 }

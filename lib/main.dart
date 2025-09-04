@@ -136,6 +136,34 @@ Future<void> _createNotificationChannels() async {
   print("✅ Android notification channels created");
 }
 
+// Comprehensive cleanup of all existing notifications and alarms
+Future<void> _cleanupAllNotifications() async {
+  try {
+    print("🧹 Cleaning up all existing notifications and alarms...");
+    
+    // Cancel all pending notifications (including any with different IDs)
+    await notificationsPlugin.cancelAll();
+    
+    // Stop all alarms
+    await Alarm.stopAll();
+    
+    // Also specifically cancel common notification IDs that might exist
+    final commonIds = [0, 1, 9997, 999]; // Include test notification IDs
+    for (final id in commonIds) {
+      try {
+        await notificationsPlugin.cancel(id);
+        await Alarm.stop(id);
+      } catch (e) {
+        // Ignore errors for non-existent notifications/alarms
+      }
+    }
+    
+    print("✅ All existing notifications and alarms cleaned up");
+  } catch (e) {
+    print("⚠️ Error during cleanup (continuing anyway): $e");
+  }
+}
+
 // Schedule daily notification at exactly 7 AM
 Future<void> scheduleDailyNotification() async {
   try {
@@ -151,6 +179,9 @@ Future<void> scheduleDailyNotification() async {
       return;
     }
     
+    // Comprehensive cleanup of ALL existing notifications and alarms
+    await _cleanupAllNotifications();
+    
     // Calculate next 7 AM
     final now = DateTime.now();
     DateTime next7AM = DateTime(now.year, now.month, now.day, 7, 0, 0);
@@ -161,14 +192,22 @@ Future<void> scheduleDailyNotification() async {
     print("⏰ Next 7 AM: $next7AM");
     
     if (Platform.isAndroid) {
-      await _scheduleWithAlarm(next7AM);
+      try {
+        await _scheduleWithAlarm(next7AM);
+        // Save the scheduled date only if alarm scheduling succeeds
+        await prefs.setString('last_scheduled_date', today);
+        print("✅ Daily notification scheduled successfully for $today");
+      } catch (e) {
+        print("❌ Android alarm scheduling failed, notification will not be set: $e");
+        // Do not save the scheduled date so it can be retried later
+        return;
+      }
     } else {
       await _scheduleWithZonedNotification(next7AM);
+      // Save the scheduled date to prevent duplicates
+      await prefs.setString('last_scheduled_date', today);
+      print("✅ Daily notification scheduled successfully for $today");
     }
-    
-    // Save the scheduled date to prevent duplicates
-    await prefs.setString('last_scheduled_date', today);
-    print("✅ Daily notification scheduled successfully for $today");
   } catch (e) {
     print("❌ Daily notification scheduling failed: $e");
   }
@@ -209,8 +248,9 @@ Future<void> _scheduleWithAlarm(DateTime scheduledTime) async {
     });
   } catch (e) {
     print("❌ Failed to schedule Android alarm: $e");
-    // Fallback to notification scheduling
-    await _scheduleWithZonedNotification(scheduledTime);
+    // Do not fallback to zonedSchedule to prevent duplicate notifications
+    // Log the error and let the user know scheduling failed
+    rethrow;
   }
 }
 
@@ -218,15 +258,19 @@ Future<void> _scheduleWithAlarm(DateTime scheduledTime) async {
 Future<void> _rescheduleNextDayAlarm() async {
   try {
     final prefs = await SharedPreferences.getInstance();
-    final tomorrow = DateTime.now().add(Duration(days: 1));
-    final tomorrowDate = tomorrow.toIso8601String().split('T')[0];
+    final now = DateTime.now();
+    final today = now.toIso8601String().split('T')[0];
     
-    // Reset the scheduled date so it can be rescheduled
-    await prefs.setString('last_scheduled_date', tomorrowDate);
+    // Clear today's scheduled date so scheduleDailyNotification can run tomorrow
+    await prefs.remove('last_scheduled_date');
     
     // Schedule for tomorrow at 7 AM
+    final tomorrow = now.add(Duration(days: 1));
     final next7AM = DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 7, 0, 0);
     await _scheduleWithAlarm(next7AM);
+    
+    // Only set the scheduled date after successful scheduling
+    await prefs.setString('last_scheduled_date', today);
     
     print("✅ Rescheduled alarm for next day: $next7AM");
   } catch (e) {
