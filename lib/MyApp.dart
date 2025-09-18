@@ -79,6 +79,8 @@ import './service/Firebase.dart';
 import './models/Media.dart';
 import './providers/events.dart';
 import './models/UserEvents.dart';
+import './screens/AppTermsScreen.dart';
+import './screens/AboutUsScreen.dart';
 
 class MyApp extends StatefulWidget {
    GlobalKey<NavigatorState>?  navKey;
@@ -798,6 +800,22 @@ void initialization() async {
             return MaterialPageRoute(
               builder: (context) {
                 return MyMainHomePage(initialPageIndex: initialPageIndex ?? 0);
+              },
+            );
+          }
+
+          if (settings.name == '/appterms') {
+            return MaterialPageRoute(
+              builder: (context) {
+                return AppTermsScreen();
+              },
+            );
+          }
+
+          if (settings.name == '/aboutus') {
+            return MaterialPageRoute(
+              builder: (context) {
+                return AboutUsScreen();
               },
             );
           }

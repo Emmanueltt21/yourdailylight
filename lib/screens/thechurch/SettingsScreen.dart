@@ -660,7 +660,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Container(height: 10),
             InkWell(
               onTap: () {
-                openBrowserTab(context, t.about, ApiUrl.ABOUT);
+                Navigator.pushNamed(context, '/aboutus');
               },
               child: Container(
                 padding:
@@ -683,8 +683,8 @@ class _SettingsPageState extends State<SettingsPage> {
             Container(height: 10),
             InkWell(
               onTap: () {
-                openBrowserTab(context, t.terms, ApiUrl.TERMS);
-              },
+                    Navigator.pushNamed(context, '/appterms');
+                  },
               child: Container(
                 padding:
                 EdgeInsets.symmetric(horizontal: 15, vertical: 2),
