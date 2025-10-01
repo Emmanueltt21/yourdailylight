@@ -2,7 +2,7 @@ name: yourdailylight
 description: "Your Daily Light App"
 
 
-version: 1.1.57+57
+version: 1.1.58+58
 
 environment:
   #sdk: ^3.6.1
@@ -28,15 +28,11 @@ dependencies:
   #better_player: ^0.0.84
   #youtube_player_flutter: ^8.1.0
  # youtube_player_flutter_quill: ^8.2.2
-  firebase_core: ^3.5.0
-  firebase_messaging: ^15.1.2
-  firebase_auth: ^5.3.3
-  #firebase_messaging: ^13.0.0
-  flutter_local_notifications: ^19.4.0
-  #google_mobile_ads: ^2.0.1
-  shared_preferences: ^2.0.13
-  #sign_in_apple: ^2.0.0    ---TO SETUP
-  google_sign_in: ^6.1.4
+  firebase_core: ^4.1.1
+  firebase_messaging: ^16.0.2
+  firebase_auth: ^6.1.0
+  flutter_local_notifications: ^17.0.0
+  google_sign_in: ^7.2.0
   email_validator: ^3.0.0
   shimmer: ^3.0.0
   #audiofileplayer: ^2.1.0
@@ -46,15 +42,15 @@ dependencies:
   path_provider: ^2.0.9
   flutter_downloader: ^1.7.2
   #in_app_purchase: ^3.0.1
-  share_plus: ^11.0.0
+  share_plus: ^12.0.0
  # package_info: ^2.0.2
   #in_app_review: ^2.0.6
   #flutter_web_browser: ^0.17.1
   lottie: ^3.0.0
-  flutter_widget_from_html: ^0.16.0
+  flutter_widget_from_html: ^0.17.1
   # select_dialog: ^2.0.0
   #flutter_tts: ^3.2.2
-  clipboard: ^0.1.3
+  clipboard: ^2.0.2
   translator: ^1.0.0
   flutter_sticky_header: ^0.8.0
   flutter_material_color_picker: ^1.1.0+2
@@ -76,7 +72,7 @@ dependencies:
   flash: ^3.0.5+1
   highlight_text: ^1.3.0
   #firebase_core_platform_interface: 4.5.1
-  firebase_core_platform_interface: ^5.0.0
+  firebase_core_platform_interface: ^6.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -87,12 +83,12 @@ dependencies:
   #epub_view: ^3.0.0
   nb_utils: ^7.0.4
   #vocsy_epub_viewer: ^0.0.8
-  just_audio: ^0.9.30
+  just_audio: ^0.10.5
   #epub_view: ^3.0.0
   #epub_parser: ^3.0.1
   #flutter_html: ^2.0.0
   #pdf: ^3.8.4
-  syncfusion_flutter_pdfviewer: ^30.1.41
+  syncfusion_flutter_pdfviewer: ^31.1.19
   #audioplayers: ^1.1.1
   just_audio_background: ^0.0.1-beta.7
   flutter_native_splash: ^2.4.6
@@ -119,12 +115,12 @@ dependencies:
   html: any
   #wakelock: any
   wakelock_plus: ^1.2.8
-  package_info_plus: ^8.2.1
+  package_info_plus: ^9.0.0
 
   #Daily update
-  timezone: ^0.10.0
+  timezone: ^0.9.0
   #flutter_native_timezone: ^2.0.0
-  flutter_timezone: ^4.1.0
+  flutter_timezone: ^5.0.0
 
   # To Auto push update on Live
   shorebird_code_push: ^2.0.4
@@ -132,8 +128,8 @@ dependencies:
   #workmanager: ^0.8.0
   alarm: ^5.1.4
  # android_alarm_manager_plus: ^4.0.7
-  android_intent_plus: ^5.3.0
-  device_info_plus: ^11.5.0
+  android_intent_plus: ^6.0.0
+  device_info_plus: ^11.0.0
 
 
 

@@ -15,15 +15,13 @@ import '../utils/ApiUrl.dart';
 import 'package:http/http.dart' as http;
 import 'package:email_validator/email_validator.dart';
 import '../models/Userdata.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in/google_sign_in.dart'; // Explicitly adding this import
 //import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'dart:io';
 
 import 'email_otp_screen.dart';
 
-GoogleSignIn googleSignIn = GoogleSignIn(
-  scopes: ['email'],
-);
+final GoogleSignIn googleSignIn = GoogleSignIn.instance; // Changed to singleton instance
 
 class LoginScreen extends StatefulWidget {
   static const routeName = "/login";
@@ -39,14 +37,6 @@ class LoginScreenRouteState extends State<LoginScreen> {
 
   //final fb = FacebookLogin();
   GoogleSignInAccount? _currentUser;
-
-  Future<void> _handleSignIn() async {
-    try {
-      await googleSignIn.signIn();
-    } catch (error) {
-      print(error);
-    }
-  }
 
   verifyFormAndSubmit() {
     String _email = emailController.text.trim();
@@ -232,17 +222,51 @@ class LoginScreenRouteState extends State<LoginScreen> {
       initPlatformState();
     }
 
-    googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
-      setState(() {
-        _currentUser = account;
-      });
-      if (_currentUser != null) {
-        // _handleGetContact();
-        print(_currentUser!.email);
-        loginUser(_currentUser!.email, "", _currentUser!.displayName, t.google);
-      }
+    // Initialize GoogleSignIn
+    unawaited(
+      googleSignIn.initialize().then((_) {
+        googleSignIn.authenticationEvents
+            .listen(_handleAuthenticationEvent)
+            .onError(_handleAuthenticationError);
+        googleSignIn.attemptLightweightAuthentication();
+      }),
+    );
+  }
+
+  Future<void> _handleSignIn(GoogleSignInAccount user) async {
+    setState(() {
+      _currentUser = user;
     });
-    googleSignIn.signInSilently();
+    print(_currentUser!.email);
+    loginUser(_currentUser!.email, "", _currentUser!.displayName, t.google);
+  }
+
+  Future<void> _handleSignOut() async {
+    setState(() {
+      _currentUser = null;
+    });
+    // You might want to add additional sign-out logic here, e.g., Firebase signOut
+  }
+
+  Future<void> _handleAuthenticationEvent(
+    GoogleSignInAuthenticationEvent event,
+  ) async {
+    switch (event) {
+      case GoogleSignInAuthenticationEventSignIn():
+        _handleSignIn(event.user);
+        break;
+      case GoogleSignInAuthenticationEventSignOut():
+        _handleSignOut();
+        break;
+    }
+  }
+
+  Future<void> _handleAuthenticationError(Object e) async {
+    setState(() {
+      _currentUser = null;
+      // Handle error, maybe show a toast or alert
+      print("Google Sign-In Error: $e");
+    });
   }
 
   @override

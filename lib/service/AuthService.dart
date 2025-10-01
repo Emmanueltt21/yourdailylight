@@ -96,7 +96,8 @@ class AuthService {
     try {
       User? user = _auth.currentUser;
       if (user != null) {
-        await user.updateEmail(newEmail);
+        await user.verifyBeforeUpdateEmail(newEmail); // Use verifyBeforeUpdateEmail
+        // await updateEmail(user, newEmail); // This is for web, not Flutter
         await user.sendEmailVerification();
       }
     } on FirebaseAuthException catch (e) {

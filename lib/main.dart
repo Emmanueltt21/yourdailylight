@@ -308,6 +308,7 @@ Future<void> _scheduleWithZonedNotification(DateTime scheduledTime) async {
        ),
        payload: NotificationType.dailyDevotional.name,
        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
        matchDateTimeComponents: DateTimeComponents.time, // Repeat daily at same time
      );
     
@@ -416,9 +417,18 @@ void main() async {
 
   HttpOverrides.global = MyHttpOverrides();
 
-  await Firebase.initializeApp(
-    options: Platform.isIOS ? DefaultFirebaseOptions.currentPlatform : null,
-  );
+  // Check if Firebase is already initialized to prevent duplicate app error
+  try {
+    await Firebase.initializeApp(
+      options: Platform.isIOS ? DefaultFirebaseOptions.currentPlatform : null,
+    );
+  } catch (e) {
+    if (e.toString().contains('duplicate-app')) {
+      print('Firebase already initialized, skipping...');
+    } else {
+      rethrow;
+    }
+  }
   fcm.FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await setupFCM();

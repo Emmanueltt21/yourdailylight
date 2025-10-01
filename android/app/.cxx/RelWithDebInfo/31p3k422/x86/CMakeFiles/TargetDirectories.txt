@@ -1,2 +1,0 @@
-/Users/iwomi/Documents/kottland25/yourdailylight/android/app/.cxx/RelWithDebInfo/31p3k422/x86/CMakeFiles/edit_cache.dir
-/Users/iwomi/Documents/kottland25/yourdailylight/android/app/.cxx/RelWithDebInfo/31p3k422/x86/CMakeFiles/rebuild_cache.dir
