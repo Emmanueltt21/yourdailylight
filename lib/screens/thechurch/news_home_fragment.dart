@@ -76,11 +76,26 @@ class _NewsScreenBodyState extends State<NewsScreenBody> {
     }).toList();
   }
 
+  List<News> orderNewsItems(List<News> listNews){
+
+// Assuming each News item has a `date` property of type DateTime or String
+  if(listNews.isNotEmpty) {
+    listNews.sort((a, b) {
+      // If date is a DateTime
+      // return b.date!.compareTo(a.date!);
+
+      // OR, if date is a String (e.g., "2025-10-24"), parse it first:
+      return DateTime.parse(b.date!).compareTo(DateTime.parse(a.date!));
+    });
+  }
+    return listNews;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     newsModel = Provider.of<NewScreensModel>(context);
-    List<News> items = getLocalizedNews(newsModel.mediaList ?? []);
-
+    List<News> items = orderNewsItems(getLocalizedNews(newsModel.mediaList ?? []));
     if (newsModel.isError && items.isEmpty) {
       return NoitemScreen(
         title: t.oops,

@@ -297,6 +297,8 @@ class NBNewsDetailsScreenState extends State<NBNewsDetailsScreen> {
               contentPadding: EdgeInsets.all(0),
               title: Text('${mDetails.author}', style: boldTextStyle()),
               subtitle: Text('${mDetails.dmo}', style: secondaryTextStyle()),
+            //  subtitle: Text('${mDetails.date}', style: secondaryTextStyle()),
+             // subtitle: Text('${mDetails.date}', style: secondaryTextStyle()),
               leading: CircleAvatar(backgroundImage: AssetImage(ApiUrl.NBProfileImage)),
               trailing: AppButton(
                 elevation: 0,

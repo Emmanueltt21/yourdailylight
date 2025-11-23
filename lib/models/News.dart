@@ -41,6 +41,7 @@ extension NewsCopyWith on News {
       uti: uti ?? this.uti,
       utimo: utimo ?? this.utimo,
       views_count: views_count ?? this.views_count,
+      initDate: initDate ?? this.initDate,
     );
   }
 }
@@ -49,7 +50,7 @@ class News {
   final int? id;
  // int? commentsCount, likesCount, previewDuration, duration, viewsCount;
   final String? category, title, thumbnail, mediaType, cat_id;
-  final String?  downloadUrl, author, date, dmo, uti, utimo, views_count;
+  final String?  downloadUrl, author, date, dmo, uti, utimo, views_count, initDate;
   //final bool? canPreview, canDownload, isFree, http;
  // bool? userLiked;
   final String? content, french_content, german_content, french_title, german_title;
@@ -74,6 +75,7 @@ class News {
       this.french_title,
       this.german_title,
       this.german_content,
+      this.initDate,
      });
 
 
@@ -102,6 +104,7 @@ class News {
       uti: json['uti'] as String?,
       utimo: json['utimo'] as String?,
       views_count: json['views_count'].toString() as String?,
+      initDate: json['init_date'] as String?,
     );
   }
 
@@ -118,7 +121,8 @@ class News {
         french_title: data['french_title'],
         german_title: data['german_title'],
         german_content: data['german_content'],
-        downloadUrl: data['downloadUrl']);
+        downloadUrl: data['downloadUrl'],
+        initDate: data['init_date']);
   }
 
   Map<String, dynamic> toMap() => {
@@ -133,6 +137,7 @@ class News {
         "german_title": german_title,
         "german_content": german_content,
         "downloadUrl": downloadUrl,
+        "initDate": initDate,
 
       };
 }

@@ -40,6 +40,7 @@ import 'package:yourdailylight/utils/ApiUrl.dart';
 import 'StartupPermissionGate.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
 
 final FlutterLocalNotificationsPlugin notificationsPlugin =
 FlutterLocalNotificationsPlugin();
@@ -224,9 +225,9 @@ Future<void> _scheduleWithAlarm(DateTime scheduledTime) async {
     final alarmSettings = AlarmSettings(
        id: 1,
        dateTime: scheduledTime,
-       assetAudioPath: 'assets/alarm.mp3',
+       assetAudioPath: 'assets/raw/alarm.mp3',
        loopAudio: false,
-       vibrate: false,
+       vibrate: true,
        volumeSettings: VolumeSettings.fade(fadeDuration: Duration(seconds: 3)),
        notificationSettings: const NotificationSettings(
          title: '📖 Your Daily Devotional',
@@ -248,9 +249,8 @@ Future<void> _scheduleWithAlarm(DateTime scheduledTime) async {
     });
   } catch (e) {
     print("❌ Failed to schedule Android alarm: $e");
-    // Do not fallback to zonedSchedule to prevent duplicate notifications
-    // Log the error and let the user know scheduling failed
-    rethrow;
+    print("↪️ Falling back to zonedSchedule for daily notifications");
+    await _scheduleWithZonedNotification(scheduledTime);
   }
 }
 
@@ -414,6 +414,15 @@ void main() async {
 
   // Initialize timezone FIRST before anything else
   tz.initializeTimeZones();
+  // Set device local timezone for accurate scheduling
+  try {
+    final dynamic timeZoneName = await FlutterTimezone.getLocalTimezone();
+    final String tzNameString = timeZoneName.toString();
+    tz.setLocalLocation(tz.getLocation(tzNameString));
+    print('✅ Timezone set to ' + tzNameString);
+  } catch (e) {
+    print('⚠️ Failed to set local timezone, defaulting to UTC: ' + e.toString());
+  }
 
   HttpOverrides.global = MyHttpOverrides();
 
