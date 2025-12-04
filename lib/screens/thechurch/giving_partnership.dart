@@ -56,94 +56,88 @@ import '../SearchScreen.dart';
      if (mounted) super.setState(fn);
    }
 
-
    @override
    Widget build(BuildContext context) {
      init();
+
      return Scaffold(
        appBar: AppBar(
-         title:  Text(t.giveandpart, style: TextStyle(color: Colors.white),),
+         title: Text(
+           t.giveandpart,
+           style: const TextStyle(color: Colors.white),
+         ),
          centerTitle: true,
        ),
-       body: SingleChildScrollView(
-         child: Padding(
+
+       body: SafeArea(
+         child: SingleChildScrollView(
+           physics: const BouncingScrollPhysics(), // smooth scrolling
            padding: const EdgeInsets.all(16.0),
+
            child: Column(
-             mainAxisAlignment: MainAxisAlignment.start,
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
                16.height,
+
                commonCacheImageWidget(
                  'assets/images/image_giftsv3.jpg',
-                 //  'assets/images/image_gift2.jpg',
                  200,
                  width: context.width(),
                  fit: BoxFit.cover,
                ).cornerRadiusWithClipRRect(16),
+
                16.height,
 
                Padding(
                  padding: const EdgeInsets.all(8.0),
-                 child: Text('${ApiUrl.appDescriptionSupport}',
-                     style: primaryTextStyle(color: Colors.blueGrey.shade700)),
+                 child: Text(
+                   ApiUrl.appDescriptionSupport,
+                   style: primaryTextStyle(
+                     color: Colors.blueGrey.shade700,
+                   ),
+                 ),
                ),
 
                8.height,
-               rowContainer(Icons.paypal, "Giving via PayPal", " Click to Give", (){
-                 openBrowserTab(context, "Giving via PayPal", ApiUrl.appPaypal_Url);
-               }),
 
-               rowContainer(Icons.account_balance, "Giving by Bank Transfer ", "Email: ${ApiUrl.supportEmail}", (){
-                 Clipboard.setData(const ClipboardData(text: '${ApiUrl.supportEmail}'));
-                 ScaffoldMessenger.of(context).showSnackBar(
-                   const SnackBar(content: Text('Mail Copied to clipboard')),
-                 );
-               }),
-
-               // rowContainer(Icons.wallet, "Orange Mobile Money ", "Name: Your Daily Light"),
-               //  rowContainer(Icons.paypal, " pastorsimon@lgmissions.org ", "Motive: Your Daily Light  "),
-               // Text('Giving and partnership view '),
-               /* Padding(
-                 padding: const EdgeInsets.all(16.0),
-                 child: ListTile(
-                   leading: Icon(Icons.paypal),
-                   title: const Text('Support Us link ',
-                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                   trailing: Icon(Icons.arrow_forward_ios),
-                   onTap: (){
-                     //Navigator.push(context, MaterialPageRoute(builder: (context) => PayPAlDonation()));
-                     //Navigator.pushNamed(context, PayPAlDonation.routeName);
-                     openBrowserTab(context, t.facebook, ApiUrl.appPaypal_Url);
-                   },
-                 ),
+               rowContainer(
+                 Icons.paypal,
+                 "Giving via PayPal",
+                 "Click to Give",
+                     () {
+                   openBrowserTab(
+                     context,
+                     "Giving via PayPal",
+                     ApiUrl.appPaypal_Url,
+                   );
+                 },
                ),
 
-               Padding(
-                 padding: const EdgeInsets.only(top: 16.0, bottom: 16),
-                 child: ListTile(
-                   leading: Icon(Icons.account_balance),
-                   title: const Text('Support via Bank Contact Us via ${ApiUrl.supportEmail}',
-                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                  // trailing: Icon(Icons.arrow_forward_ios),
-                   onTap: (){
-                    // openEmailApp();
-                     Clipboard.setData(const ClipboardData(text: '${ApiUrl.supportEmail}'));
-                     ScaffoldMessenger.of(context).showSnackBar(
-                       const SnackBar(content: Text('Mail Copied to clipboard')),
-                     );
-                     //Navigator.push(context, MaterialPageRoute(builder: (context) => PayPAlDonation()));
-                     //Navigator.pushNamed(context,Avez-vous vu le 6500 ? PayPAlDonation.routeName);
-                     //openBrowserTab(context, t.facebook, ApiUrl.appInstagramLink);
-                   },
-                 ),
-               )*/
+               rowContainer(
+                 Icons.account_balance,
+                 "Giving by Bank Transfer",
+                 "Email: ${ApiUrl.supportEmail}",
+                     () {
+                   Clipboard.setData(
+                     ClipboardData(text: ApiUrl.supportEmail),
+                   );
 
+                   ScaffoldMessenger.of(context).showSnackBar(
+                     const SnackBar(
+                       content: Text('Mail copied to clipboard'),
+                     ),
+                   );
+                 },
+               ),
+
+               16.height,
              ],
            ),
          ),
        ),
      );
    }
+
 
    Future<void> openEmailApp() async {
      final Uri emailLaunchUri = Uri(

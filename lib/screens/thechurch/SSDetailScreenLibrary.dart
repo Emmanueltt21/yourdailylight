@@ -97,15 +97,15 @@ class SSDetailScreenLibraryState extends State<SSDetailScreenLibrary> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Text('${widget.newsDetails?.b_title}', textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle()),
+                      Expanded(child: Text('${widget.newsDetails?.b_title}', textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle())),
                       Text('Available', textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle(color: Colors.green)),
                     ],
                   ),
                   SizedBox(height: 16),
-                  Text("Author", textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle(size: 14)),
+                 /* Text("Author", textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle(size: 14)),
                   SizedBox(height: 8),
                   Text('${widget.newsDetails?.author}', textAlign: TextAlign.left, overflow: TextOverflow.clip, style: boldTextStyle(size: 12)),
-
+*/
                   SizedBox(height: 16, width: 16),
                   Text("Description", textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle()),
                   SizedBox(height: 8),

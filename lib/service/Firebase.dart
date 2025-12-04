@@ -194,13 +194,17 @@ class Firebase {
       BigTextStyleInformation bigTextStyleInformation =
           BigTextStyleInformation(msg!, contentTitle: title);
       var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-          'churchapp', 'churchapp',
+          'churchapp_silent', 'churchapp_silent',
           color: MyColors.primary,
           importance: Importance.max,
           priority: Priority.high,
+          playSound: false,
+          enableVibration: false,
           styleInformation: bigTextStyleInformation,
           ticker: title);
-      var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
+      var iOSPlatformChannelSpecifics = DarwinNotificationDetails(
+        presentSound: false,
+      );
       var platformChannelSpecifics = NotificationDetails(
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
@@ -219,13 +223,17 @@ class Firebase {
     InboxStyleInformation inboxStyleInformation =
         InboxStyleInformation(lines, contentTitle: name, summaryText: title);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'churchapp', 'churchapp',
+        'churchapp_silent', 'churchapp_silent',
         color: MyColors.primary,
         importance: Importance.max,
         priority: Priority.high,
+        playSound: false,
+        enableVibration: false,
         styleInformation: inboxStyleInformation,
         ticker: name);
-    var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
+    var iOSPlatformChannelSpecifics = DarwinNotificationDetails(
+      presentSound: false,
+    );
     var platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);

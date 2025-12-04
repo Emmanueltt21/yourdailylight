@@ -83,9 +83,8 @@ class _NewsScreenBodyState extends State<NewsScreenBody> {
     listNews.sort((a, b) {
       // If date is a DateTime
       // return b.date!.compareTo(a.date!);
-
       // OR, if date is a String (e.g., "2025-10-24"), parse it first:
-      return DateTime.parse(b.date!).compareTo(DateTime.parse(a.date!));
+      return DateTime.parse(b.initDate!).compareTo(DateTime.parse(a.initDate!));
     });
   }
     return listNews;

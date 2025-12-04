@@ -21,6 +21,7 @@ import '../../models/Userdata.dart';
 import '../../providers/AppStateManager.dart';
 import '../../providers/NBDataProviders.dart';
 import '../../service/notification_service.dart';
+import '../../service/NotificationManager.dart';
 import '../../socials/Settings.dart';
 import '../../utils/my_colors.dart';
 import '../../utils/utils.dart';
@@ -178,8 +179,9 @@ class _ProfileHomeState extends State<ProfileHome> {
         return;
       }
 
-      // Schedule the daily notification (assuming NotificationService exists)
-     // await NotificationService.scheduleDailyNotification();
+      // Schedule the daily notification via centralized NotificationManager (silent)
+      await notificationManager.cleanupAll();
+      await notificationManager.scheduleDaily7AMSilent();
       setState(() {
         _isLoading = false;
         _statusMessage = 'Daily notification scheduled successfully!';

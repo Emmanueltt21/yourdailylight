@@ -177,7 +177,7 @@ class _ItemTileState extends State<LibraryItemTile> {
                     Text('${widget.object.b_title!}',
                       style: boldTextStyle(),).paddingOnly(left: 8.0, right: 8, top: 8),
                     Text('Available',style: primaryTextStyle(size: 12, color: Colors.green),).paddingOnly(left: 8.0, right: 8, top: 8),
-                    Text('${widget.object.author!}',style: primaryTextStyle(size: 12),).paddingOnly(left: 8.0, right: 8, top: 8),
+                 //   Text('${widget.object.author!}',style: primaryTextStyle(size: 12),).paddingOnly(left: 8.0, right: 8, top: 8),
                     Text('${widget.object.date!}',style: primaryTextStyle(),).paddingOnly(left: 8.0, right: 8, top: 8),
                   ],
                 ).expand()

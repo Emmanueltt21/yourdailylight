@@ -6,10 +6,8 @@ import 'package:firebase_messaging/firebase_messaging.dart' as fcm;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:nb_utils/nb_utils.dart' as PlatformUtils;
-import 'package:alarm/alarm.dart';
 
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -41,17 +39,12 @@ import 'StartupPermissionGate.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:yourdailylight/service/NotificationManager.dart';
 
-final FlutterLocalNotificationsPlugin notificationsPlugin =
-FlutterLocalNotificationsPlugin();
+// Using NotificationManager; no direct FlutterLocalNotificationsPlugin here
 
 
 
-// Alarm callback for Android
-Future<void> alarmCallback() async {
-  print("🔔 Alarm triggered at 7 AM - showing notification");
-  await _showDailyDevotionalNotification();
-}
 
 // Notification types
 enum NotificationType {
@@ -60,283 +53,29 @@ enum NotificationType {
 }
 
 // Initialize notifications
-Future<void> initNotifications() async {
-  // Don't initialize timezone here - it should be done in main()
-
-  const AndroidInitializationSettings androidSettings =
-  AndroidInitializationSettings('@mipmap/ic_launcher');
-  final DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
-    requestAlertPermission: true,
-    requestBadgePermission: true,
-    requestSoundPermission: true,
-  );
-
-  await notificationsPlugin.initialize(
-    InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    ),
-    onDidReceiveNotificationResponse: (response) {
-      print("✅ RECEIVED NOTIFICATION PAYLOAD: ${response.payload}");
-      if (response.payload != null) {
-        _handleNotificationTap(response.payload!);
-      }
-    },
-  );
-
-  // Create Android notification channels
-  if (Platform.isAndroid) {
-    await _createNotificationChannels();
-  }
-}
+// initNotifications removed; NotificationManager handles initialization
 
 // Create notification channels for Android
-Future<void> _createNotificationChannels() async {
-  const AndroidNotificationChannel dailyDevotionalChannel = AndroidNotificationChannel(
-    'daily_devotional',
-    'Daily Devotional',
-    description: 'Daily devotional notifications',
-    importance: Importance.max,
-    enableVibration: false,
-    playSound: false,
-  );
-
-  /*
-  const AndroidNotificationChannel testChannel = AndroidNotificationChannel(
-    'daily_devotional_test',
-    'Daily Devotional Test',
-    description: 'Test notifications for daily devotional',
-    importance: Importance.max,
-    enableVibration: true,
-    playSound: true,
-  );
-
- const AndroidNotificationChannel testGeneralChannel = AndroidNotificationChannel(
-    'test_channel',
-    'Test Notifications',
-    description: 'Channel for testing notifications',
-    importance: Importance.max,
-    enableVibration: true,
-    playSound: true,
-  );*/
-
-  await notificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(dailyDevotionalChannel);
-
-/*
-  await notificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(testChannel);
-
-  await notificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(testGeneralChannel);
-*/
-
-  print("✅ Android notification channels created");
-}
+// _createNotificationChannels removed; NotificationManager creates silent channels
 
 // Comprehensive cleanup of all existing notifications and alarms
-Future<void> _cleanupAllNotifications() async {
-  try {
-    print("🧹 Cleaning up all existing notifications and alarms...");
-    
-    // Cancel all pending notifications (including any with different IDs)
-    await notificationsPlugin.cancelAll();
-    
-    // Stop all alarms
-    await Alarm.stopAll();
-    
-    // Also specifically cancel common notification IDs that might exist
-    final commonIds = [0, 1, 9997, 999]; // Include test notification IDs
-    for (final id in commonIds) {
-      try {
-        await notificationsPlugin.cancel(id);
-        await Alarm.stop(id);
-      } catch (e) {
-        // Ignore errors for non-existent notifications/alarms
-      }
-    }
-    
-    print("✅ All existing notifications and alarms cleaned up");
-  } catch (e) {
-    print("⚠️ Error during cleanup (continuing anyway): $e");
-  }
-}
+// _cleanupAllNotifications removed; NotificationManager.cleanupAll handles this
 
 // Schedule daily notification at exactly 7 AM
 Future<void> scheduleDailyNotification() async {
-  try {
-    print("🔔 Setting up daily notification for 7 AM...");
-    
-    // Check if notification is already scheduled today
-    final prefs = await SharedPreferences.getInstance();
-    final lastScheduledDate = prefs.getString('last_scheduled_date');
-    final today = DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD format
-    
-    if (lastScheduledDate == today) {
-      print("✅ Daily notification already scheduled for today: $today");
-      return;
-    }
-    
-    // Comprehensive cleanup of ALL existing notifications and alarms
-    await _cleanupAllNotifications();
-    
-    // Calculate next 7 AM
-    final now = DateTime.now();
-    DateTime next7AM = DateTime(now.year, now.month, now.day, 7, 0, 0);
-    if (now.isAfter(next7AM)) {
-      next7AM = next7AM.add(Duration(days: 1));
-    }
-    
-    print("⏰ Next 7 AM: $next7AM");
-    
-    if (Platform.isAndroid) {
-      try {
-        await _scheduleWithAlarm(next7AM);
-        // Save the scheduled date only if alarm scheduling succeeds
-        await prefs.setString('last_scheduled_date', today);
-        print("✅ Daily notification scheduled successfully for $today");
-      } catch (e) {
-        print("❌ Android alarm scheduling failed, notification will not be set: $e");
-        // Do not save the scheduled date so it can be retried later
-        return;
-      }
-    } else {
-      await _scheduleWithZonedNotification(next7AM);
-      // Save the scheduled date to prevent duplicates
-      await prefs.setString('last_scheduled_date', today);
-      print("✅ Daily notification scheduled successfully for $today");
-    }
-  } catch (e) {
-    print("❌ Daily notification scheduling failed: $e");
-  }
+  // Delegate scheduling to NotificationManager
+  await notificationManager.cleanupAll();
+  await notificationManager.scheduleDaily7AMSilent();
 }
 
 
 
-// Schedule with Alarm package for Android
-Future<void> _scheduleWithAlarm(DateTime scheduledTime) async {
-  try {
-    // Cancel any existing alarms with the same ID
-    await Alarm.stop(1);
-    
-    final alarmSettings = AlarmSettings(
-       id: 1,
-       dateTime: scheduledTime,
-       assetAudioPath: 'assets/raw/alarm.mp3',
-       loopAudio: false,
-       vibrate: true,
-       volumeSettings: VolumeSettings.fade(fadeDuration: Duration(seconds: 3)),
-       notificationSettings: const NotificationSettings(
-         title: '📖 Your Daily Devotional',
-         body: 'Check out God\'s Word for you today! 🔥',
-         stopButton: 'Stop',
-         icon: 'notification_icon',
-       ),
-     );
-    
-    await Alarm.set(alarmSettings: alarmSettings);
-    print("✅ Android alarm scheduled for $scheduledTime");
-    
-    // Set up listener to reschedule for next day when alarm triggers
-    Alarm.ringStream.stream.listen((alarmSettings) {
-      if (alarmSettings.id == 1) {
-        print("🔔 Daily alarm triggered, rescheduling for tomorrow");
-        _rescheduleNextDayAlarm();
-      }
-    });
-  } catch (e) {
-    print("❌ Failed to schedule Android alarm: $e");
-    print("↪️ Falling back to zonedSchedule for daily notifications");
-    await _scheduleWithZonedNotification(scheduledTime);
-  }
-}
-
-// Reschedule alarm for next day (Android)
-Future<void> _rescheduleNextDayAlarm() async {
-  try {
-    final prefs = await SharedPreferences.getInstance();
-    final now = DateTime.now();
-    final today = now.toIso8601String().split('T')[0];
-    
-    // Clear today's scheduled date so scheduleDailyNotification can run tomorrow
-    await prefs.remove('last_scheduled_date');
-    
-    // Schedule for tomorrow at 7 AM
-    final tomorrow = now.add(Duration(days: 1));
-    final next7AM = DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 7, 0, 0);
-    await _scheduleWithAlarm(next7AM);
-    
-    // Only set the scheduled date after successful scheduling
-    await prefs.setString('last_scheduled_date', today);
-    
-    print("✅ Rescheduled alarm for next day: $next7AM");
-  } catch (e) {
-    print("❌ Failed to reschedule alarm: $e");
-  }
-}
 
 // Schedule with zonedSchedule for iOS and fallback
-Future<void> _scheduleWithZonedNotification(DateTime scheduledTime) async {
-  try {
-    // Cancel any existing notifications with the same ID
-    await notificationsPlugin.cancel(1);
-    
-    // Convert to timezone-aware datetime
-    final tz.TZDateTime tzScheduledTime = tz.TZDateTime.from(scheduledTime, tz.local);
-    
-    await notificationsPlugin.zonedSchedule(
-       1,
-       '📖 Your Daily Devotional',
-       'Check out God\'s Word for you today! 🔥',
-       tzScheduledTime,
-       const NotificationDetails(
-         android: AndroidNotificationDetails(
-           'daily_devotional',
-           'Daily Devotional',
-           importance: Importance.max,
-           priority: Priority.high,
-           channelDescription: 'Daily devotional notifications',
-         ),
-         iOS: DarwinNotificationDetails(
-           presentAlert: true,
-           presentBadge: true,
-           presentSound: false,
-         ),
-       ),
-       payload: NotificationType.dailyDevotional.name,
-       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-       matchDateTimeComponents: DateTimeComponents.time, // Repeat daily at same time
-     );
-    
-    print("✅ Zoned notification scheduled for $scheduledTime (repeats daily)");
-  } catch (e) {
-    print("❌ Failed to schedule zoned notification: $e");
-  }
-}
+// Removed: _scheduleWithZonedNotification; use NotificationManager
 
 // Show daily notification
-Future<void> _showDailyDevotionalNotification() async {
-  await notificationsPlugin.show(
-    0,
-    '📖 Your Daily Devotional',
-    'Check out God\'s Word for you today! 🔥',
-  const NotificationDetails(
-    android: AndroidNotificationDetails(
-    'daily_devotional',
-    'Daily Devotional',
-    importance: Importance.max,
-    priority: Priority.high,
-    channelDescription: 'Daily devotional notifications',
-  ),
-  iOS: DarwinNotificationDetails(),
-  ),
-  payload: NotificationType.dailyDevotional.name,
-  );
-}
+// Removed: _showDailyDevotionalNotification; use NotificationManager
 
 // Simplified notification permission handling
 Future<void> requestAllNotificationPermissions() async {
@@ -442,13 +181,10 @@ void main() async {
 
   await setupFCM();
 
-  // Initialize Alarm for Android
-  if (Platform.isAndroid) {
-    await Alarm.init();
-  }
+  // Alarm package removed; using only flutter_local_notifications
 
-  // Initialize notifications
-  await initNotifications();
+  // Initialize notifications via NotificationManager (creates silent channels and hooks tap)
+  await notificationManager.init(onTap: (payload) => _handleNotificationTap(payload));
 
   // Initialize JustAudioBackground AFTER notifications
   try {
@@ -503,9 +239,9 @@ void main() async {
   WidgetsBinding.instance.addPostFrameCallback((_) async {
     // Add delay to ensure UI is fully loaded
     await Future.delayed(Duration(seconds: 2));
-    await _requestPermissions();
+    await notificationManager.requestAllNotificationPermissions();
     // Schedule notifications after permissions are handled
-    await scheduleDailyNotification();
+    await notificationManager.scheduleDaily7AMSilent(payload: NotificationType.dailyDevotional.name);
   });
 }
 
@@ -541,7 +277,7 @@ Future<void> setupFCM() async {
   fcm.NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     badge: true,
-    sound: true,
+    sound: false,
   );
 
   if (settings.authorizationStatus == fcm.AuthorizationStatus.authorized) {

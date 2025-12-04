@@ -81,12 +81,12 @@ class NewScreensModel with ChangeNotifier {
       final response = await dio.post(
         ApiUrl.GET_NEWS,
         data: jsonEncode({
-          "data": {
-            "email": userdata == null ? "null" : userdata!.email,
-            "version": "v2",
-            "page": page.toString(),
-            "media_type": "news"
-          }
+            "data": {
+              "email": userdata == null ? "null" : userdata!.email,
+              "version": "v2",
+              "page": page.toString(),
+              "media_type": "news"
+            }
         }),
       );
 

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +11,7 @@ import '../../providers/AppStateManager.dart';
 import '../../providers/NotificationProvider.dart';
 import '../../service/Firebase.dart';
 import '../../service/notification_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../utils/ApiUrl.dart';
 import '../../utils/TextStyles.dart';
 import '../../utils/app_themes.dart';
@@ -31,7 +31,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   late AppStateManager appManager;
   static const String storeBaseURL = 'https:play.google.com/';
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   // Removed notificationService instance - using NotificationService() directly
 
   @override
@@ -53,14 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
    }
 
 }
-  Future<void> _initializeNotifications() async {
-    const InitializationSettings settings = InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      iOS: DarwinInitializationSettings(),
-    );
-
-    await flutterLocalNotificationsPlugin.initialize(settings);
-  }
+  // Initialization happens at app startup via NotificationManager
 
   // Cancel all test notifications on dispose
   @override
@@ -114,38 +106,9 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-// Add this method to the _HomePageState class
+  // Test notification using centralized silent channel
   Future<void> _testNotification() async {
-    const AndroidNotificationDetails androidNotificationDetails =
-    AndroidNotificationDetails(
-      'test_channel', // Channel ID
-      'Test Notifications', // Channel name
-      channelDescription: 'Channel for testing notifications',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: false,
-    );
-
-    const DarwinNotificationDetails darwinNotificationDetails =
-    DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
-
-    const NotificationDetails notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
-      iOS: darwinNotificationDetails,
-      macOS: darwinNotificationDetails,
-    );
-
-    await flutterLocalNotificationsPlugin.show(
-      999, // Notification ID
-      'Your Daily Light - Devotions', // Title
-      'This is a test notification!', // Body
-      notificationDetails,
-      payload: 'test_payload',
-    );
+    await NotificationService().showTestDailyDevotional();
   }
   
 
@@ -837,7 +800,7 @@ class _SettingsPageState extends State<SettingsPage> {
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Notification "${notification.title}" launched successfully'),
+          content: Text('Notification "${notification.title ?? 'Untitled'}" launched successfully'),
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 2),
         ),
@@ -937,7 +900,7 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Cancel Notification'),
-        content: Text('Are you sure you want to cancel the notification "${notification.title}"?'),
+        content: Text('Are you sure you want to cancel the notification "${notification.title ?? 'Untitled'}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),

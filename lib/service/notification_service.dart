@@ -8,7 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
-import '../main.dart';
+import 'NotificationManager.dart';
 import '../screens/thechurch/my_main_home_page.dart';
 import 'Firebase.dart';
 
@@ -17,32 +17,36 @@ class NotificationService {
 
 
   Future<List<PendingNotificationRequest>> getScheduledNotifications() async {
-    return await notificationsPlugin.pendingNotificationRequests();
+    return await notificationManager.notificationsPlugin.pendingNotificationRequests();
   }
 
   Future<void> cancelTestNotifications() async {
-    await notificationsPlugin.cancel(9997);
+    await notificationManager.notificationsPlugin.cancel(9997);
   }
 
   Future<void> cancelNotification(int id) async {
-    await notificationsPlugin.cancel(id);
+    await notificationManager.notificationsPlugin.cancel(id);
   }
 
   Future<void> showTestDailyDevotional() async {
-    await notificationsPlugin.show(
+    await notificationManager.notificationsPlugin.show(
       9997, // Use unique ID for test notifications
       '📖 Test Daily Devotional',
       'This is a test of your daily devotional notification',
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'daily_devotional_test',
-          'Daily Devotional',
+          'daily_devotional_silent',
+          'Daily Devotional (Silent)',
           importance: Importance.max,
           priority: Priority.high,
+          playSound: false,
+          enableVibration: false,
         ),
-        iOS: DarwinNotificationDetails(),
+        iOS: DarwinNotificationDetails(
+          presentSound: false,
+        ),
       ),
-      payload: NotificationType.dailyDevotional.name,
+      payload: 'dailyDevotional',
     );
   }
 
