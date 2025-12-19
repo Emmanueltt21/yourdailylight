@@ -376,6 +376,30 @@ class _ProfileHomeState extends State<ProfileHome> {
 
                   }),
                   10.height,
+
+                ],
+              ),
+            ),
+            16.height,
+
+
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: boxDecorationWithShadow(
+                borderRadius: BorderRadius.circular(10),
+                backgroundColor: context.cardColor,
+              ),
+              child: Column(
+                children: <Widget>[
+                  10.height,
+
+
+                  profileOption(t.notifications, Icons.delete, MyColors.accentDark)
+                      .onTap(() async {
+                   await  notificationManager.showDailyDevotionalSilent(payload: "dailyDevotional") ;
+
+                  }),
+                  10.height,
                 ],
               ),
             ),

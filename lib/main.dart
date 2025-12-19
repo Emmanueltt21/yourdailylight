@@ -40,6 +40,8 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:yourdailylight/service/NotificationManager.dart';
+import 'package:yourdailylight/service/NotificationHandler.dart';
+import 'package:yourdailylight/utils/GlobalKeys.dart';
 
 // Using NotificationManager; no direct FlutterLocalNotificationsPlugin here
 
@@ -47,10 +49,7 @@ import 'package:yourdailylight/service/NotificationManager.dart';
 
 
 // Notification types
-enum NotificationType {
-  dailyDevotional,
-  firebaseMessage,
-}
+// Removed: NotificationType enum; using NotificationManager.NotificationType
 
 // Initialize notifications
 // initNotifications removed; NotificationManager handles initialization
@@ -97,49 +96,8 @@ Future<bool> getNotificationPermissionsStatus() async {
   }
 }
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey(debugLabel: "Main Navigator");
-
-// Handle notification taps
-void _handleNotificationTap(String payload) {
-  print("🔔 _handleNotificationTap Route ----------->> $payload");
-  debugPrint("[DEBUG] _handleNotificationTap called with payload: $payload");
-  NotificationType type;
-  try {
-    // Try to parse as JSON (for Firebase notifications)
-    final dynamic decoded = json.decode(payload);
-    if (decoded is Map && decoded.containsKey('type')) {
-      final String? notifType = decoded['type'] as String?;
-      type = NotificationType.values.firstWhere(
-        (e) => e.name == notifType,
-        orElse: () => NotificationType.firebaseMessage,
-      );
-    } else {
-      // Fallback to enum name matching
-      type = NotificationType.values.firstWhere(
-        (e) => e.name == payload,
-        orElse: () => NotificationType.firebaseMessage,
-      );
-    }
-  } catch (e) {
-    // Not JSON, fallback to enum name matching
-    type = NotificationType.values.firstWhere(
-      (e) => e.name == payload,
-      orElse: () => NotificationType.firebaseMessage,
-    );
-  }
-  print("✅ RECEIVED NOTIFICATION payload: $payload, type: $type");
-  print("🧭 Navigator state: ${navigatorKey.currentState}");
-  
-  if (type == NotificationType.dailyDevotional) {
-    print("📖 Navigating to devotional tab (index 1)");
-    navigatorKey.currentState?.pushNamed(MyMainHomePage.routeName, arguments: 1);
-  } else {
-    print("🏠 Navigating to home tab (index 0)");
-    navigatorKey.currentState?.pushNamed(MyMainHomePage.routeName, arguments: 0);
-  }
-  print("🚀 Navigation command sent");
-}
-
+// GlobalKey and pendingNotificationPayload moved to GlobalKeys.dart and NotificationManager.dart
+// _handleNotificationTap moved to NotificationHandler.dart
 
 /// ✅ Handle background FCM
 Future<void> _firebaseMessagingBackgroundHandler(fcm.RemoteMessage message) async {
@@ -184,7 +142,9 @@ void main() async {
   // Alarm package removed; using only flutter_local_notifications
 
   // Initialize notifications via NotificationManager (creates silent channels and hooks tap)
-  await notificationManager.init(onTap: (payload) => _handleNotificationTap(payload));
+  print("⏳ Initializing NotificationManager...");
+  await notificationManager.init(onTap: (payload) => NotificationHandler.handleNotificationTap(payload));
+  print("✅ NotificationManager initialized.");
 
   // Initialize JustAudioBackground AFTER notifications
   try {
@@ -242,6 +202,9 @@ void main() async {
     await notificationManager.requestAllNotificationPermissions();
     // Schedule notifications after permissions are handled
     await notificationManager.scheduleDaily7AMSilent(payload: NotificationType.dailyDevotional.name);
+    
+    // Check for pending notification payload
+    NotificationHandler.consumePendingPayload();
   });
 }
 

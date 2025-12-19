@@ -52,7 +52,7 @@
         com.ryanheise.audioservice.AudioServiceActivity -->
         <!-- MAIN ACTIVITY -->
         <activity
-            android:name="com.ryanheise.audioservice.AudioServiceActivity"
+            android:name="com.lighthouse.yourdailylight.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -74,16 +74,16 @@
             </intent-filter>
         </activity>
 
-        <activity
+      <!--  <activity
             android:name=".MainActivity"
             android:exported="true">
-            <!-- Intent filter for notification clicks -->
+            &lt;!&ndash; Intent filter for notification clicks &ndash;&gt;
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
+-->
         <!-- Remove AudioServiceActivity - not needed when using MainActivity -->
 
         <!-- Audio Service -->
@@ -138,11 +138,11 @@
             android:exported="false"
             android:enabled="true"/>
 
-        <!-- Meta-data -->
+   <!--     &lt;!&ndash; Meta-data &ndash;&gt;
         <meta-data
             android:name="flutterNotificationsPlugin"
             android:value="io.flutter.plugins.flutterlocalnotifications.FlutterLocalNotificationsPlugin" />
-
+-->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
@@ -154,6 +154,13 @@
 
     </application>
 
+    <!-- Required to query activities that can process text, see:
+        https://developer.android.com/training/package-visibility and
+        https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+
+        In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+
+
     <!-- Queries for alarm/reminder functionality (Android 11+) -->
     <queries>
         <intent>
@@ -161,6 +168,10 @@
         </intent>
         <intent>
             <action android:name="android.settings.REQUEST_SCHEDULE_EXACT_ALARM" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
         </intent>
     </queries>
 

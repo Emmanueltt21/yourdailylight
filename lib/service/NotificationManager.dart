@@ -5,9 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:alarm/alarm.dart';
 
+enum NotificationType {
+  dailyDevotional,
+  liveStream,
+  chat,
+  post,
+  firebaseMessage,
+  unknown
+}
+
 typedef NotificationTapHandler = void Function(String payload);
 
 class NotificationManager {
+  static String? pendingPayload;
   final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -23,12 +33,27 @@ class NotificationManager {
     await notificationsPlugin.initialize(
       InitializationSettings(android: androidSettings, iOS: iosSettings),
       onDidReceiveNotificationResponse: (response) {
+        print("🔔 [NotificationManager] onDidReceiveNotificationResponse called");
+        print("   Payload: ${response.payload}");
         final payload = response.payload;
         if (payload != null && onTap != null) {
           onTap(payload);
         }
       },
     );
+    
+    // Check if app was launched by notification
+    final details = await notificationsPlugin.getNotificationAppLaunchDetails();
+    if (details != null && details.didNotificationLaunchApp) {
+      print("🚀 [NotificationManager] App launched via notification");
+      final payload = details.notificationResponse?.payload;
+      print("   Launch Payload: $payload");
+      
+      if (payload != null) {
+        // Store payload to be handled when Navigator is ready
+        pendingPayload = payload;
+      }
+    }
 
     if (Platform.isAndroid) {
       await _ensureSilentAndroidChannels();

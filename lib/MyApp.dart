@@ -81,12 +81,13 @@ import './providers/events.dart';
 import './models/UserEvents.dart';
 import './screens/AppTermsScreen.dart';
 import './screens/AboutUsScreen.dart';
+import 'package:yourdailylight/service/NotificationHandler.dart';
 
 class MyApp extends StatefulWidget {
    GlobalKey<NavigatorState>?  navKey;
    MyApp({
     Key? key,
-    required  GlobalKey<NavigatorState> navKey ,
+    required this.navKey,
     required Widget? defaultHome,
   })  : _defaultHome = defaultHome,
         super(key: key);
@@ -192,6 +193,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       print("please store = " + event.items.toString());
     });
     initialization();
+    
+    // Check for pending notification payload on app start
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+       NotificationHandler.consumePendingPayload();
+    });
   }
 
 
@@ -227,6 +233,11 @@ void initialization() async {
         break;
       case AppLifecycleState.resumed:
         eventBus.fire(OnAppStateChanged("active"));
+        // Check for pending notification payload when app resumes
+        // Add slight delay to ensure Navigator is ready
+        Future.delayed(Duration(milliseconds: 500), () {
+           NotificationHandler.consumePendingPayload();
+        });
         break;
       case AppLifecycleState.inactive:
       case AppLifecycleState.detached:

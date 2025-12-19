@@ -14,8 +14,9 @@ import '../utils/my_colors.dart';
 import '../providers/events.dart';
 import '../models/UserEvents.dart';
 import 'dart:math';
+import 'NotificationManager.dart';
 
-var flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+// var flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
@@ -52,6 +53,8 @@ class Firebase {
   }
 
   void init() {
+    // Removed local initialization to prevent overwriting NotificationManager's config
+    /*
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('@mipmap/launcher_icon');
 
@@ -64,6 +67,7 @@ class Firebase {
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
        // onSelectNotification: onSelect
     );
+    */
 
     FirebaseMessaging.onMessage.listen((message) async {
       print("onMessage: $message");
@@ -111,7 +115,7 @@ class Firebase {
     });
   }
 
-  static handleNotificationMessages(Map<String, dynamic> message) {
+  static handleNotificationMessages(Map<String, dynamic> message) async {
     print("myBackgroundMessageHandler message1: $message");
     var data = message;
     //['data'];
@@ -209,14 +213,38 @@ class Firebase {
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
 
-      flutterLocalNotificationsPlugin.show(
+      // Use the global notificationManager instance
+      await notificationManager.notificationsPlugin.show(
           102, title, msg, platformChannelSpecifics,
           payload: json.encode(message));
     }
   }
 
+  static sendNotification(
+      Map<String, dynamic> message, String? title, String msg) async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'churchapp_silent', 'churchapp_silent',
+        color: MyColors.primary,
+        importance: Importance.max,
+        priority: Priority.high,
+        playSound: false,
+        enableVibration: false,
+        ticker: 'ticker');
+    var iOSPlatformChannelSpecifics = DarwinNotificationDetails(
+      presentSound: false,
+    );
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+
+    // Use the global notificationManager instance
+    await notificationManager.notificationsPlugin.show(
+        102, title, msg, platformChannelSpecifics,
+        payload: json.encode(message));
+  }
+
   static chatNotification(
-      Map<String, dynamic> message, String? name, String title) {
+      Map<String, dynamic> message, String? name, String title) async {
     List<String> lines = <String>[
       title,
     ];
@@ -238,7 +266,8 @@ class Firebase {
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
 
-    flutterLocalNotificationsPlugin.show(
+    // Use the global notificationManager instance
+    await notificationManager.notificationsPlugin.show(
         new Random().nextInt(100000), name, title, platformChannelSpecifics,
         payload: json.encode(message));
   }
@@ -315,3 +344,4 @@ class Firebase {
     }
   }
 }
+

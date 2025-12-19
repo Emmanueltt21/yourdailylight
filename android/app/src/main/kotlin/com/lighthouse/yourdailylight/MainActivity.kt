@@ -1,11 +1,14 @@
 package com.lighthouse.yourdailylight
 
+
+import io.flutter.embedding.android.FlutterActivity
+
 import com.ryanheise.audioservice.AudioServiceActivity
 import android.os.Bundle
 import android.content.Context
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
-
+/*
 class MainActivity : AudioServiceActivity() {
 
     // Optional: If you're caching a FlutterEngine (e.g., for background execution)
@@ -18,4 +21,8 @@ class MainActivity : AudioServiceActivity() {
         super.onCreate(savedInstanceState)
         // Custom native initialization if needed
     }
+}*/
+
+class MainActivity : FlutterActivity() {
+
 }

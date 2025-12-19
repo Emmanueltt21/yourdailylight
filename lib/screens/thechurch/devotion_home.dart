@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yourdailylight/providers/AppStateManager.dart';
 import 'package:yourdailylight/utils/my_colors.dart';
 import '../../utils/img.dart';
@@ -533,22 +534,62 @@ class _BranchesPageBodyState extends State<DevotionalsPageBody> {
               devotionals!.biblereading??'',
               //webView: false,
               textStyle: TextStyles.medium(context).copyWith(fontSize: 17, color: Colors.black),
+              onTapUrl: (url) {
+                print("Clicked URL: $url");
+                // Open the link in browser
+                launchUrl(
+                  Uri.parse(url),
+                  mode: LaunchMode.externalApplication,
+                );
+
+                return true; // IMPORTANT: must return true
+              },
             ),
             Container(height: 20),
             HtmlWidget(
               removeGtxTransDiv(devotionals!.content??''),
               // webView: false,
               textStyle: TextStyles.medium(context).copyWith(fontSize: 20, color: Colors.black),
+              onTapUrl: (url) {
+                print("Clicked URL: $url");
+                // Open the link in browser
+                launchUrl(
+                  Uri.parse(url),
+                  mode: LaunchMode.externalApplication,
+                );
+
+                return true; // IMPORTANT: must return true
+              },
             ),
             Container(height: 20),
             HtmlWidget(
               removeGtxTransDiv(devotionals!.confession??''),
               //webView: false,
               textStyle: TextStyles.medium(context).copyWith(fontSize: 20, color: Colors.black),
+              onTapUrl: (url) {
+                print("Clicked URL: $url");
+                // Open the link in browser
+                launchUrl(
+                  Uri.parse(url),
+                  mode: LaunchMode.externalApplication,
+                );
+
+                return true; // IMPORTANT: must return true
+              },
             ),
             Container(height: 20),
             HtmlWidget(
               removeGtxTransDiv(devotionals!.studies??''),
+              onTapUrl: (url) {
+                print("Clicked URL: $url");
+                // Open the link in browser
+                launchUrl(
+                  Uri.parse(url),
+                  mode: LaunchMode.externalApplication,
+                );
+
+                return true; // IMPORTANT: must return true
+              },
               // webView: false,
               textStyle: TextStyles.medium(context).copyWith(fontSize: 20, color: Colors.black),
             ),

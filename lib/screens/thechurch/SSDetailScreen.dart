@@ -34,61 +34,65 @@ class SSDetailScreenState extends State<SSDetailScreen> {
 
     return Scaffold(
       appBar: _appBar(cartProvider),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.6)),
-              child: Column(
-                children: [
-                  commonCachedNetworkImage(
-                    widget.newsDetails?.thumbnail,
-                    height: 250,
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.contain,
-                  ),
+      body:  SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(), // smooth scrolling
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.6)),
+                child: Column(
+                  children: [
+                    commonCachedNetworkImage(
+                      widget.newsDetails?.thumbnail,
+                      height: 250,
+                      width: MediaQuery.of(context).size.width,
+                      fit: BoxFit.contain,
+                    ),
 
-                  SizedBox(height: 16),
-                ],
+                    SizedBox(height: 16),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                 // Text("Title", textAlign: TextAlign.start, overflow: TextOverflow.clip, style: secondaryTextStyle()),
-                 // SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(child: Text("${widget.newsDetails?.b_title}", textAlign:
-                      TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle(size: 18))),
-                     // Text("\$${widget.newsDetails?.amount}", textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle()),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                 // Text("${widget.newsDetails?.author}", textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle(size: 14)),
-                //  SizedBox(height: 8),
-                  Text(Utils.kmDateFormatter(widget.newsDetails!.date??""), textAlign: TextAlign.left, overflow: TextOverflow.clip, style: boldTextStyle(size: 12)),
+              Padding(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                   // Text("Title", textAlign: TextAlign.start, overflow: TextOverflow.clip, style: secondaryTextStyle()),
+                   // SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(child: Text("${widget.newsDetails?.b_title}", textAlign:
+                        TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle(size: 18))),
+                       // Text("\$${widget.newsDetails?.amount}", textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle()),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                   // Text("${widget.newsDetails?.author}", textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle(size: 14)),
+                  //  SizedBox(height: 8),
+                    Text(Utils.kmDateFormatter(widget.newsDetails!.date??""), textAlign: TextAlign.left, overflow: TextOverflow.clip, style: boldTextStyle(size: 12)),
 
-                  SizedBox(height: 16, width: 16),
-                //  Text("Description", textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle()),
-                  SizedBox(height: 8),
-                  HtmlWidget(
-                      "${widget.newsDetails?.b_desc}",
-                      ),
-                ],
+                    SizedBox(height: 16, width: 16),
+                  //  Text("Description", textAlign: TextAlign.start, overflow: TextOverflow.clip, style: boldTextStyle()),
+                    SizedBox(height: 8),
+                    HtmlWidget(
+                        "${widget.newsDetails?.b_desc}",
+                        ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
      /* bottomNavigationBar: Padding(
@@ -139,58 +143,60 @@ class SSDetailScreenState extends State<SSDetailScreen> {
         ),
       ),*/
 
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(16),
-        child: Row(
-          children: [
-            /*Container(
-              decoration: BoxDecoration(border: Border.all(color: Colors.grey.withOpacity(0.5)), borderRadius: BorderRadius.circular(8)),
-              padding: EdgeInsets.all(8),
-              child: Icon(Icons.shopping_cart_outlined),
-            ).onTap((){
-              //Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()),);
-              //String productId, String productName, int quantity //       double price, String imageName
-              cartProvider.addToCart(
-                widget.newsDetails!.id.toString(),
-                widget.newsDetails!.b_name!,
-                1,
-                widget.newsDetails!.amount.toDouble(),
-                widget.newsDetails!.thumbnail.toString(),
-              );
-              setState(() {});
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            children: [
+              /*Container(
+                decoration: BoxDecoration(border: Border.all(color: Colors.grey.withOpacity(0.5)), borderRadius: BorderRadius.circular(8)),
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.shopping_cart_outlined),
+              ).onTap((){
+                //Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()),);
+                //String productId, String productName, int quantity //       double price, String imageName
+                cartProvider.addToCart(
+                  widget.newsDetails!.id.toString(),
+                  widget.newsDetails!.b_name!,
+                  1,
+                  widget.newsDetails!.amount.toDouble(),
+                  widget.newsDetails!.thumbnail.toString(),
+                );
+                setState(() {});
 
-            }),
-            SizedBox(width: 8),*/
-            Expanded(
-              child: sSAppButton(
-                color: MyColors.accentDark,
-                context: context,
-                title: 'Checkout ',
-                onPressed: () {
-                  print('bookUrl --------->> ${widget.newsDetails?.bookUrl}');
+              }),
+              SizedBox(width: 8),*/
+              Expanded(
+                child: sSAppButton(
+                  color: MyColors.accentDark,
+                  context: context,
+                  title: 'Checkout ',
+                  onPressed: () {
+                    print('bookUrl --------->> ${widget.newsDetails?.bookUrl}');
 
-                  openBrowserTab(context, widget.newsDetails!.b_name!,
-                      widget.newsDetails!.bookUrl!.trim());
-                  /*cartProvider.addToCart(
-                    widget.newsDetails!.id.toString(),
-                    widget.newsDetails!.b_name!,
-                    1,
-                    widget.newsDetails!.amount.toDouble(),
-                    widget.newsDetails!.thumbnail.toString(),
-                  );
-                  setState(() {});
+                    openBrowserTab(context, widget.newsDetails!.b_name!,
+                        widget.newsDetails!.bookUrl!.trim());
+                    /*cartProvider.addToCart(
+                      widget.newsDetails!.id.toString(),
+                      widget.newsDetails!.b_name!,
+                      1,
+                      widget.newsDetails!.amount.toDouble(),
+                      widget.newsDetails!.thumbnail.toString(),
+                    );
+                    setState(() {});
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CartPage()),
-                  );
-                   */
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CartPage()),
+                    );
+                     */
 
 
-                },
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

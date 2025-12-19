@@ -117,17 +117,19 @@ class NewsScreenBodyRouteState extends State<LibraryScreenBody> {
       child: (bookScreensModel.isError == true && items!.length == 0)
           ? NoitemScreen(
           title: t.oops, message: t.dataloaderror, onClick: _onRefresh)
-          : ListView.builder(
-        itemCount: items!.length,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (BuildContext context, int index) {
-          return LibraryItemTile(
-            mediaList: items!,
-            index: index,
-            object: items![index],
-          );
-        },
-      ),
+          : SafeArea(
+            child: ListView.builder(
+                    itemCount: items!.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (BuildContext context, int index) {
+            return LibraryItemTile(
+              mediaList: items!,
+              index: index,
+              object: items![index],
+            );
+                    },
+                  ),
+          ),
     );
   }
 }
