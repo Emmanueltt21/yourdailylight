@@ -86,10 +86,9 @@ class Utils {
 
   static Future<void> shareApp(shareMessage) async {
     try {
-     /* await Share.share(
-        text: ApiUrl.appName ?? "",
-        linkUrl: shareMessage,
-      );*/
+    SharePlus.instance.share(
+        ShareParams(text: '$shareMessage')
+    );
     } catch (e) {
       debugPrint("shareFile Exception ===> $e");
       return;

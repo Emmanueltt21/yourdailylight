@@ -42,7 +42,6 @@ dependencies:
   path_provider: ^2.0.9
   flutter_downloader: ^1.7.2
   #in_app_purchase: ^3.0.1
-  share_plus: ^12.0.0
  # package_info: ^2.0.2
   #in_app_review: ^2.0.6
   #flutter_web_browser: ^0.17.1
@@ -130,6 +129,7 @@ dependencies:
  # android_alarm_manager_plus: ^4.0.7
   android_intent_plus: ^6.0.0
   device_info_plus: ^11.0.0
+  share_plus: ^12.0.1
 
 
 

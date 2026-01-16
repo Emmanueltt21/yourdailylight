@@ -245,6 +245,16 @@ Future<void> setupFCM() async {
 
   if (settings.authorizationStatus == fcm.AuthorizationStatus.authorized) {
     print("✅ User granted notification permission.");
+    
+    if (Platform.isIOS) {
+      String? apnsToken = await messaging.getAPNSToken();
+      if (apnsToken != null) {
+        print("🍏 APNs Token: $apnsToken");
+      } else {
+        print("🍎 APNs Token is NULL. Notifications will not work. Check: 1. Push Capability in Xcode 2. Running on Real Device (not Simulator)");
+      }
+    }
+
     await messaging.subscribeToTopic("all_users");
     print("📩 Subscribed to 'all_users' topic");
 

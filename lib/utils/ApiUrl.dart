@@ -19,6 +19,10 @@ class ApiUrl {
   static String? appleAppURL = "https://apps.apple.com/us/app/your-daily-light/id1663965399";
   static String? appleAppId = "1663965399";
 
+  static String? lighthouseWebAddress = "https://www.lighthouseglobalmissions.org";
+  static String? lighthouseMissionAdd = "https://www.lgmissions.org";
+  static String? missionNewsletter = "https://newsletter.yourdailylight.org/newsletter";
+
   static String androidAppShareUrlDesc = "Let me recommend you this application\n\n$androidAppUrl";
   static String iosAppShareUrlDesc = "Let me recommend you this application\n\n$iosAppUrl";
   static String androidAppUrl = "https://play.google.com/store/apps/details?id=${ApiUrl.appPackageName}";
@@ -33,7 +37,7 @@ class ApiUrl {
   static String appPaypal_Url = "https://paypal.me/LGmissions?country.x=DE&locale.x=en_US";
 
 
-  static String appDescriptionSupport = "Your partnership through giving to Lighthouse Global Missions enables us to accomplish more in fulfilling God’s call in bringing His life changing word and the miracle working power of the Holy Spirit around the world. And your every sacrifice will be richly rewarded and replenished with multiplication by the Lord, even as He guaranteed by His word (Scripture References: Mark 10:29-30, Luke 6:38).";
+  //static String appDescriptionSupport = "Your partnership through giving to Lighthouse Global Missions enables us to accomplish more in fulfilling God’s call in bringing His life changing word and the miracle working power of the Holy Spirit around the world. And your every sacrifice will be richly rewarded and replenished with multiplication by the Lord, even as He guaranteed by His word (Scripture References: Mark 10:29-30, Luke 6:38).";
 
 
   static const NBProfileImage = 'assets/images/bible.jpg';

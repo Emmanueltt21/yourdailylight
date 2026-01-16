@@ -91,7 +91,7 @@ import '../SearchScreen.dart';
                Padding(
                  padding: const EdgeInsets.all(8.0),
                  child: Text(
-                   ApiUrl.appDescriptionSupport,
+                   t.appDescriptionSupport,
                    style: primaryTextStyle(
                      color: Colors.blueGrey.shade700,
                    ),
@@ -102,12 +102,12 @@ import '../SearchScreen.dart';
 
                rowContainer(
                  Icons.paypal,
-                 "Giving via PayPal",
-                 "Click to Give",
+                 t.giving_via_paypal,
+                 t.click_to_give,
                      () {
                    openBrowserTab(
                      context,
-                     "Giving via PayPal",
+                     t.giving_via_paypal,
                      ApiUrl.appPaypal_Url,
                    );
                  },
@@ -115,8 +115,17 @@ import '../SearchScreen.dart';
 
                rowContainer(
                  Icons.account_balance,
-                 "Giving by Bank Transfer",
-                 "Email: ${ApiUrl.supportEmail}",
+                 t.seebankdetails,
+                 t.via_bank,
+                     () {
+                   bankBottomSheet();
+                 },
+               ),
+
+               rowContainer(
+                 Icons.mail,
+                 t.additional_giving,
+                 "${t.email}: ${ApiUrl.supportEmail}",
                      () {
                    Clipboard.setData(
                      ClipboardData(text: ApiUrl.supportEmail),
@@ -194,6 +203,86 @@ import '../SearchScreen.dart';
      );
    }
    
+
+    void bankBottomSheet() {
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    height: 4,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                24.height,
+                Text(
+                  "Bank Transfer Details",
+                  style: boldTextStyle(size: 20, color: MyColors.primary),
+                ),
+                16.height,
+                _buildBankDetailRow("Account Name", "Lighthouse Global Missions"),
+                16.height,
+                _buildBankDetailRow("Bank", "Sparkasse"),
+                16.height,
+                _buildBankDetailRow("IBAN", "DE 2879 3501 0100 2233 8503", isCopyable: true),
+                32.height,
+              ],
+            ),
+          );
+        },
+      );
+    }
+
+    Widget _buildBankDetailRow(String label, String value, {bool isCopyable = false}) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: secondaryTextStyle(size: 14)),
+          4.height,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  value,
+                  style: boldTextStyle(size: 16, color: MyColors.primaryDark),
+                ),
+              ),
+              if (isCopyable)
+                IconButton(
+                  icon: Icon(Icons.copy, size: 20, color: MyColors.primary),
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: value));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('IBAN copied to clipboard')),
+                    );
+                    Navigator.pop(context);
+                  },
+                ),
+            ],
+          ),
+          const Divider(height: 24),
+        ],
+      );
+    }
  }
 
 

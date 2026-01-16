@@ -606,7 +606,7 @@ class _StringsEn {
 	String get mylibrary=> 'My Library';
 	String get prayer_request=> 'Prayer Request or Testimony';
 	String get mySubscription=> 'My Subscription';
-	String get giveandpart=> 'Giving and PartnerShip';
+	String get giveandpart=> 'Giving and Partnership';
 	String get follow_us=> 'Follow us on';
 	String get profile=> 'Profile';
 	String get no_phone=> 'No Phone';
@@ -633,6 +633,25 @@ class _StringsEn {
 	String get added_bookmark=> 'Added to Bookmark';
 	String get removed_bookmark=> 'Removed from Bookmark';
 	String get delete_account=> 'Delete Account';
+	String get appDescriptionSupport=> 'Your partnership through giving to Lighthouse Global Missions enables us to accomplish more in fulfilling God’s call in bringing His life changing word and the miracle working power of the Holy Spirit around the world. And your every sacrifice will be richly rewarded and replenished with multiplication by the Lord, even as He guaranteed by His word (Scripture References: Mark 10:29-30, Luke 6:38).';
+  String get giving_via_paypal=> 'Giving via PayPal';
+  String get click_to_give=> 'Click to Give';
+  String get additional_giving=> 'Additional giving options ';
+  String get email=> 'Email';
+  String get aboutcontent_para_1=> 'Lighthouse Global Missions is fulfilling God’s call to bring the Light of Jesus Christ to the nations. Your Daily Light devotional is one of the ways by which we are fulfilling this call to bring the Gospel of Jesus Christ and the illuminating word of God to individuals across the globe. This devotional brings God’s word daily, to individuals for a victorious and a fulfilling life in Christ, enabling them to grow in the knowledge of God, walk in the power of the Holy Spirit, discover their life purpose and fulfill God’s call for their lives.';
+  String get aboutcontent_para_2=> 'We are glad to have you get on board with Your Daily Light app, granting you free access to a daily dose of God’s word for your nourishment and spiritual development. We also encourage you to share the impact of this devotional in your life, invite others to download the app, and contribute to helping us reach more people for the glory of God. Directly hit the share button in the application and invite others to download the app today.';
+  String get aboutcontent_para_3=> 'On the application home section, you will also find seasonal prophetic messages of what God is saying, stay updated with ministry events, read real life testimonies and discover opportunities to be part of what God is doing through Lighthouse Global Missions.';
+  String get aboutcontent_para_4=> 'You can also share your testimonies and submit prayer requests using the testimony and prayers section. We will be glad to read about the impact of Your Daily Light in your life, and to pray with you in your areas of need. From the built in book store, you can directly find and get relevant materials to accelerate your growth.';
+  String get aboutcontent_para_5=> 'Your Daily Light app is only made free and accessible to a global audience by the generosity of individuals like you through financial partnership. We also have many other avenues of ministry where every gift makes a difference. You too can join this mission by giving to this ministry. And God who guarantees to reward every sacrifice for His purpose will richly reward you with a multiplication of your gift and with diverse blessings. Your giving will make a difference in many lives. Use the Giving and Partnership section to see ways to donate.';
+  String get aboutcontent_para_6a=> 'Learn more about Lighthouse Global Missions at ';
+  String get aboutcontent_para_6b=> 'or';
+  String get aboutcontent_para_7a => 'Subscribe to our Newsletter at ';
+  String get aboutcontent_para_7b=> 'to stay updated and get involved with what God is accomplishing.';
+  String get apptagline=> 'Devotional App for Daily Illumination and Spiritual Growth';
+  String get seebankdetails=> 'See bank transfer details';
+  String get via_bank=> 'via Bank';
+
+
 }
 
 // Path: <root>
@@ -970,6 +989,29 @@ class _StringsFr implements _StringsEn {
 @override String get added_bookmark	 => 'Ajouté aux favoris	';
 @override String get removed_bookmark	 => 'Supprimé du signet	';
 @override String get delete_account	 => 'Supprimer le compte';
+@override String get appDescriptionSupport=> 'Votre partenariat par vos dons à Lighthouse Global Missions nous permet d’accomplir davantage l’appel de Dieu, en apportant Sa Parole qui transforme les vies et la puissance miraculeuse du Saint-Esprit à travers le monde.Et chaque sacrifice que vous faites sera richement récompensé et renouvelé avec multiplication par le Seigneur, comme Il l’a garanti dans Sa Parole (Références bibliques : Marc 10:29-30, Luc 6:38).';
+@override String get giving_via_paypal=> 'Giving via PayPal';
+@override String get click_to_give=> 'Click to Give';
+@override String get additional_giving=> 'Additional giving options ';
+@override String get email=> 'Email';
+
+@override String get aboutcontent_para_1=> 'Lighthouse Global Missions répond à l\'appel de Dieu pour apporter la lumière de Jésus-Christ aux nations. Notre dévotion quotidienne « Your Daily Light » est l\'un des moyens par lesquels nous répondons à cet appel pour apporter l\'Évangile de Jésus-Christ et la parole éclairante de Dieu aux gens partout dans le monde. Cette méditation apporte chaque jour la parole de Dieu aux gens pour qu\'ils aient une vie victorieuse et épanouissante en Christ, leur permettant de grandir dans la connaissance de Dieu, de marcher dans la puissance du Saint-Esprit, de découvrir le dessein de leur vie et de répondre à l\'appel de Dieu pour leur vie.';
+@override String get aboutcontent_para_2=> 'On est heureux de vous accueillir sur l\'application Your Daily Light, qui vous donne accès gratuitement à une dose quotidienne de la parole de Dieu pour votre nourriture et votre développement spirituel. On vous encourage également à partager l\'impact de cette méditation dans votre vie, à inviter d\'autres personnes à télécharger l\'application et à contribuer à nous aider à toucher plus de gens pour la gloire de Dieu. Cliquez directement sur le bouton « Partager » dans l\'application et invitez d\'autres personnes à télécharger l\'application dès aujourd\'hui.';
+@override String get aboutcontent_para_3=> 'Dans la section d\'accueil de l\'appli, tu trouveras aussi des messages prophétiques saisonniers sur ce que Dieu dit, tu pourras te tenir au courant des événements du ministère, lire des témoignages réels et découvrir des opportunités de participer à ce que Dieu fait à travers Lighthouse Global Missions.';
+@override String get aboutcontent_para_4=> 'Tu peux aussi partager tes témoignages et envoyer des demandes de prière dans la section « Témoignages et prières ». On sera ravis de lire l\'impact de Your Daily Light dans ta vie et de prier avec toi pour tes besoins. Dans la librairie intégrée, tu peux directement trouver et obtenir des ressources pertinentes pour accélérer ta croissance.';
+@override String get aboutcontent_para_5=> 'L\'application Your Daily Light est gratuite et accessible à un public mondial grâce à la générosité de personnes comme toi qui nous soutiennent financièrement. On a aussi plein d\'autres moyens de ministère où chaque don fait une différence. Toi aussi, tu peux te joindre à cette mission en donnant à ce ministère. Et Dieu, qui garantit de récompenser chaque sacrifice pour son dessein, te récompensera généreusement en multipliant ton don et en te donnant plein de bénédictions. Ton don fera une différence dans de nombreuses vies. Consulte la section Dons et partenariat pour découvrir les différentes façons de faire un don.';
+@override String get aboutcontent_para_6a=> 'Pour en savoir plus sur Lighthouse Global Missions, rends-toi sur ';
+@override String get aboutcontent_para_6b=> 'ou ';
+@override String get aboutcontent_para_7a=> 'Abonne-toi à notre newsletter sur ';
+@override String get aboutcontent_para_7b=> 'pour rester informé et t\'impliquer dans l\'œuvre que Dieu accomplit.';
+@override String get apptagline=> 'Application de dévotion pour l’illumination quotidienne et la croissance spirituelle';
+@override String get seebankdetails=> 'Voir les détails du virement bancaire';
+@override String get via_bank=> 'Via banque';
+
+
+
+
+
 
 }
 
@@ -1306,6 +1348,29 @@ class _StringsDe implements _StringsEn {
 	@override String get added_bookmark => 'Zum Lesezeichen hinzugefügt';
 	@override String get removed_bookmark => 'Aus Lesezeichen entfernt';
 	@override String get delete_account => 'Konto löschen';
+  @override String get appDescriptionSupport=> 'Ihre Partnerschaft durch Ihre Spende an Lighthouse Global Missions ermöglicht es uns, mehr zu bewirken, indem wir Gottes Auftrag erfüllen und Sein lebensveränderndes Wort sowie die wunderwirkende Kraft des Heiligen Geistes in die ganze Welt bringen. Und jedes Opfer, das Sie bringen, wird vom Herrn reich belohnt und vervielfacht, so wie Er es in Seinem Wort zugesichert hat (Bibelstellen: Markus 10,29–30; Lukas 6,38).';
+  @override String get giving_via_paypal=> 'Giving via PayPal';
+  @override String get click_to_give=> 'Click to Give';
+  @override String get additional_giving=> 'Additional giving options ';
+  @override String get email=> 'Email';
+  @override String get aboutcontent_para_1=> 'Lighthouse Global Missions folgt Gottes Ruf, das Licht Jesu Christi zu den Völkern zu bringen. Die tägliche Andacht „Dein tägliches Licht" (orig.Your Daily Light) ist eine der Möglichkeiten, wie wir diesem Ruf folgen, um das Evangelium Jesu Christi und das erleuchtende Wort Gottes zu Menschen auf der ganzen Welt zu tragen. Diese Andacht bringt Menschen täglich Gottes Wort für ein siegreiches und erfülltes Leben in Christus, damit sie in der Erkenntnis Gottes wachsen, in der Kraft des Heiligen Geistes wandeln, ihren Lebenszweck entdecken und Gottes Ruf für ihr Leben erfüllen können.';
+  @override String get aboutcontent_para_2=> 'Wir freuen uns, dass du die App „Your Daily Light“ nutzt, die dir kostenlosen Zugang zu einer täglichen Dosis von Gottes Wort für deine geistliche Nahrung und Entwicklung bietet. Wir ermutigen dich auch, die Wirkung dieser Andacht in deinem Leben mit anderen zu teilen, andere zum Herunterladen der App einzuladen und dazu beizutragen, dass wir mehr Menschen zur Ehre Gottes erreichen. Klicke direkt auf die Schaltfläche „Teilen“ in der Anwendung und lade andere ein, die App noch heute herunterzuladen.';
+  @override String get aboutcontent_para_3=> 'Auf der Startseite der App findest du zudem saisonale prophetische Botschaften darüber, was Gott sagt, kannst dich über Veranstaltungen des Dienstes auf dem Laufenden halten, echte Lebenszeugnisse lesen und Möglichkeiten entdecken, Teil dessen zu sein, was Gott durch Lighthouse Global Missions tut.';
+  @override String get aboutcontent_para_4=> 'Du kannst auch deine Zeugnisse teilen und Gebetsanliegen über den Bereich „Zeugnisse und Gebete” einreichen. Wir freuen uns, wenn du uns erzählst, wie „Your Daily Light” dein Leben beeinflusst hat, und beten gerne mit dir für deine Anliegen. Im integrierten Buchladen kannst du weiteres Lesematerial finden, das dein Wachstum fördert.';
+  @override String get aboutcontent_para_5=> 'Die Your Daily Light App ist nur dank der Großzügigkeit von Menschen wie dir, die uns finanziell unterstützen, kostenlos und für ein weltweites Publikum zugänglich. Wir haben auch viele andere Bereiche, in denen jede Spende einen Unterschied macht. Auch du kannst dich dieser Mission anschließen, indem du für diesen Dienst spendest. Und Gott, der verspricht, jedes Opfer für seine Zwecke zu belohnen, wird dich reichlich mit einer Vervielfachung deiner Spende und mit vielfältigen Segnungen beschenken. Deine Spende wird in vielen Leben etwas bewirken. Unter „Spenden und Partnerschaft” findest du Möglichkeiten, wie du spenden kannst.';
+  @override String get aboutcontent_para_6a=> 'Erfahre mehr über Lighthouse Global Missions unter ';
+  @override String get aboutcontent_para_6b=> 'oder';
+  @override String get aboutcontent_para_7a=> 'Abonniere unseren Newsletter unter ';
+  @override String get aboutcontent_para_7b=> ' um auf dem Laufenden zu bleiben und dich an dem zu beteiligen, was Gott tut. ';
+  @override String get apptagline=> 'Andachts-App für tägliche Erleuchtung und geistliches Wachstum';
+  @override String get seebankdetails=> 'Überweisungsdetails anzeigen';
+  @override String get via_bank=> 'Über Bank';
+
+
+
+
+
+
 }
 
 /// Flat map(s) containing all translations.
@@ -1596,7 +1661,7 @@ extension on _StringsEn {
 			"mylibrary":"My Library",
 			"prayer_request":"Prayer Request or Testimony",
 			"mySubscription":"My Subscription",
-			"giveandpart":"Giving and PartnerShip",
+			"giveandpart":"Giving and Partnership",
 			"follow_us":"Follow us on",
 			"profile":"Profile",
 			"no_phone":"No Phone",
@@ -1622,7 +1687,8 @@ extension on _StringsEn {
 			"details":"Details",
 			"added_bookmark":"Added to Bookmark",
 			"removed_bookmark":"Removed from Bookmark",
-		"delete_account":"Delete Account"
+      "delete_account":"Delete Account",
+      "appDescriptionSupport":"Your partnership through giving to Lighthouse Global Missions enables us to accomplish more in fulfilling God’s call in bringing His life changing word and the miracle working power of the Holy Spirit around the world. And your every sacrifice will be richly rewarded and replenished with multiplication by the Lord, even as He guaranteed by His word (Scripture References: Mark 10:29-30, Luke 6:38).",
 		};
 	}
 }
@@ -1938,7 +2004,8 @@ extension on _StringsFr {
 			"details": "Détails",
 			"added_bookmark": "Ajouté aux favoris",
 			"removed_bookmark": "Supprimé du signet",
-		"delete_account":"Supprimer le compte"
+		  "delete_account":"Supprimer le compte",
+		  "appDescriptionSupport":"Votre partenariat par vos dons à Lighthouse Global Missions nous permet d’accomplir davantage l’appel de Dieu, en apportant Sa Parole qui transforme les vies et la puissance miraculeuse du Saint-Esprit à travers le monde. Et chaque sacrifice que vous faites sera richement récompensé et renouvelé avec multiplication par le Seigneur, comme Il l’a garanti dans Sa Parole (Références bibliques : Marc 10:29-30, Luc 6:38).",
 
 		};
 	}
@@ -2263,7 +2330,8 @@ extension on _StringsDe {
 		"details": "Einzelheiten",
 		"added_bookmark": "Zum Lesezeichen hinzugefügt",
 		"removed_bookmark": "Aus Lesezeichen entfernt",
-			"delete_account":"Konto löschen"
+			"delete_account":"Konto löschen",
+			"appDescriptionSupport":"Ihre Partnerschaft durch Ihre Spende an Lighthouse Global Missions ermöglicht es uns, mehr zu bewirken, indem wir Gottes Auftrag erfüllen und Sein lebensveränderndes Wort sowie die wunderwirkende Kraft des Heiligen Geistes in die ganze Welt bringen.Und jedes Opfer, das Sie bringen, wird vom Herrn reich belohnt und vervielfacht, so wie Er es in Seinem Wort zugesichert hat (Bibelstellen: Markus 10,29–30; Lukas 6,38)."
 
 		};
 	}
