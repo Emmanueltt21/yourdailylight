@@ -650,6 +650,11 @@ class _StringsEn {
   String get apptagline=> 'Devotional App for Daily Illumination and Spiritual Growth';
   String get seebankdetails=> 'See bank transfer details';
   String get via_bank=> 'via Bank';
+  String get bank_details=> 'Bank Transfer Details';
+  String get account_name=> 'Account Name';
+  String get bank=> 'Bank';
+  String get iban=> 'IBAN';
+
 
 
 }
@@ -990,11 +995,10 @@ class _StringsFr implements _StringsEn {
 @override String get removed_bookmark	 => 'Supprimé du signet	';
 @override String get delete_account	 => 'Supprimer le compte';
 @override String get appDescriptionSupport=> 'Votre partenariat par vos dons à Lighthouse Global Missions nous permet d’accomplir davantage l’appel de Dieu, en apportant Sa Parole qui transforme les vies et la puissance miraculeuse du Saint-Esprit à travers le monde.Et chaque sacrifice que vous faites sera richement récompensé et renouvelé avec multiplication par le Seigneur, comme Il l’a garanti dans Sa Parole (Références bibliques : Marc 10:29-30, Luc 6:38).';
-@override String get giving_via_paypal=> 'Giving via PayPal';
-@override String get click_to_give=> 'Click to Give';
-@override String get additional_giving=> 'Additional giving options ';
-@override String get email=> 'Email';
-
+@override String get giving_via_paypal => 'Donner via PayPal';
+@override String get click_to_give => 'Cliquer pour donner';
+@override String get additional_giving => 'Options de don supplémentaires';
+@override String get email => 'E-mail';
 @override String get aboutcontent_para_1=> 'Lighthouse Global Missions répond à l\'appel de Dieu pour apporter la lumière de Jésus-Christ aux nations. Notre dévotion quotidienne « Your Daily Light » est l\'un des moyens par lesquels nous répondons à cet appel pour apporter l\'Évangile de Jésus-Christ et la parole éclairante de Dieu aux gens partout dans le monde. Cette méditation apporte chaque jour la parole de Dieu aux gens pour qu\'ils aient une vie victorieuse et épanouissante en Christ, leur permettant de grandir dans la connaissance de Dieu, de marcher dans la puissance du Saint-Esprit, de découvrir le dessein de leur vie et de répondre à l\'appel de Dieu pour leur vie.';
 @override String get aboutcontent_para_2=> 'On est heureux de vous accueillir sur l\'application Your Daily Light, qui vous donne accès gratuitement à une dose quotidienne de la parole de Dieu pour votre nourriture et votre développement spirituel. On vous encourage également à partager l\'impact de cette méditation dans votre vie, à inviter d\'autres personnes à télécharger l\'application et à contribuer à nous aider à toucher plus de gens pour la gloire de Dieu. Cliquez directement sur le bouton « Partager » dans l\'application et invitez d\'autres personnes à télécharger l\'application dès aujourd\'hui.';
 @override String get aboutcontent_para_3=> 'Dans la section d\'accueil de l\'appli, tu trouveras aussi des messages prophétiques saisonniers sur ce que Dieu dit, tu pourras te tenir au courant des événements du ministère, lire des témoignages réels et découvrir des opportunités de participer à ce que Dieu fait à travers Lighthouse Global Missions.';
@@ -1007,6 +1011,10 @@ class _StringsFr implements _StringsEn {
 @override String get apptagline=> 'Application de dévotion pour l’illumination quotidienne et la croissance spirituelle';
 @override String get seebankdetails=> 'Voir les détails du virement bancaire';
 @override String get via_bank=> 'Via banque';
+@override String get bank_details=> 'Détails du virement bancaire';
+@override String get account_name => 'Nom du compte';
+@override  String get bank => 'Banque';
+@override String get iban => 'IBAN';
 
 
 
@@ -1349,10 +1357,10 @@ class _StringsDe implements _StringsEn {
 	@override String get removed_bookmark => 'Aus Lesezeichen entfernt';
 	@override String get delete_account => 'Konto löschen';
   @override String get appDescriptionSupport=> 'Ihre Partnerschaft durch Ihre Spende an Lighthouse Global Missions ermöglicht es uns, mehr zu bewirken, indem wir Gottes Auftrag erfüllen und Sein lebensveränderndes Wort sowie die wunderwirkende Kraft des Heiligen Geistes in die ganze Welt bringen. Und jedes Opfer, das Sie bringen, wird vom Herrn reich belohnt und vervielfacht, so wie Er es in Seinem Wort zugesichert hat (Bibelstellen: Markus 10,29–30; Lukas 6,38).';
-  @override String get giving_via_paypal=> 'Giving via PayPal';
-  @override String get click_to_give=> 'Click to Give';
-  @override String get additional_giving=> 'Additional giving options ';
-  @override String get email=> 'Email';
+  @override String get giving_via_paypal => 'Spenden über PayPal';
+  @override String get click_to_give => 'Zum Spenden klicken';
+  @override String get additional_giving => 'Weitere Spendenoptionen';
+  @override String get email => 'E-Mail';
   @override String get aboutcontent_para_1=> 'Lighthouse Global Missions folgt Gottes Ruf, das Licht Jesu Christi zu den Völkern zu bringen. Die tägliche Andacht „Dein tägliches Licht" (orig.Your Daily Light) ist eine der Möglichkeiten, wie wir diesem Ruf folgen, um das Evangelium Jesu Christi und das erleuchtende Wort Gottes zu Menschen auf der ganzen Welt zu tragen. Diese Andacht bringt Menschen täglich Gottes Wort für ein siegreiches und erfülltes Leben in Christus, damit sie in der Erkenntnis Gottes wachsen, in der Kraft des Heiligen Geistes wandeln, ihren Lebenszweck entdecken und Gottes Ruf für ihr Leben erfüllen können.';
   @override String get aboutcontent_para_2=> 'Wir freuen uns, dass du die App „Your Daily Light“ nutzt, die dir kostenlosen Zugang zu einer täglichen Dosis von Gottes Wort für deine geistliche Nahrung und Entwicklung bietet. Wir ermutigen dich auch, die Wirkung dieser Andacht in deinem Leben mit anderen zu teilen, andere zum Herunterladen der App einzuladen und dazu beizutragen, dass wir mehr Menschen zur Ehre Gottes erreichen. Klicke direkt auf die Schaltfläche „Teilen“ in der Anwendung und lade andere ein, die App noch heute herunterzuladen.';
   @override String get aboutcontent_para_3=> 'Auf der Startseite der App findest du zudem saisonale prophetische Botschaften darüber, was Gott sagt, kannst dich über Veranstaltungen des Dienstes auf dem Laufenden halten, echte Lebenszeugnisse lesen und Möglichkeiten entdecken, Teil dessen zu sein, was Gott durch Lighthouse Global Missions tut.';
@@ -1365,6 +1373,10 @@ class _StringsDe implements _StringsEn {
   @override String get apptagline=> 'Andachts-App für tägliche Erleuchtung und geistliches Wachstum';
   @override String get seebankdetails=> 'Überweisungsdetails anzeigen';
   @override String get via_bank=> 'Über Bank';
+  @override String get bank_details=> 'Überweisungsdetails';
+  @override String get account_name => 'Kontoname';
+  @override String get bank => 'Bank';
+  @override String get iban => 'IBAN';
 
 
 
