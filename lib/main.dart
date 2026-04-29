@@ -6,7 +6,6 @@ import 'package:firebase_messaging/firebase_messaging.dart' as fcm;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 import 'package:nb_utils/nb_utils.dart' as PlatformUtils;
 
 import 'package:path/path.dart';
@@ -114,7 +113,16 @@ void main() async {
   // Set device local timezone for accurate scheduling
   try {
     final dynamic timeZoneName = await FlutterTimezone.getLocalTimezone();
-    final String tzNameString = timeZoneName.toString();
+    String tzNameString = timeZoneName.toString();
+    
+    // Handle complex TimezoneInfo strings returned by some devices
+    if (tzNameString.contains('TimezoneInfo(')) {
+      final match = RegExp(r'TimezoneInfo\(([^,]+)').firstMatch(tzNameString);
+      if (match != null) {
+        tzNameString = match.group(1)!.trim();
+      }
+    }
+    
     tz.setLocalLocation(tz.getLocation(tzNameString));
     print('✅ Timezone set to ' + tzNameString);
   } catch (e) {
@@ -126,7 +134,7 @@ void main() async {
   // Check if Firebase is already initialized to prevent duplicate app error
   try {
     await Firebase.initializeApp(
-      options: Platform.isIOS ? DefaultFirebaseOptions.currentPlatform : null,
+      options: DefaultFirebaseOptions.currentPlatform,
     );
   } catch (e) {
     if (e.toString().contains('duplicate-app')) {
@@ -137,7 +145,7 @@ void main() async {
   }
   fcm.FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  await setupFCM();
+  // setupFCM will be called inside addPostFrameCallback to ensure Activity is ready
 
   // Alarm package removed; using only flutter_local_notifications
 
@@ -146,17 +154,6 @@ void main() async {
   await notificationManager.init(onTap: (payload) => NotificationHandler.handleNotificationTap(payload));
   print("✅ NotificationManager initialized.");
 
-  // Initialize JustAudioBackground AFTER notifications
-  try {
-    await JustAudioBackground.init(
-      androidNotificationChannelId: 'com.lighthouse.yourdailylight',
-      androidNotificationChannelName: 'Audio Playback',
-      androidNotificationOngoing: true,
-    );
-  } catch (e) {
-    print('❌ JustAudioBackground initialization failed: $e');
-    // Continue without audio background service if it fails
-  }
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -183,10 +180,10 @@ void main() async {
         ChangeNotifierProvider(create: (_) => BookmarksModel()),
         ChangeNotifierProvider(create: (_) => PlaylistsModel()),
         ChangeNotifierProvider(create: (_) => AudioPlayerModel()),
-       //  ChangeNotifierProvider(create: (_) => DownloadsModel()),
-      //  ChangeNotifierProvider(create: (_) => HymnsBookmarksModel()),
-      //  ChangeNotifierProvider(create: (_) => NotesProvider()),
-      //  ChangeNotifierProvider(create: (_) => BibleModel()),
+        ChangeNotifierProvider(create: (_) => DownloadsModel()),
+        ChangeNotifierProvider(create: (_) => HymnsBookmarksModel()),
+        ChangeNotifierProvider(create: (_) => NotesProvider()),
+        ChangeNotifierProvider(create: (_) => BibleModel()),
         ChangeNotifierProvider(create: (_) => TranslateProvider()),
         ChangeNotifierProvider(create: (_) => ChatManager()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
@@ -197,8 +194,16 @@ void main() async {
 
   // ✅ DEFER permissions and scheduling AFTER runApp with delay
   WidgetsBinding.instance.addPostFrameCallback((_) async {
-    // Add delay to ensure UI is fully loaded
+    // Add delay to ensure UI is fully loaded and Activity is attached
     await Future.delayed(Duration(seconds: 2));
+    
+    // Setup FCM permissions and listeners safely
+    try {
+      await setupFCM();
+    } catch (e) {
+      print("⚠️ FCM Setup error (expected if in background): $e");
+    }
+
     await notificationManager.requestAllNotificationPermissions();
     // Schedule notifications after permissions are handled
     await notificationManager.scheduleDaily7AMSilent(payload: NotificationType.dailyDevotional.name);

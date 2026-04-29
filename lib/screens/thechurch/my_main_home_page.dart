@@ -18,6 +18,7 @@ import '../../providers/DevotionalAlarmService.dart';
 import '../../providers/HomeProvider.dart';
 import '../../service/notification_service.dart';
 import '../../widgets/PermissionDialog.dart';
+import '../../audio_player/miniPlayer.dart';
 
 class MyMainHomePage extends StatefulWidget {
   static const routeName = "/myhomepage";
@@ -249,8 +250,17 @@ class _MyMainHomePageState extends State<MyMainHomePage>
       },
       child: Scaffold(
         backgroundColor: const Color(0xffC4DFCB),
-        body: ChangeNotifierProvider(
-            create: (context) => HomeProvider(), child: pages[pageIndex]),
+        body: Column(
+          children: [
+            Expanded(
+              child: ChangeNotifierProvider(
+                create: (context) => HomeProvider(), 
+                child: pages[pageIndex]
+              ),
+            ),
+            MiniPlayer(),
+          ],
+        ),
         bottomNavigationBar: buildMyNavBar(context),
       ),
     );

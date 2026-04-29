@@ -118,13 +118,14 @@ class _AudioPlayout extends State<MiniPlayer> {
                                 : Container(
                                     width: 15,
                                   ),
-                            Container(
-                              color: MyColors.primary,
-                              //width: 100,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[],
+                            IconButton(
+                              onPressed: () {
+                                audioPlayerModel.stop();
+                              },
+                              icon: const Icon(
+                                Icons.close,
+                                size: 25,
+                                color: Colors.white70,
                               ),
                             ),
                           ],

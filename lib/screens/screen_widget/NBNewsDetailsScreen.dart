@@ -245,91 +245,101 @@ class NBNewsDetailsScreenState extends State<NBNewsDetailsScreen> {
         elevation: 0,
        // backgroundColor: context.cardColor,
       ),
-      body: isLoading ? Container(
-        height: 600,
-        child: const Center(
-          child: CupertinoActivityIndicator(
-            radius: 20,
-          ),
-        ),
-      ) : SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-           // Text('${widget.newsDetails!.cat_id}', style: boldTextStyle(color: MyColors.accentDark)),
-            Row(
-              children: [
-                Text('${mDetails.title}', style: boldTextStyle(size: 20)).expand(flex: 3),
-                isBookmark
-                    ? IconButton(
-                        icon: Icon(Icons.bookmark),
-                        onPressed: () {
+      body: SafeArea(
+        child: isLoading
+            ? Container(
+                height: 600,
+                child: const Center(
+                  child: CupertinoActivityIndicator(
+                    radius: 20,
+                  ),
+                ),
+              )
+            : SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Text('${widget.newsDetails!.cat_id}', style: boldTextStyle(color: MyColors.accentDark)),
+                    Row(
+                      children: [
+                        Text('${mDetails.title}', style: boldTextStyle(size: 20))
+                            .expand(flex: 3),
+                        isBookmark
+                            ? IconButton(
+                                icon: Icon(Icons.bookmark),
+                                onPressed: () {
+                                  setState(
+                                    () {
+                                      isBookmark = isBookmark;
+                                    },
+                                  );
+                                  toasty(context, t.removed_bookmark);
+                                },
+                              )
+                            : IconButton(
+                                icon: Icon(Icons.bookmark_border),
+                                onPressed: () {
+                                  setState(
+                                    () {
+                                      isBookmark = isBookmark;
+                                    },
+                                  );
+                                  toasty(context, t.added_bookmark);
+                                },
+                              ),
+                      ],
+                    ),
+                    16.height,
+                    commonCacheImageWidget(
+                      mDetails.thumbnail,
+                      200,
+                      width: context.width(),
+                      fit: BoxFit.cover,
+                    ).cornerRadiusWithClipRRect(16),
+                    16.height,
+                    ListTile(
+                      contentPadding: EdgeInsets.all(0),
+                      title: Text('${mDetails.author}', style: boldTextStyle()),
+                      subtitle:
+                          Text('${mDetails.dmo}', style: secondaryTextStyle()),
+                      //  subtitle: Text('${mDetails.date}', style: secondaryTextStyle()),
+                      // subtitle: Text('${mDetails.date}', style: secondaryTextStyle()),
+                      leading: CircleAvatar(
+                          backgroundImage: AssetImage(ApiUrl.NBProfileImage)),
+                      trailing: AppButton(
+                        elevation: 0,
+                        text: isFollowing ? t.likes : t.likes,
+                        onTap: () {
                           setState(
                             () {
-                              isBookmark = isBookmark;
+                              isFollowing = !isFollowing;
                             },
                           );
-                          toasty(context, t.removed_bookmark);
                         },
-                      )
-                    : IconButton(
-                        icon: Icon(Icons.bookmark_border),
-                        onPressed: () {
-                          setState(
-                            () {
-                              isBookmark = isBookmark;
-                            },
-                          );
-                          toasty(context, t.added_bookmark);
-                        },
-                      ),
-              ],
-            ),
-            16.height,
-            commonCacheImageWidget(
-              mDetails.thumbnail,
-              200,
-              width: context.width(),
-              fit: BoxFit.cover,
-            ).cornerRadiusWithClipRRect(16),
-            16.height,
-            ListTile(
-              contentPadding: EdgeInsets.all(0),
-              title: Text('${mDetails.author}', style: boldTextStyle()),
-              subtitle: Text('${mDetails.dmo}', style: secondaryTextStyle()),
-            //  subtitle: Text('${mDetails.date}', style: secondaryTextStyle()),
-             // subtitle: Text('${mDetails.date}', style: secondaryTextStyle()),
-              leading: CircleAvatar(backgroundImage: AssetImage(ApiUrl.NBProfileImage)),
-              trailing: AppButton(
-                elevation: 0,
-                text: isFollowing ? t.likes : t.likes,
-                onTap: () {
-                  setState(
-                    () {
-                      isFollowing = !isFollowing;
-                    },
-                  );
-                },
-                color: isFollowing ? grey.withOpacity(0.2) : MyColors.accentDark,
-                textColor: isFollowing ? grey : white,
-              ).cornerRadiusWithClipRRect(30),
-            ),
-            16.height,
-           // Text('${widget.newsDetails!.content}', style: primaryTextStyle(), textAlign: TextAlign.justify),
-            HtmlWidget('${mDetails.content}',
-             // webView: true,
-            ),
-            16.height,
-        /*    nbAppButtonWidget(
-              context,
-              'Comment',
-              () {
-                NBCommentScreen(widget.newsDetails).launch(context);
-              },
-            ),*/
-            16.height,
-          ],
-        ).paddingOnly(left: 16, right: 16),
+                        color: isFollowing
+                            ? grey.withOpacity(0.2)
+                            : MyColors.accentDark,
+                        textColor: isFollowing ? grey : white,
+                      ).cornerRadiusWithClipRRect(30),
+                    ),
+                    16.height,
+                    // Text('${widget.newsDetails!.content}', style: primaryTextStyle(), textAlign: TextAlign.justify),
+                    HtmlWidget(
+                      '${mDetails.content}',
+                      // webView: true,
+                    ),
+                    16.height,
+                    /*    nbAppButtonWidget(
+                      context,
+                      'Comment',
+                      () {
+                        NBCommentScreen(widget.newsDetails).launch(context);
+                      },
+                    ),*/
+                    16.height,
+                  ],
+                ).paddingOnly(left: 16, right: 16),
+              ),
       ),
     );
   }

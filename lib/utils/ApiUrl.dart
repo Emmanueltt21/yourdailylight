@@ -21,7 +21,7 @@ class ApiUrl {
 
   static String? lighthouseWebAddress = "https://www.lighthouseglobalmissions.org";
   static String? lighthouseMissionAdd = "https://www.lgmissions.org";
-  static String? missionNewsletter = "https://newsletter.yourdailylight.org/newsletter";
+  static String? missionNewsletter = "https://newsletter.lighthouseglobalmissions.org/newsletter";
 
   static String androidAppShareUrlDesc = "Let me recommend you this application\n\n$androidAppUrl";
   static String iosAppShareUrlDesc = "Let me recommend you this application\n\n$iosAppUrl";

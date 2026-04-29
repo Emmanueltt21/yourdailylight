@@ -111,8 +111,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     mediaList.add(media);
     if (media.mediaType!.toLowerCase() == "audio") {
       print("audio media = " + media.title!);
-      Provider.of<AudioPlayerModel>(context, listen: false)
-          .preparePlaylist(mediaList, media);
+      Provider.of<AudioPlayerModel>(context, listen: false).preparePlaylist(mediaList, media);
       navigatorKey.currentState!.pushNamed(PlayPage.routeName);
     } else {
       print("video media = " + media.title!);

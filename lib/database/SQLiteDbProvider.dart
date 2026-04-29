@@ -16,11 +16,26 @@ class SQLiteDbProvider {
   SQLiteDbProvider._();
   static final SQLiteDbProvider db = SQLiteDbProvider._();
   static Database? _database;
+  static Completer<Database>? _initCompleter;
 
   Future<Database?> get database async {
-    if (_database != null) return _database;
-    _database = await initDB();
-    return _database;
+    // If database is already initialized, return it
+    if (_database != null && _database!.isOpen) return _database;
+
+    // If initialization is already in progress, wait for it
+    if (_initCompleter != null) return _initCompleter!.future;
+
+    // Start initialization
+    _initCompleter = Completer<Database>();
+    try {
+      _database = await initDB();
+      _initCompleter!.complete(_database);
+      return _database;
+    } catch (e) {
+      _initCompleter!.completeError(e);
+      _initCompleter = null; // Reset so we can try again if it failed
+      rethrow;
+    }
   }
 
   initDB() async {

@@ -30,11 +30,11 @@
 	@override String get quitapp => 'Beenden Sie die App!';
 	@override String get quitappwarning => 'Möchten Sie die App schließen?';
 	@override String get quitappaudiowarning => 'Sie spielen gerade eine Audiodatei ab. Wenn Sie die App beenden, wird die Audiowiedergabe gestoppt. ';
-	@override String get ok => 'OK';
+	@override String get ok => 'Ja';
 	@override String get retry => 'WIEDERHOLEN';
 	@override String get oops => 'Ups!';
 	@override String get save => 'Speichern';
-	@override String get cancel => 'Stornieren';
+	@override String get cancel => 'Nein';
 	@override String get error => 'Fehler';
 	@override String get success => 'Erfolg';
 	@override String get skip => 'Überspringen';
@@ -100,7 +100,7 @@
 	@override String get deletecommentalerttext => 'Möchten Sie diesen Kommentar löschen? ';
 	@override String get loadmore => 'Mehr laden';
 	@override String get messages => 'Mitteilungen';
-	@override String get guestuser => 'Gastbenutzer';
+	@override String get guestuser => 'Gastnutzer';
 	@override String get fullname => 'Vollständiger Name';
 	@override String get emailaddress => 'E-Mail-Adresse';
 	@override String get password => 'Passwort';

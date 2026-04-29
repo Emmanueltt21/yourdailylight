@@ -1,7 +1,6 @@
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import '../utils/my_colors.dart';
 import '../utils/Utility.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../models/CommentsArguement.dart';
 import '../socials/PostCommentsScreen.dart';
 import '../socials/likesPostPeople.dart';
@@ -419,23 +418,31 @@ class _UserPostTileState extends State<UserPostTile> {
                 widget.object.media!.length < 2
                     ? Container()
                     : Row(
-                        children: [
-                          Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: SmoothPageIndicator(
-                                controller: _pageController, // PageController
-                                count: widget.object.media!.length,
-                                effect: WormEffect(
-                                    dotHeight: 6,
-                                    dotWidth: 6,
-                                    dotColor: Colors.grey,
-                                    activeDotColor: MyColors
-                                        .primary), // your preferred effect
-                                onDotClicked: (index) {}),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          widget.object.media!.length,
+                          (index) => GestureDetector(
+                            onTap: () {
+                              _pageController.animateToPage(
+                                index,
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            },
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 200),
+                              margin: EdgeInsets.all(6),
+                              height: 6,
+                              width: currentPage == index + 1 ? 18 : 6,
+                              decoration: BoxDecoration(
+                                color: currentPage == index + 1
+                                    ? MyColors.primary
+                                    : Colors.grey,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
                           ),
-                          Spacer(),
-                        ],
+                        ),
                       ),
                 widget.object.content == ""
                     ? Container()

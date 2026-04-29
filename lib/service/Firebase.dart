@@ -215,8 +215,12 @@ class Firebase {
 
       // Use the global notificationManager instance
       await notificationManager.notificationsPlugin.show(
-          102, title, msg, platformChannelSpecifics,
-          payload: json.encode(message));
+        id: 102,
+        title: title,
+        body: msg,
+        notificationDetails: platformChannelSpecifics,
+        payload: json.encode(message),
+      );
     }
   }
 
@@ -239,8 +243,12 @@ class Firebase {
 
     // Use the global notificationManager instance
     await notificationManager.notificationsPlugin.show(
-        102, title, msg, platformChannelSpecifics,
-        payload: json.encode(message));
+      id: 102,
+      title: title,
+      body: msg,
+      notificationDetails: platformChannelSpecifics,
+      payload: json.encode(message),
+    );
   }
 
   static chatNotification(
@@ -268,8 +276,12 @@ class Firebase {
 
     // Use the global notificationManager instance
     await notificationManager.notificationsPlugin.show(
-        new Random().nextInt(100000), name, title, platformChannelSpecifics,
-        payload: json.encode(message));
+      id: Random().nextInt(100000),
+      title: name,
+      body: title,
+      notificationDetails: platformChannelSpecifics,
+      payload: json.encode(message),
+    );
   }
 
   Future<String?> onSelect(String? itm) async {

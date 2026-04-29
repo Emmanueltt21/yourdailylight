@@ -21,19 +21,19 @@ class NotificationService {
   }
 
   Future<void> cancelTestNotifications() async {
-    await notificationManager.notificationsPlugin.cancel(9997);
+    await notificationManager.notificationsPlugin.cancel(id: 9997);
   }
 
   Future<void> cancelNotification(int id) async {
-    await notificationManager.notificationsPlugin.cancel(id);
+    await notificationManager.notificationsPlugin.cancel(id: id);
   }
 
   Future<void> showTestDailyDevotional() async {
     await notificationManager.notificationsPlugin.show(
-      9997, // Use unique ID for test notifications
-      '📖 Test Daily Devotional',
-      'This is a test of your daily devotional notification',
-      const NotificationDetails(
+      id: 9997,
+      title: '📖 Test Daily Devotional',
+      body: 'This is a test of your daily devotional notification',
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'daily_devotional_silent',
           'Daily Devotional (Silent)',

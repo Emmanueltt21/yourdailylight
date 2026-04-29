@@ -563,7 +563,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                             const  Icon(Icons.person, size: 20.0, color: MyColors.accentDark),
                             Container(width: 10),
                             //  Text(t.mylibrary,
-                            Text('My Profile',
+                            Text(t.myProfile,
                                 style: TextStyles.subhead(context).copyWith(
                                   fontSize: 15,
                                 )),

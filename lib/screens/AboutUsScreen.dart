@@ -45,7 +45,7 @@ class AboutUsScreen extends StatelessWidget {
               ),
               SizedBox(height: 8),
               Text(
-                "Devotional App for Daily Illumination and Spiritual Growth",
+                t.apptagline,
                 style: TextStyles.subhead(context).copyWith(
                   fontSize: 16,
                   color: MyColors.grey_60,
@@ -98,6 +98,11 @@ class AboutUsScreen extends StatelessWidget {
               Text(t.aboutcontent_para_7b,
                 style:  TextStyles.medium(context).copyWith(fontSize: 16, color: Colors.black87),
               ),
+              SizedBox(height: 8),
+              Text(t.aboutcontent_para_8a,
+                style:  TextStyles.medium(context).copyWith(fontSize: 16, color: Colors.black87),
+              ),
+              _buildSectionTitle(ApiUrl.supportEmail, context),
               SizedBox(height: 8),
               SizedBox(height: 40),
             ],

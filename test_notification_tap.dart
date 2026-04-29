@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'dart:convert';
 
 // Test script to verify notification tap handling
 void main() async {
@@ -17,7 +16,7 @@ void main() async {
   );
   
   await notificationsPlugin.initialize(
-    initializationSettings,
+    settings: initializationSettings,
     onDidReceiveNotificationResponse: (NotificationResponse response) {
       print('✅ TEST: Notification tapped with payload: ${response.payload}');
       print('✅ TEST: This should navigate to DevotionHome (index 1)');
@@ -38,10 +37,10 @@ void main() async {
   
   // Show test notification
   await notificationsPlugin.show(
-    9999,
-    '📖 Test Daily Devotional',
-    'Tap this notification to test navigation',
-    const NotificationDetails(
+    id: 9999,
+    title: '📖 Test Daily Devotional',
+    body: 'Tap this notification to test navigation',
+    notificationDetails: const NotificationDetails(
       android: AndroidNotificationDetails(
         'daily_devotional_test',
         'Daily Devotional Test',

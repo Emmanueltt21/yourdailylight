@@ -70,37 +70,7 @@ class UpdateUserProfileState extends State<UpdateUserProfile> {
   }
 
   pickImages(String type) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowCompression: true,
-      allowMultiple: false,
-      withData: false,
-      allowedExtensions: ['png', 'PNG', 'JPEG', 'JPG', 'jpg', 'jpeg'],
-    );
-    if (mounted) {
-      if (result != null) {
-        PlatformFile file = result.files.first;
 
-        print(file.name);
-        print(file.bytes);
-        print(file.size);
-        print(file.extension);
-        print(file.path);
-
-        if (type == "avatar") {
-          print("avatar changed");
-          setState(() {
-            avatar = file.path;
-          });
-        } else {
-          print("coverphoto changed");
-          setState(() {
-            coverPhoto = file.path;
-          });
-        }
-      }
-      setState(() {});
-    }
   }
 
   /*pickImages(String type, {quantity = 1}) async {

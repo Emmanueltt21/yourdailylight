@@ -30,44 +30,7 @@ class MakePostScreenState extends State<MakePostScreen> {
   List<Files> _selectedFiles = [];
 
   pickVideos() async {
-    if (_selectedFiles.length >= 10) {
-      Alerts.showToast(context, t.maximumallowedsizehint);
-      return;
-    }
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      // allowCompression: true,
-      allowMultiple: false,
-      withData: false,
-      allowedExtensions: ['mp4'],
-    );
-    if (mounted) {
-      if (result != null) {
-        PlatformFile file = result.files.first;
 
-        print(file.name);
-        //print(file.bytes);
-        print(file.size);
-        print(file.extension);
-        print(file.path);
-        if (file.size > (100024 * 10)) {
-          Alerts.showToast(context, t.maximumuploadsizehint);
-          return;
-        }
-
-        //final filePath = await FlutterAbsolutePath.getAbsolutePath(file.path!);
-        final filePath = '';
-        // print("video absolute path " + filePath);
-        _selectedFiles.add(new Files(
-            link: filePath,
-            type: "video",
-            filetype: file.extension,
-            length: file.size,
-            thumbnail: "null"));
-        //genThumbnailFile(_selectedFiles.length - 1);
-      }
-      setState(() {});
-    }
   }
 
   pickImages() async {
@@ -75,36 +38,7 @@ class MakePostScreenState extends State<MakePostScreen> {
       Alerts.showToast(context, t.maximumallowedsizehint);
       return;
     }
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowCompression: true,
-      allowMultiple: false,
-      withData: false,
-      allowedExtensions: ['png', 'PNG', 'JPEG', 'JPG', 'jpg', 'jpeg', 'gif'],
-    );
-    if (mounted) {
-      if (result != null) {
-        PlatformFile file = result.files.first;
 
-        print(file.name);
-        print(file.bytes);
-        print(file.size);
-        print(file.extension);
-        print(file.path);
-        if (file.size > (1024 * 100)) {
-          Alerts.showToast(context, t.maximumuploadsizehint);
-          return;
-        }
-
-        _selectedFiles.add(new Files(
-          link: file.path,
-          type: "image",
-          filetype: file.extension,
-          length: file.size,
-        ));
-      }
-      setState(() {});
-    }
   }
 
   validateandsubmit() async {

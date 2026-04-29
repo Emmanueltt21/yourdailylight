@@ -249,90 +249,100 @@ class _MediaCommentsLikesContainerState
       builder: (context, mediaPlayerModel, child) {
         return Container(
           height: 50,
-          margin: EdgeInsets.fromLTRB(0, 10, 0, 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              InkWell(
-                onTap: () {
-                  mediaPlayerModel
-                      .likePost(mediaPlayerModel.isLiked! ? "unlike" : "like");
-                },
-                child: Row(children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 6),
-                    child: FaIcon(FontAwesomeIcons.thumbsUp,
-                        size: 26,
-                        color: mediaPlayerModel.isLiked!
-                            ? Colors.pink
-                            : Colors.white),
-                  ),
-                  mediaPlayerModel.likesCount == 0
-                      ? Container()
-                      : Text(mediaPlayerModel.likesCount.toString(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          )),
-                ]),
-              ),
-              InkWell(
-                onTap: () {
-                  mediaPlayerModel.navigatetoCommentsScreen(context);
-                },
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.insert_comment, size: 26, color: Colors.white),
-                    mediaPlayerModel.commentsCount == 0
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                InkWell(
+                  onTap: () {
+                    mediaPlayerModel
+                        .likePost(mediaPlayerModel.isLiked! ? "unlike" : "like");
+                  },
+                  child: Row(children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 6),
+                      child: FaIcon(FontAwesomeIcons.thumbsUp,
+                          size: 26,
+                          color: mediaPlayerModel.isLiked!
+                              ? Colors.pink
+                              : Colors.white),
+                    ),
+                    const SizedBox(width: 4),
+                    mediaPlayerModel.likesCount == 0
                         ? Container()
-                        : Text(mediaPlayerModel.commentsCount.toString(),
-                            style: TextStyle(
+                        : Text(mediaPlayerModel.likesCount.toString(),
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             )),
-                  ],
+                  ]),
                 ),
-              ),
-              IconButton(
-                onPressed: () {
-                  widget.audioPlayerModel.shufflePlaylist();
-                  Provider.of<MediaPlayerModel>(context, listen: false)
-                      .setMediaLikesCommentsCount(
-                          widget.audioPlayerModel.currentMedia!);
-                },
-                icon: Icon(
-                  Icons.shuffle,
-                  size: 26.0,
-                  color: Colors.white,
+                const SizedBox(width: 15),
+                InkWell(
+                  onTap: () {
+                    mediaPlayerModel.navigatetoCommentsScreen(context);
+                  },
+                  child: Row(
+                    children: <Widget>[
+                      const Icon(Icons.insert_comment, size: 26, color: Colors.white),
+                      const SizedBox(width: 4),
+                      mediaPlayerModel.commentsCount == 0
+                          ? Container()
+                          : Text(mediaPlayerModel.commentsCount.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              )),
+                    ],
+                  ),
                 ),
-              ),
-              IconButton(
-                onPressed: () => widget.audioPlayerModel
-                    .setShowList(!widget.audioPlayerModel.showList),
-                icon: Icon(
-                  Icons.playlist_play,
-                  size: 27.0,
-                  color: Colors.white,
+                const SizedBox(width: 15),
+                IconButton(
+                  onPressed: () {
+                    widget.audioPlayerModel.shufflePlaylist();
+                    Provider.of<MediaPlayerModel>(context, listen: false)
+                        .setMediaLikesCommentsCount(
+                            widget.audioPlayerModel.currentMedia!);
+                  },
+                  icon: const Icon(
+                    Icons.shuffle,
+                    size: 26.0,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              IconButton(
-                onPressed: () => widget.audioPlayerModel.changeRepeat(),
-                icon: widget.audioPlayerModel.isRepeat == true
-                    ? Icon(
-                        Icons.repeat_one,
-                        size: 26.0,
-                        color: Colors.white,
-                      )
-                    : Icon(
-                        Icons.repeat,
-                        size: 26.0,
-                        color: Colors.white,
-                      ),
-              ),
-              MediaPopupMenu(widget.currentMedia),
-            ],
+                const SizedBox(width: 15),
+                IconButton(
+                  onPressed: () => widget.audioPlayerModel
+                      .setShowList(!widget.audioPlayerModel.showList),
+                  icon: const Icon(
+                    Icons.playlist_play,
+                    size: 27.0,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 15),
+                IconButton(
+                  onPressed: () => widget.audioPlayerModel.changeRepeat(),
+                  icon: widget.audioPlayerModel.isRepeat == true
+                      ? const Icon(
+                          Icons.repeat_one,
+                          size: 26.0,
+                          color: Colors.white,
+                        )
+                      : const Icon(
+                          Icons.repeat,
+                          size: 26.0,
+                          color: Colors.white,
+                        ),
+                ),
+                const SizedBox(width: 15),
+                MediaPopupMenu(widget.currentMedia),
+              ],
+            ),
           ),
         );
       },

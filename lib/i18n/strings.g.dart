@@ -647,6 +647,7 @@ class _StringsEn {
   String get aboutcontent_para_6b=> 'or';
   String get aboutcontent_para_7a => 'Subscribe to our Newsletter at ';
   String get aboutcontent_para_7b=> 'to stay updated and get involved with what God is accomplishing.';
+  String get aboutcontent_para_8a=> 'You can also get in touch with Pastor Simon at:';
   String get apptagline=> 'Devotional App for Daily Illumination and Spiritual Growth';
   String get seebankdetails=> 'See bank transfer details';
   String get via_bank=> 'via Bank';
@@ -654,6 +655,7 @@ class _StringsEn {
   String get account_name=> 'Account Name';
   String get bank=> 'Bank';
   String get iban=> 'IBAN';
+  String get myProfile=> 'My Profile';
 
 
 
@@ -1008,6 +1010,7 @@ class _StringsFr implements _StringsEn {
 @override String get aboutcontent_para_6b=> 'ou ';
 @override String get aboutcontent_para_7a=> 'Abonne-toi à notre newsletter sur ';
 @override String get aboutcontent_para_7b=> 'pour rester informé et t\'impliquer dans l\'œuvre que Dieu accomplit.';
+@override String get aboutcontent_para_8a=> 'Vous pouvez également contacter le pasteur Simon à l\'adresse suivante :';
 @override String get apptagline=> 'Application de dévotion pour l’illumination quotidienne et la croissance spirituelle';
 @override String get seebankdetails=> 'Voir les détails du virement bancaire';
 @override String get via_bank=> 'Via banque';
@@ -1015,6 +1018,7 @@ class _StringsFr implements _StringsEn {
 @override String get account_name => 'Nom du compte';
 @override  String get bank => 'Banque';
 @override String get iban => 'IBAN';
+@override  String get myProfile=> 'Mon profil';
 
 
 
@@ -1082,11 +1086,11 @@ class _StringsDe implements _StringsEn {
 	@override String get quitapp => 'Beenden Sie die App!';
 	@override String get quitappwarning => 'Möchten Sie die App schließen?';
 	@override String get quitappaudiowarning => 'Sie spielen gerade eine Audiodatei ab. Wenn Sie die App beenden, wird die Audiowiedergabe gestoppt. ';
-	@override String get ok => 'OK';
+	@override String get ok => 'Ja';
 	@override String get retry => 'WIEDERHOLEN';
 	@override String get oops => 'Ups!';
 	@override String get save => 'Speichern';
-	@override String get cancel => 'Stornieren';
+	@override String get cancel => 'Nein';
 	@override String get error => 'Fehler';
 	@override String get success => 'Erfolg';
 	@override String get skip => 'Überspringen';
@@ -1152,7 +1156,7 @@ class _StringsDe implements _StringsEn {
 	@override String get deletecommentalerttext => 'Möchten Sie diesen Kommentar löschen? ';
 	@override String get loadmore => 'Mehr laden';
 	@override String get messages => 'Mitteilungen';
-	@override String get guestuser => 'Gastbenutzer';
+	@override String get guestuser => 'Gastnutzer';
 	@override String get fullname => 'Vollständiger Name';
 	@override String get emailaddress => 'E-Mail-Adresse';
 	@override String get password => 'Passwort';
@@ -1370,6 +1374,7 @@ class _StringsDe implements _StringsEn {
   @override String get aboutcontent_para_6b=> 'oder';
   @override String get aboutcontent_para_7a=> 'Abonniere unseren Newsletter unter ';
   @override String get aboutcontent_para_7b=> ' um auf dem Laufenden zu bleiben und dich an dem zu beteiligen, was Gott tut. ';
+  @override String get aboutcontent_para_8a=> 'Sie können sich auch unter folgender Adresse an Pastor Simon wenden:';
   @override String get apptagline=> 'Andachts-App für tägliche Erleuchtung und geistliches Wachstum';
   @override String get seebankdetails=> 'Überweisungsdetails anzeigen';
   @override String get via_bank=> 'Über Bank';
@@ -1377,6 +1382,8 @@ class _StringsDe implements _StringsEn {
   @override String get account_name => 'Kontoname';
   @override String get bank => 'Bank';
   @override String get iban => 'IBAN';
+  @override  String get myProfile=> 'Mein Profil';
+
 
 
 
@@ -2070,11 +2077,11 @@ extension on _StringsDe {
 			"quitapp": "Beenden Sie die App!",
 			"quitappwarning": "Möchten Sie die App schließen?",
 			"quitappaudiowarning": "Sie spielen gerade eine Audiodatei ab. Wenn Sie die App beenden, wird die Audiowiedergabe gestoppt. ",
-			"ok": "OK",
+			"ok": "Ja",
 			"retry": "WIEDERHOLEN",
 			"oops": "Ups!",
 			"save": "Speichern",
-			"cancel": "Stornieren",
+			"cancel": "Nein",
 			"error": "Fehler",
 			"success": "Erfolg",
 			"skip": "Überspringen",
@@ -2140,7 +2147,7 @@ extension on _StringsDe {
 			"deletecommentalerttext": "Möchten Sie diesen Kommentar löschen? ",
 			"loadmore": "Mehr laden",
 			"messages": "Mitteilungen",
-			"guestuser": "Gastbenutzer",
+			"guestuser": "Gastnutzer",
 			"fullname": "Vollständiger Name",
 			"emailaddress": "E-Mail-Adresse",
 			"password": "Passwort",

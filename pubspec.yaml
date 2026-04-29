@@ -2,7 +2,7 @@ name: yourdailylight
 description: "Your Daily Light App"
 
 
-version: 1.1.67+67
+version: 1.1.72+72
 
 environment:
   #sdk: ^3.6.1
@@ -23,7 +23,7 @@ dependencies:
   transparent_image: ^2.0.0
   pull_to_refresh: ^2.0.0
   cached_network_image: ^3.2.0
-  font_awesome_flutter: ^10.1.0
+  font_awesome_flutter: ^11.0.0
   line_awesome_flutter: ^3.0.1
   #better_player: ^0.0.84
   #youtube_player_flutter: ^8.1.0
@@ -31,7 +31,7 @@ dependencies:
   firebase_core: ^4.1.1
   firebase_messaging: ^16.0.2
   firebase_auth: ^6.1.0
-  flutter_local_notifications: ^17.0.0
+  flutter_local_notifications: ^21.0.0
   google_sign_in: ^7.2.0
   email_validator: ^3.0.0
   shimmer: ^3.0.0
@@ -49,7 +49,7 @@ dependencies:
   flutter_widget_from_html: ^0.17.1
   # select_dialog: ^2.0.0
   #flutter_tts: ^3.2.2
-  clipboard: ^2.0.2
+  clipboard: ^3.0.14
   translator: ^1.0.0
   flutter_sticky_header: ^0.8.0
   flutter_material_color_picker: ^1.1.0+2
@@ -59,9 +59,9 @@ dependencies:
     #git:
   # url: https://github.com/canewsin/flutter_absolute_path.git
 
-  smooth_page_indicator: ^1.0.0+2
+  smooth_page_indicator: ^2.0.1
   visibility_detector: ^0.4.0+2
-  file_picker: ^10.0.0
+  file_picker: ^11.0.2
   event_bus: ^2.0.0
   photo_view: ^0.15.0
   #flutter_login_facebook: ^1.4.1
@@ -82,14 +82,14 @@ dependencies:
   #epub_view: ^3.0.0
   nb_utils: ^7.0.4
   #vocsy_epub_viewer: ^0.0.8
-  just_audio: ^0.10.5
+  #just_audio: ^0.10.5
   #epub_view: ^3.0.0
   #epub_parser: ^3.0.1
   #flutter_html: ^2.0.0
   #pdf: ^3.8.4
-  syncfusion_flutter_pdfviewer: ^31.1.19
+  syncfusion_flutter_pdfviewer: ^33.2.4
   #audioplayers: ^1.1.1
-  just_audio_background: ^0.0.1-beta.7
+  audioplayers: ^6.1.0
   flutter_native_splash: ^2.4.6
   url_launcher: ^6.1.2
   #open_mail_app: ^0.4.5
@@ -117,7 +117,7 @@ dependencies:
   package_info_plus: ^9.0.0
 
   #Daily update
-  timezone: ^0.9.0
+  timezone: ^0.11.0
   #flutter_native_timezone: ^2.0.0
   flutter_timezone: ^5.0.0
 
@@ -128,7 +128,7 @@ dependencies:
   alarm: ^5.1.4
  # android_alarm_manager_plus: ^4.0.7
   android_intent_plus: ^6.0.0
-  device_info_plus: ^11.0.0
+  device_info_plus: ^12.4.0
   share_plus: ^12.0.1
 
 

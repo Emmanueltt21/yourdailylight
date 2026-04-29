@@ -34,77 +34,104 @@ class OnboarderPageState extends State<OnboardingPage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(0),
-          child: Container(color: Colors.grey[100])),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(children: <Widget>[
-          Expanded(
-            child: Stack(
-              children: <Widget>[
-                PageView(
-                  onPageChanged: onPageViewChange,
-                  controller: pageController,
-                  children: buildPageViewItem(),
-                ),
-                Row(
-                  children: <Widget>[
-                    Spacer(),
-                    IconButton(
-                      icon: Icon(Icons.close, color: MyColors.grey_40),
-                      onPressed: () {
+        preferredSize: Size.fromHeight(0),
+        child: Container(color: Colors.grey[100]),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            /// MAIN CONTENT
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  PageView(
+                    onPageChanged: onPageViewChange,
+                    controller: pageController,
+                    children: buildPageViewItem(),
+                  ),
+
+                  /// CLOSE BUTTON (TOP RIGHT)
+                  Row(
+                    children: <Widget>[
+                      Spacer(),
+                      IconButton(
+                        icon: Icon(Icons.close, color: MyColors.grey_40),
+                        onPressed: () {
+                          Provider.of<AppStateManager>(context, listen: false)
+                              .setUserSeenOnboardingPage(true);
+
+                          Navigator.pushReplacementNamed(
+                              context, MyMainHomePage.routeName);
+                        },
+                      ),
+                    ],
+                  ),
+
+                  /// DOT INDICATOR (BOTTOM CENTER)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: 60,
+                      padding: EdgeInsets.only(top: 32),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: buildDots(context),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            /// 🔥 FIXED BOTTOM BUTTON (SAFE AREA APPLIED HERE)
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 55,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isLast ? MyColors.primary : MyColors.grey_10,
+                      foregroundColor: isLast ? Colors.white : MyColors.grey_90,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: isLast ? 4 : 0,
+                    ),
+                    onPressed: () {
+                      if (isLast) {
                         Provider.of<AppStateManager>(context, listen: false)
                             .setUserSeenOnboardingPage(true);
-                      //  Navigator.pushReplacementNamed(context, HomePage.routeName);
-                        Navigator.pushReplacementNamed(context, MyMainHomePage.routeName);
-                      },
-                    ),
-                  ],
-                ),
 
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 60,
-                    padding: EdgeInsets.only(top: 32),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: buildDots(context),
+                        Navigator.pushReplacementNamed(
+                            context, MyMainHomePage.routeName);
+                        return;
+                      }
+
+                      pageController.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeOut,
+                      );
+                    },
+                    child: Text(
+                      isLast ? t.done : t.next,
+                      style: TextStyles.subhead(context).copyWith(
+                        color: isLast ? Colors.white : MyColors.grey_90,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              child: Text(isLast ? t.done : t.next,
-                  style: TextStyles.subhead(context).copyWith(
-                      color: MyColors.grey_90, fontWeight: FontWeight.bold)),
-              style: TextButton.styleFrom(
-                backgroundColor: MyColors.grey_10,
               ),
-              onPressed: () {
-                if (isLast) {
-                  Provider.of<AppStateManager>(context, listen: false)
-                      .setUserSeenOnboardingPage(true);
-                 // Navigator.pushReplacementNamed(context, HomePage.routeName);
-                  Navigator.pushReplacementNamed(context, MyMainHomePage.routeName);
-                  return;
-                }
-                pageController.nextPage(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeOut);
-              },
             ),
-          )
-        ]),
+          ],
+        ),
       ),
     );
   }
+
 
   void onPageViewChange(int _page) {
     page = _page;

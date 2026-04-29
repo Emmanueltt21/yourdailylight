@@ -1,158 +1,114 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 import 'package:yourdailylight/utils/my_colors.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../widgets/CommentsItem.dart';
+import '../../providers/AudioPlayerModel.dart';
+import '../../models/Media.dart';
 
 
 class PodCastPlayer extends StatefulWidget {
- // const PodCastPlayer({Key? key}) : super(key: key);
-  String podCastMediaUrl , podcastTitle, cover_photo;
+  final String podCastMediaUrl;
+  final String podcastTitle;
+  final String cover_photo;
   static const routeName = "/podcastplayer";
-   PodCastPlayer({required this.podCastMediaUrl, required this.podcastTitle, required this.cover_photo});
+
+  PodCastPlayer({required this.podCastMediaUrl, required this.podcastTitle, required this.cover_photo});
 
   @override
   State<PodCastPlayer> createState() => _PodCastPlayerState();
 }
 
 class _PodCastPlayerState extends State<PodCastPlayer> with WidgetsBindingObserver {
-  static int _nextMediaId = 0;
-  late AudioPlayer _player;
-  String urldata = '';
-
-
-
 
   @override
   void initState() {
     super.initState();
-    _player = AudioPlayer();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.black,
     ));
-    _init();
-  }
-
-  Future<void> _init() async {
-    final session = await AudioSession.instance;
-    await session.configure(const AudioSessionConfiguration.speech());
-    // Listen to errors during playback.
-    _player.playbackEventStream.listen((event) {},
-        onError: (Object e, StackTrace stackTrace) {
-          print('A stream error occurred: $e');
-        });
-    try {
-    //  await _player.setAudioSource(_playlist);
-      await _player.setAudioSource(
-          AudioSource.uri(
-        Uri.parse(widget.podCastMediaUrl),
-            tag: MediaItem(
-              id: '${_nextMediaId++}',
-              album: "Your Daily Light PodCast",
-              title: '${widget.podcastTitle}',
-              artUri: Uri.parse(
-                  "${widget.cover_photo}"
-              ),
-            ),
-
+    
+    // Start playback when entering the screen
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final audioModel = Provider.of<AudioPlayerModel>(context, listen: false);
+      audioModel.play(Media(
+        id: widget.podCastMediaUrl.hashCode, // Simple ID for matching
+        title: widget.podcastTitle,
+        streamUrl: widget.podCastMediaUrl,
+        coverPhoto: widget.cover_photo,
       ));
-    } catch (e, stackTrace) {
-      // Catch load errors: 404, invalid url ...
-      print("Error loading playlist: $e");
-      print(stackTrace);
-    }
+    });
   }
-
-  @override
-  void dispose() {
-    _player.dispose();
-    super.dispose();
-  }
-
-  Stream<PositionData> get _positionDataStream =>
-      Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-          _player.positionStream,
-          _player.bufferedPositionStream,
-          _player.durationStream,
-              (position, bufferedPosition, duration) => PositionData(
-              position, bufferedPosition, duration ?? Duration.zero));
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColors.accentDark,
-        title: Text('${widget.podcastTitle}', style: TextStyle(color: Colors.white),),
+        title: Text(widget.podcastTitle, style: TextStyle(color: Colors.white),),
         centerTitle: true,
       ),
 
-      body:Scaffold(
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: StreamBuilder<SequenceState?>(
-                  stream: _player.sequenceStateStream,
+      body: Consumer<AudioPlayerModel>(
+        builder: (context, audioModel, child) {
+          return SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                              child:
+                              Image.network(widget.cover_photo)),
+                        ),
+                      ),
+                      const Text("Your Daily Light PodCast"),
+                      Text(widget.podcastTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                    ],
+                  ),
+                ),
+                ControlButtons(audioModel),
+                StreamBuilder<PositionData>(
+                  stream: _getPositionDataStream(audioModel),
                   builder: (context, snapshot) {
-                    final state = snapshot.data;
-                    if (state?.sequence.isEmpty ?? true) {
-                      return const SizedBox();
-                    }
-                    final metadata = state!.currentSource!.tag as MediaItem;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                                child:
-                                Image.network(metadata.artUri.toString())),
-                          ),
-                        ),
-                        Text(metadata.album!,
-                            //style: Theme.of(context).textTheme.headline6
-                        ),
-                        Text(metadata.title),
-                      ],
+                    return SeekBar(
+                      duration: audioModel.duration,
+                      position: audioModel.position,
+                      bufferedPosition: Duration.zero,
+                      onChangeEnd: (newPosition) {
+                        audioModel.player.seek(newPosition);
+                      },
                     );
                   },
                 ),
-              ),
-              ControlButtons(_player),
-              StreamBuilder<PositionData>(
-                stream: _positionDataStream,
-                builder: (context, snapshot) {
-                  final positionData = snapshot.data;
-                  return SeekBar(
-                    duration: positionData?.duration ?? Duration.zero,
-                    position: positionData?.position ?? Duration.zero,
-                    bufferedPosition:
-                    positionData?.bufferedPosition ?? Duration.zero,
-                    onChangeEnd: (newPosition) {
-                      _player.seek(newPosition);
-                    },
-                  );
-                },
-              ),
-              const SizedBox(height: 8.0),
-             SizedBox(height: 50,)
-            ],
-          ),
-        ),
-
+                const SizedBox(height: 8.0),
+                const SizedBox(height: 50,)
+              ],
+            ),
+          );
+        },
       ),
+    );
+  }
+
+  Stream<PositionData> _getPositionDataStream(AudioPlayerModel audioModel) {
+    return Rx.combineLatest3<Duration, Duration, Duration, PositionData>(
+      audioModel.player.onPositionChanged,
+      Stream.value(Duration.zero),
+      audioModel.player.onDurationChanged,
+      (position, bufferedPosition, duration) => PositionData(
+          position, bufferedPosition, duration)
     );
   }
 }
@@ -160,9 +116,9 @@ class _PodCastPlayerState extends State<PodCastPlayer> with WidgetsBindingObserv
 
 /// Displays the play/pause button and volume/speed sliders.
 class ControlButtons extends StatelessWidget {
-  final AudioPlayer player;
+  final AudioPlayerModel audioModel;
 
-  const ControlButtons(this.player, {Key? key}) : super(key: key);
+  const ControlButtons(this.audioModel, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -171,87 +127,85 @@ class ControlButtons extends StatelessWidget {
       children: [
         IconButton(
           icon: const Icon(Icons.volume_up),
-          onPressed: () {
-            showSliderDialog(
-              context: context,
-              title: "Adjust volume",
-              divisions: 10,
-              min: 0.0,
-              max: 1.0,
-              stream: player.volumeStream,
-              onChanged: player.setVolume,
-            );
-          },
+          onPressed: () => _showVolumeDialog(context),
         ),
-        StreamBuilder<SequenceState?>(
-          stream: player.sequenceStateStream,
-          builder: (context, snapshot) => IconButton(
-            icon: const Icon(Icons.skip_previous),
-            onPressed: player.hasPrevious ? player.seekToPrevious : null,
+        IconButton(
+          icon: const Icon(Icons.skip_previous),
+          onPressed: null,
+        ),
+        IconButton(
+          icon: Icon(
+            audioModel.playerState == PlayerState.playing
+                ? Icons.pause
+                : Icons.play_arrow,
           ),
-        ),
-        StreamBuilder<PlayerState>(
-          stream: player.playerStateStream,
-          builder: (context, snapshot) {
-            final playerState = snapshot.data;
-            final processingState = playerState?.processingState;
-            final playing = playerState?.playing;
-            if (processingState == ProcessingState.loading ||
-                processingState == ProcessingState.buffering) {
-              return Container(
-                margin: const EdgeInsets.all(8.0),
-                width: 64.0,
-                height: 64.0,
-                child: const CircularProgressIndicator(),
-              );
-            } else if (playing != true) {
-              return IconButton(
-                icon: const Icon(Icons.play_arrow),
-                iconSize: 64.0,
-                onPressed: player.play,
-              );
-            } else if (processingState != ProcessingState.completed) {
-              return IconButton(
-                icon: const Icon(Icons.pause),
-                iconSize: 64.0,
-                onPressed: player.pause,
-              );
+          iconSize: 64.0,
+          onPressed: () {
+            if (audioModel.playerState == PlayerState.playing) {
+              audioModel.pause();
             } else {
-              return IconButton(
-                icon: const Icon(Icons.replay),
-                iconSize: 64.0,
-                onPressed: () => player.seek(Duration.zero,
-                    index: player.effectiveIndices!.first),
-              );
+              audioModel.resume();
             }
           },
         ),
-        StreamBuilder<SequenceState?>(
-          stream: player.sequenceStateStream,
-          builder: (context, snapshot) => IconButton(
-            icon: const Icon(Icons.skip_next),
-            onPressed: player.hasNext ? player.seekToNext : null,
-          ),
+        IconButton(
+          icon: const Icon(Icons.skip_next),
+          onPressed: null,
         ),
-        StreamBuilder<double>(
-          stream: player.speedStream,
-          builder: (context, snapshot) => IconButton(
-            icon: Text("${snapshot.data?.toStringAsFixed(1)}x",
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            onPressed: () {
-              showSliderDialog(
-                context: context,
-                title: "Adjust speed",
-                divisions: 10,
-                min: 0.5,
-                max: 1.5,
-                stream: player.speedStream,
-                onChanged: player.setSpeed,
-              );
-            },
-          ),
+        IconButton(
+          icon: const Icon(Icons.speed),
+          onPressed: () => _showSpeedDialog(context),
         ),
       ],
+    );
+  }
+
+  void _showVolumeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        double currentVolume = 1.0;
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Adjust volume"),
+              content: Slider(
+                value: currentVolume,
+                onChanged: (v) {
+                  setState(() => currentVolume = v);
+                  audioModel.player.setVolume(v);
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showSpeedDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        double currentSpeed = 1.0;
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Adjust speed"),
+              content: Slider(
+                min: 0.5,
+                max: 2.0,
+                divisions: 6,
+                value: currentSpeed,
+                onChanged: (v) {
+                  setState(() => currentSpeed = v);
+                  audioModel.player.setPlaybackRate(v);
+                },
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

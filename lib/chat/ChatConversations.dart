@@ -333,9 +333,8 @@ class _GetPartnerChatBodyState extends State<GetPartnerChatBody> {
                             ),
                             onPressed: () async {
                               FilePickerResult? result =
-                                  await FilePicker.platform.pickFiles(
+                                  await FilePicker.pickFiles(
                                 type: FileType.custom,
-                                allowCompression: true,
                                 allowMultiple: false,
                                 withData: false,
                                 allowedExtensions: [

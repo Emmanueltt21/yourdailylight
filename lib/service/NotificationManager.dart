@@ -31,7 +31,7 @@ class NotificationManager {
     );
 
     await notificationsPlugin.initialize(
-      InitializationSettings(android: androidSettings, iOS: iosSettings),
+      settings: InitializationSettings(android: androidSettings, iOS: iosSettings),
       onDidReceiveNotificationResponse: (response) {
         print("🔔 [NotificationManager] onDidReceiveNotificationResponse called");
         print("   Payload: ${response.payload}");
@@ -66,10 +66,10 @@ class NotificationManager {
 
     // Attempt to delete previously-created noisy channels if they exist
     try {
-      await androidPlugin?.deleteNotificationChannel('daily_devotional');
+      await androidPlugin?.deleteNotificationChannel(channelId: 'daily_devotional');
     } catch (_) {}
     try {
-      await androidPlugin?.deleteNotificationChannel('churchapp');
+      await androidPlugin?.deleteNotificationChannel(channelId: 'churchapp');
     } catch (_) {}
 
     const AndroidNotificationChannel dailyDevotionalSilent = AndroidNotificationChannel(
@@ -138,11 +138,11 @@ class NotificationManager {
     final tzScheduledTime = tz.TZDateTime.from(next7AM, tz.local);
 
     await notificationsPlugin.zonedSchedule(
-      1,
-      '📖 Your Daily Devotional',
-      'Check out God\'s Word for you today! 🔥',
-      tzScheduledTime,
-      const NotificationDetails(
+      id: 1,
+      title: '📖 Your Daily Devotional',
+      body: 'Check out God\'s Word for you today! 🔥',
+      scheduledDate: tzScheduledTime,
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'daily_devotional_silent',
           'Daily Devotional (Silent)',
@@ -158,9 +158,8 @@ class NotificationManager {
           presentSound: false,
         ),
       ),
-      payload: payload,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      payload: payload,
       matchDateTimeComponents: DateTimeComponents.time,
     );
 
@@ -169,10 +168,10 @@ class NotificationManager {
 
   Future<void> showDailyDevotionalSilent({String payload = 'dailyDevotional'}) async {
     await notificationsPlugin.show(
-      0,
-      '📖 Your Daily Devotional',
-      'Check out God\'s Word for you today! 🔥',
-      const NotificationDetails(
+      id: 0,
+      title: '📖 Your Daily Devotional',
+      body: 'Check out God\'s Word for you today! 🔥',
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'daily_devotional_silent',
           'Daily Devotional (Silent)',
