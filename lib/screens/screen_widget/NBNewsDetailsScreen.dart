@@ -15,6 +15,7 @@ import '../../models/News.dart';
 import '../../providers/AppStateManager.dart';
 import '../../utils/ApiUrl.dart';
 import '../../utils/langs.dart';
+import '../../utils/utils.dart';
 import '../../widgets/widget_church.dart';
 
 class NBNewsDetailsScreen extends StatefulWidget {
@@ -326,6 +327,10 @@ class NBNewsDetailsScreenState extends State<NBNewsDetailsScreen> {
                     // Text('${widget.newsDetails!.content}', style: primaryTextStyle(), textAlign: TextAlign.justify),
                     HtmlWidget(
                       '${mDetails.content}',
+                      onTapUrl: (url) async {
+                        await Utils.redirectToUrl(url);
+                        return true;
+                      },
                       // webView: true,
                     ),
                     16.height,

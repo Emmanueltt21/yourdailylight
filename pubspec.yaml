@@ -6,7 +6,7 @@ version: 1.1.72+72
 
 environment:
   #sdk: ^3.6.1
-  sdk: ^3.7.2
+  sdk: ^3.11.4
 
 
 dependencies:
@@ -14,23 +14,23 @@ dependencies:
     sdk: flutter
 
 
-  cupertino_icons: ^1.0.8
+  cupertino_icons: ^1.0.9
   fast_i18n: ^5.11.0
   easy_dialog: ^1.1.0
-  sqflite: ^2.0.2
-  dio: ^5.3.2
+  sqflite: ^2.4.1
+  dio: ^5.9.2
   provider: ^6.0.2
   transparent_image: ^2.0.0
   pull_to_refresh: ^2.0.0
-  cached_network_image: ^3.2.0
+  cached_network_image: ^3.4.1
   font_awesome_flutter: ^11.0.0
   line_awesome_flutter: ^3.0.1
   #better_player: ^0.0.84
   #youtube_player_flutter: ^8.1.0
  # youtube_player_flutter_quill: ^8.2.2
-  firebase_core: ^4.1.1
+  firebase_core: ^4.7.0
   firebase_messaging: ^16.0.2
-  firebase_auth: ^6.1.0
+  firebase_auth: ^6.4.0
   flutter_local_notifications: ^21.0.0
   google_sign_in: ^7.2.0
   email_validator: ^3.0.0
@@ -45,7 +45,7 @@ dependencies:
  # package_info: ^2.0.2
   #in_app_review: ^2.0.6
   #flutter_web_browser: ^0.17.1
-  lottie: ^3.0.0
+  lottie: ^3.3.1
   flutter_widget_from_html: ^0.17.1
   # select_dialog: ^2.0.0
   #flutter_tts: ^3.2.2
@@ -80,7 +80,7 @@ dependencies:
   #New Dependencies and library
   #epubx: ^3.0.0
   #epub_view: ^3.0.0
-  nb_utils: ^7.0.4
+  nb_utils: ^7.1.0
   #vocsy_epub_viewer: ^0.0.8
   #just_audio: ^0.10.5
   #epub_view: ^3.0.0
@@ -113,8 +113,8 @@ dependencies:
   rxdart: any
   html: any
   #wakelock: any
-  wakelock_plus: ^1.2.8
-  package_info_plus: ^9.0.0
+  wakelock_plus: ^1.5.2
+  package_info_plus: ^9.0.1
 
   #Daily update
   timezone: ^0.11.0

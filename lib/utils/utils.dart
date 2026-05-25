@@ -54,13 +54,13 @@ class Utils {
   }
 
   static Future<void> redirectToUrl(String url) async {
-    debugPrint("_launchUrl url ===> $url");
-    if (await canLaunchUrl(Uri.parse(url.toString()))) {
-      await launchUrl(
-        Uri.parse(url.toString()),
-        mode: LaunchMode.platformDefault,
-      );
-    } else {
+    final uri = Uri.parse(url);
+    debugPrint("_launchUrl url ===> $uri");
+    final launched = await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    );
+    if (!launched) {
       throw "Could not launch $url";
     }
   }
@@ -95,4 +95,3 @@ class Utils {
     }
   }
 }
-
