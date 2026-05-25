@@ -59,11 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDWQ3OWoXIKI4iiXX22Rv-gzsimoWH4EhU',
-    appId: '1:859943339060:ios:e6470e912b13d0153bb661',
+    appId: '1:859943339060:ios:0da9b47008cc30833bb661',
     messagingSenderId: '859943339060',
     projectId: 'mychurch-f40f8',
-    storageBucket: 'mychurch-f40f8.appspot.com',
-    iosClientId: '859943339060-o32utn2rq1jtg0shnjtp5u0edtsavlpv.apps.googleusercontent.com',
+    storageBucket: 'mychurch-f40f8.firebasestorage.app',
+    iosClientId: '859943339060-ashva4ed6eblqc3ju61gbcajsm6hi9eh.apps.googleusercontent.com',
     iosBundleId: 'com.lighthouseglobal.yourdailylight',
   );
 }

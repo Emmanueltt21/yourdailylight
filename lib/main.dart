@@ -242,17 +242,29 @@ class MyHttpOverrides extends HttpOverrides {
 Future<void> setupFCM() async {
   fcm.FirebaseMessaging messaging = fcm.FirebaseMessaging.instance;
 
+  await messaging.setAutoInitEnabled(true);
+
   fcm.NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     badge: true,
-    sound: false,
+    sound: true,
   );
 
   if (settings.authorizationStatus == fcm.AuthorizationStatus.authorized) {
     print("✅ User granted notification permission.");
     
     if (Platform.isIOS) {
+      await messaging.setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
       String? apnsToken = await messaging.getAPNSToken();
+      if (apnsToken == null) {
+        await Future.delayed(const Duration(seconds: 2));
+        apnsToken = await messaging.getAPNSToken();
+      }
       if (apnsToken != null) {
         print("🍏 APNs Token: $apnsToken");
       } else {
@@ -262,6 +274,13 @@ Future<void> setupFCM() async {
 
     await messaging.subscribeToTopic("all_users");
     print("📩 Subscribed to 'all_users' topic");
+
+    final token = await messaging.getToken();
+    print("📱 FCM Token: $token");
+
+    messaging.onTokenRefresh.listen((newToken) {
+      print("🔄 FCM token refreshed: $newToken");
+    });
 
     fcm.FirebaseMessaging.onMessage.listen((fcm.RemoteMessage message) {
       print("📨 Foreground message: \${message.messageId}");
