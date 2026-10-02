@@ -7,6 +7,15 @@ import '../models/ChatMessages.dart';
 import '../utils/ApiUrl.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:convert';
+import 'dart:async';
+import '../models/Userdata.dart';
+import '../models/Inbox.dart';
+import '../models/LiveStreams.dart';
+import '../models/ChatMessages.dart';
+import '../utils/ApiUrl.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/Media.dart';
@@ -15,6 +24,19 @@ import '../providers/events.dart';
 import '../models/UserEvents.dart';
 import 'dart:math';
 import 'NotificationManager.dart';
+import 'package:html/parser.dart' show parse;
+
+String _sanitizeHtml(String? text) {
+  if (text == null) return "";
+  // Decode HTML entities
+  try {
+    var document = parse(text);
+    return document.body?.text ?? text.replaceAll('&nbsp;', ' ');
+  } catch (e) {
+    return text.replaceAll('&nbsp;', ' ');
+  }
+}
+
 
 // var flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
 
@@ -195,6 +217,8 @@ class Firebase {
     }
 
     if (title != "" && msg != "") {
+      title = _sanitizeHtml(title);
+      msg = _sanitizeHtml(msg);
       BigTextStyleInformation bigTextStyleInformation =
           BigTextStyleInformation(msg!, contentTitle: title);
       var androidPlatformChannelSpecifics = AndroidNotificationDetails(
@@ -226,6 +250,8 @@ class Firebase {
 
   static sendNotification(
       Map<String, dynamic> message, String? title, String msg) async {
+    title = _sanitizeHtml(title);
+    msg = _sanitizeHtml(msg);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'churchapp_silent', 'churchapp_silent',
         color: MyColors.primary,
@@ -253,6 +279,8 @@ class Firebase {
 
   static chatNotification(
       Map<String, dynamic> message, String? name, String title) async {
+    name = _sanitizeHtml(name);
+    title = _sanitizeHtml(title);
     List<String> lines = <String>[
       title,
     ];

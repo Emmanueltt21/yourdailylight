@@ -82,6 +82,7 @@ import './models/UserEvents.dart';
 import './screens/AppTermsScreen.dart';
 import './screens/AboutUsScreen.dart';
 import 'package:yourdailylight/service/NotificationHandler.dart';
+import './screens/NotificationsScreen.dart';
 
 class MyApp extends StatefulWidget {
    GlobalKey<NavigatorState>?  navKey;
@@ -507,6 +508,14 @@ void initialization() async {
             return MaterialPageRoute(
               builder: (context) {
                 return InboxListScreenState();
+              },
+            );
+          }
+
+          if (settings.name == NotificationsScreen.routeName) {
+            return MaterialPageRoute(
+              builder: (context) {
+                return NotificationsScreen();
               },
             );
           }

@@ -17,6 +17,8 @@ import '../../utils/ApiUrl.dart';
 import '../../utils/langs.dart';
 import '../../utils/utils.dart';
 import '../../widgets/widget_church.dart';
+import 'package:intl/intl.dart';
+
 
 class NBNewsDetailsScreen extends StatefulWidget {
   static String tag = '/NBNewsDetailsScreen';
@@ -90,84 +92,75 @@ class NBNewsDetailsScreenState extends State<NBNewsDetailsScreen> {
     });
     mDetails = widget.newsDetails!;
 
-    if(mlang =="EN"){
-      setState(() {
-        isLoading = false;
-        News news = News(
-          title: mDetails.title,
-          content: mDetails.content,
-          category: mDetails.category,
-          thumbnail: mDetails.thumbnail,
-          mediaType: mDetails.mediaType,
-          author: mDetails.author,
-          date: mDetails.date,
-          dmo: mDetails.dmo,
-          uti: mDetails.uti,
-          utimo: mDetails.utimo,
-          views_count: mDetails.views_count,
-        );
-        setState(() {
-          isLoading = false;
-          mDetails  = news;
-          print(mDetails);
-        });
-      });
 
-    } else if(mlang =="DE"){
-      setState(() {
-        isLoading = false;
-        News news = News(
-          title: mDetails.german_title,
-          content: mDetails.german_content,
-          category: mDetails.category,
-          thumbnail: mDetails.thumbnail,
-          mediaType: mDetails.mediaType,
-          author: mDetails.author,
-          date: mDetails.date,
-          dmo: mDetails.dmo,
-          uti: mDetails.uti,
-          utimo: mDetails.utimo,
-          views_count: mDetails.views_count,
-        );
-        setState(() {
-          isLoading = false;
-          mDetails  = news;
-          print(mDetails);
-        });
+    print("translateItems ---->> ");
 
-      });
-    } else if(mlang =="FR"){
-      setState(() {
-        isLoading = false;
-        News news = News(
-          title: mDetails.french_title,
-          content: mDetails.french_content,
-          category: mDetails.category,
-          thumbnail: mDetails.thumbnail,
-          mediaType: mDetails.mediaType,
-          author: mDetails.author,
-          date: mDetails.date,
-          dmo: mDetails.dmo,
-          uti: mDetails.uti,
-          utimo: mDetails.utimo,
-          views_count: mDetails.views_count,
-        );
-        setState(() {
-          isLoading = false;
-          mDetails  = news;
-          print(mDetails);
-        });
+    String? chosenTitle;
+    String? chosenContent;
 
-      });
-    } else {
-        // If the server did not return a 200 OK response,
-        // then throw an exception.
-        setState(() {
-          isLoading = false;
-          isError = true;
-          print(mDetails);
-        });
-      }
+    switch (mlang) {
+      case "FR":
+        chosenTitle = mDetails.french_title;
+        chosenContent = mDetails.french_content;
+        break;
+      case "DE":
+        chosenTitle = mDetails.german_title;
+        chosenContent = mDetails.german_content;
+        break;
+      case "IT":
+        chosenTitle = mDetails.italian_title;
+        chosenContent = mDetails.italian_content;
+        break;
+      case "ES":
+        chosenTitle = mDetails.spanish_title;
+        chosenContent = mDetails.spanish_content;
+        break;
+      case "HI":
+        chosenTitle = mDetails.hindi_title;
+        chosenContent = mDetails.hindi_content;
+        break;
+      case "RU":
+        chosenTitle = mDetails.russian_title;
+        chosenContent = mDetails.russian_content;
+        break;
+      case "PT":
+        chosenTitle = mDetails.portuguese_title;
+        chosenContent = mDetails.portuguese_content;
+        break;
+      case "ZH":
+        chosenTitle = mDetails.mandarin_title;
+        chosenContent = mDetails.mandarin_content;
+        break;
+      default: // EN or fallback
+        chosenTitle = mDetails.title;
+        chosenContent = mDetails.content;
+        break;
+    }
+
+    final effectiveTitle = (chosenTitle != null && chosenTitle.trim().isNotEmpty)
+        ? chosenTitle
+        : mDetails.title;
+    final effectiveContent = (chosenContent != null && chosenContent.trim().isNotEmpty)
+        ? chosenContent
+        : mDetails.content;
+
+    setState(() {
+      isLoading = false;
+      mDetails = News(
+        id: mDetails.id,
+        title: effectiveTitle,
+        content: effectiveContent,
+        category: mDetails.category,
+        thumbnail: mDetails.thumbnail,
+        mediaType: mDetails.mediaType,
+        author: mDetails.author,
+        date: mDetails.date,
+        dmo: mDetails.dmo,
+        uti: mDetails.uti,
+        utimo: mDetails.utimo,
+        views_count: mDetails.views_count,
+      );
+    });
     } catch (exception) {
       // I get no exception here
       print(exception);
@@ -260,12 +253,13 @@ class NBNewsDetailsScreenState extends State<NBNewsDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 4,),
                     // Text('${widget.newsDetails!.cat_id}', style: boldTextStyle(color: MyColors.accentDark)),
                     Row(
                       children: [
                         Text('${mDetails.title}', style: boldTextStyle(size: 20))
                             .expand(flex: 3),
-                        isBookmark
+                      /*  isBookmark
                             ? IconButton(
                                 icon: Icon(Icons.bookmark),
                                 onPressed: () {
@@ -287,7 +281,7 @@ class NBNewsDetailsScreenState extends State<NBNewsDetailsScreen> {
                                   );
                                   toasty(context, t.added_bookmark);
                                 },
-                              ),
+                              ),*/
                       ],
                     ),
                     16.height,
@@ -302,12 +296,16 @@ class NBNewsDetailsScreenState extends State<NBNewsDetailsScreen> {
                       contentPadding: EdgeInsets.all(0),
                       title: Text('${mDetails.author}', style: boldTextStyle()),
                       subtitle:
-                          Text('${mDetails.dmo}', style: secondaryTextStyle()),
+                         // Text('${mDetails.dmo}', style: secondaryTextStyle()),
+                      Text(
+                        formatDate(mDetails.dmo),
+                        style: secondaryTextStyle(),
+                      ),
                       //  subtitle: Text('${mDetails.date}', style: secondaryTextStyle()),
                       // subtitle: Text('${mDetails.date}', style: secondaryTextStyle()),
                       leading: CircleAvatar(
                           backgroundImage: AssetImage(ApiUrl.NBProfileImage)),
-                      trailing: AppButton(
+                       /*trailing: AppButton(
                         elevation: 0,
                         text: isFollowing ? t.likes : t.likes,
                         onTap: () {
@@ -321,7 +319,37 @@ class NBNewsDetailsScreenState extends State<NBNewsDetailsScreen> {
                             ? grey.withOpacity(0.2)
                             : MyColors.accentDark,
                         textColor: isFollowing ? grey : white,
-                      ).cornerRadiusWithClipRRect(30),
+                      ).cornerRadiusWithClipRRect(30),*/
+                      trailing: Builder(
+                        builder: (BuildContext iconContext) {
+                          return FilledButton.icon(
+                            onPressed: () async {
+                              final String shareText =
+                                  "${mDetails.title}\n${ApiUrl.DailyWebNews}?id=${mDetails.id}";
+                              await Utils.shareApp(shareText, context: iconContext);
+                            },
+                            icon: const Icon(Icons.share_rounded, size: 18),
+                            //label: const Text("Share"),
+                            label:  Text(t.share),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: MyColors.accentDark,
+                              foregroundColor: white,
+                              elevation: 0,
+                              shape: const StadiumBorder(),
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                            ),
+                          );
+                        },
+                      ),
+                      /*trailing: IconButton(
+                          onPressed: () async {
+                            //eguzzz
+                            //...
+                            // Share devotional title and link
+                            final String shareText = "${mDetails.title} \n${ApiUrl.DailyWebNews}?id=${mDetails.id}";
+                            await Utils.shareApp(shareText);
+                          },
+                          icon: Icon(Icons.share)),*/
                     ),
                     16.height,
                     // Text('${widget.newsDetails!.content}', style: primaryTextStyle(), textAlign: TextAlign.justify),
@@ -348,4 +376,17 @@ class NBNewsDetailsScreenState extends State<NBNewsDetailsScreen> {
       ),
     );
   }
+
+
+  String formatDate(String? date) {
+    if (date == null || date.isEmpty) return "";
+
+    try {
+      final DateTime dt = DateTime.parse(date);
+      return DateFormat("MMMM d, yyyy • h:mm a").format(dt);
+    } catch (e) {
+      return date;
+    }
+  }
+
 }

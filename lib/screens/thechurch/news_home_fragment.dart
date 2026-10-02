@@ -9,12 +9,13 @@ import 'package:html/parser.dart' show parse;
 import '../../i18n/strings.g.dart';
 import '../../models/News.dart';
 import '../../providers/AppStateManager.dart';
+import '../../providers/InboxProvider.dart';
 import '../../providers/NewsScreensModel.dart';
 import '../../utils/langs.dart';
 import '../../utils/my_colors.dart';
-import '../../widgets/widget_church.dart';
 import '../DrawerScreen.dart';
 import '../NoitemScreen.dart';
+import '../NotificationsScreen.dart';
 import '../screen_widget/NBNewsDetailsScreen.dart';
 
 class NewsHomeFragment extends StatelessWidget {
@@ -27,7 +28,49 @@ class NewsHomeFragment extends StatelessWidget {
         Provider.of<AppStateManager>(context, listen: false).userdata,
       ),
       child: Scaffold(
-        appBar: AppBar(title: Text(t.appname_label, style: TextStyle(color: Colors.white))),
+        appBar: AppBar(
+          title: Text(t.appname_label, style: TextStyle(color: Colors.white)),
+          actions: [
+            Consumer<InboxProvider>(
+              builder: (context, inboxProvider, _) {
+                final unreadCount = inboxProvider.unreadCount;
+                return Stack(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.notifications_outlined, color: Colors.white),
+                      tooltip: 'Notifications',
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(NotificationsScreen.routeName);
+                      },
+                    ),
+                    if (unreadCount > 0)
+                      Positioned(
+                        right: 6,
+                        top: 6,
+                        child: Container(
+                          padding: EdgeInsets.all(3),
+                          constraints: BoxConstraints(minWidth: 18, minHeight: 18),
+                          decoration: BoxDecoration(
+                            color: Colors.redAccent,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            unreadCount > 99 ? '99+' : '$unreadCount',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
         body: Padding(padding: EdgeInsets.only(top: 12), child: NewsScreenBody()),
         drawer: SizedBox(
           width: MediaQuery.of(context).size.width * 0.75, // 3/4 of screen width
@@ -65,16 +108,59 @@ class _NewsScreenBodyState extends State<NewsScreenBody> {
     String lang = appLanguageData[AppLanguage.values[appManager.preferredLanguage]]!['name']!;
 
     return items.map((item) {
+      String? localizedTitle;
+      String? localizedContent;
+
       switch (lang) {
         case 'French':
-          return item.copyWith(title: item.french_title, content: item.french_content);
+          localizedTitle = item.french_title;
+          localizedContent = item.french_content;
+          break;
         case 'German':
-          return item.copyWith(title: item.german_title, content: item.german_content);
+          localizedTitle = item.german_title;
+          localizedContent = item.german_content;
+          break;
+        case 'Italian':
+          localizedTitle = item.italian_title;
+          localizedContent = item.italian_content;
+          break;
+        case 'Spanish':
+          localizedTitle = item.spanish_title;
+          localizedContent = item.spanish_content;
+          break;
+        case 'Hindi':
+          localizedTitle = item.hindi_title;
+          localizedContent = item.hindi_content;
+          break;
+        case 'Russian':
+          localizedTitle = item.russian_title;
+          localizedContent = item.russian_content;
+          break;
+        case 'Portuguese':
+          localizedTitle = item.portuguese_title;
+          localizedContent = item.portuguese_content;
+          break;
+        case 'Mandarin':
+          localizedTitle = item.mandarin_title;
+          localizedContent = item.mandarin_content;
+          break;
         default:
-          return item;
+          localizedTitle = item.title;
+          localizedContent = item.content;
+          break;
       }
+
+      final effectiveTitle = (localizedTitle != null && localizedTitle.trim().isNotEmpty)
+          ? localizedTitle
+          : item.title;
+      final effectiveContent = (localizedContent != null && localizedContent.trim().isNotEmpty)
+          ? localizedContent
+          : item.content;
+
+      return item.copyWith(title: effectiveTitle, content: effectiveContent);
     }).toList();
   }
+
 
   List<News> orderNewsItems(List<News> listNews){
 

@@ -1,5 +1,9 @@
 class ApiUrl {
   static const String BASEURL = "https://app.yourdailylight.org/dailylight/";   //LIVE Server
+
+  //static const String BASEURL = "http://192.168.1.122/dailylightapp_backend/";   //LOCAL HOSTED Server
+
+
     //static const String BASEURL = "https://testdailylight.yourdailylight.org/dailylight/";   //test dailylight Server
   //static const String BASEURL_ADD = "https://hupertech.com/";
   static const String BASEURL_ADD = "https://www.pay.iwomitechnologies.com";
@@ -27,6 +31,8 @@ class ApiUrl {
   static String iosAppShareUrlDesc = "Let me recommend you this application\n\n$iosAppUrl";
   static String androidAppUrl = "https://play.google.com/store/apps/details?id=${ApiUrl.appPackageName}";
   static String iosAppUrl = "https://apps.apple.com/us/app/id${ApiUrl.appleAppId}";
+  static String DailyDevotionalLink = "https://devotional.yourdailylight.org/";
+  static String DailyWebNews = "https://news.yourdailylight.org/";
 
 
   static String appFacebookLink = "https://www.facebook.com/YourDailyLight";

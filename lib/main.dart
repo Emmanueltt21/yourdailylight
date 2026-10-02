@@ -33,6 +33,7 @@ import 'package:yourdailylight/providers/DownloadsModel.dart';
 import 'package:yourdailylight/providers/NotesProvider.dart';
 import 'package:yourdailylight/providers/ChatManager.dart';
 import 'package:yourdailylight/providers/cart_provider.dart';
+import 'package:yourdailylight/providers/InboxProvider.dart';
 import 'package:yourdailylight/utils/ApiUrl.dart';
 import 'StartupPermissionGate.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -187,22 +188,23 @@ void main() async {
         ChangeNotifierProvider(create: (_) => TranslateProvider()),
         ChangeNotifierProvider(create: (_) => ChatManager()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => InboxProvider()..loadItems()),
       ],
       child: MyApp(defaultHome: firstScreen, navKey: navigatorKey),
     ),
   );
 
-  // ✅ DEFER permissions and scheduling AFTER runApp with delay
+  // Defer notification manager scheduling and permissions to ensure Activity is attached
   WidgetsBinding.instance.addPostFrameCallback((_) async {
-    // Add delay to ensure UI is fully loaded and Activity is attached
-    await Future.delayed(Duration(seconds: 2));
-    
-    // Setup FCM permissions and listeners safely
+    // Setup FCM permissions and listeners safely now that Activity is attached
     try {
       await setupFCM();
     } catch (e) {
-      print("⚠️ FCM Setup error (expected if in background): $e");
+      print("⚠️ FCM Setup error: $e");
     }
+
+    // Add delay for local notifications plugin just in case it needs it for daily scheduling
+    await Future.delayed(Duration(seconds: 2));
 
     await notificationManager.requestAllNotificationPermissions();
     // Schedule notifications after permissions are handled

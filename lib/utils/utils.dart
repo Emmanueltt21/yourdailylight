@@ -84,11 +84,23 @@ class Utils {
     }
   }
 
-  static Future<void> shareApp(shareMessage) async {
+  static Future<void> shareApp(String shareMessage, {BuildContext? context}) async {
     try {
-    SharePlus.instance.share(
-        ShareParams(text: '$shareMessage')
-    );
+      Rect? sharePositionOrigin;
+      if (context != null) {
+        final RenderBox? box = context.findRenderObject() as RenderBox?;
+        if (box != null) {
+          sharePositionOrigin = box.localToGlobal(Offset.zero) & box.size;
+        }
+      } else {
+        // Fallback rect for iPad to prevent crash if context is not available
+        sharePositionOrigin = const Rect.fromLTWH(0, 0, 10, 10);
+      }
+      
+      await Share.share(
+        shareMessage,
+        sharePositionOrigin: sharePositionOrigin,
+      );
     } catch (e) {
       debugPrint("shareFile Exception ===> $e");
       return;

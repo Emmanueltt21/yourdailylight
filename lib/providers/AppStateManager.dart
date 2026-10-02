@@ -47,7 +47,7 @@ class AppStateManager with ChangeNotifier {
       } catch (e) {
         // quietly pass
       }
-      switch (appLanguageData[AppLanguage.values[preferredLanguage]]!['value']) {
+      switch (appLanguageData[AppLanguage.values[preferredLanguage]]?['value']) {
         case "en":
           LocaleSettings.setLocale(AppLocale.en);
           break;
@@ -56,6 +56,27 @@ class AppStateManager with ChangeNotifier {
           break;
         case "de":
           LocaleSettings.setLocale(AppLocale.de);
+          break;
+        case "it":
+          LocaleSettings.setLocale(AppLocale.it);
+          break;
+        case "es":
+          LocaleSettings.setLocale(AppLocale.es);
+          break;
+        case "hi":
+          LocaleSettings.setLocale(AppLocale.hi);
+          break;
+        case "ru":
+          LocaleSettings.setLocale(AppLocale.ru);
+          break;
+        case "pt":
+          LocaleSettings.setLocale(AppLocale.pt);
+          break;
+        case "zh":
+          LocaleSettings.setLocale(AppLocale.zh);
+          break;
+        default:
+          LocaleSettings.setLocale(AppLocale.en);
           break;
       }
       isLoadingTheme = false;
@@ -87,28 +108,45 @@ class AppStateManager with ChangeNotifier {
   setAppLanguage(int index) async {
     //AppLanguage _preferredLanguage = AppLanguage.values[index];
     preferredLanguage = index;
-    switch (appLanguageData[AppLanguage.values[preferredLanguage]]!['value']) {
+    final langCode = appLanguageData[AppLanguage.values[preferredLanguage]]?['value'] ?? 'en';
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setString(MyAppLanguage, langCode.toUpperCase());
+    switch (langCode) {
       case "en":
-        var prefs = await SharedPreferences.getInstance();
-        prefs.setString(MyAppLanguage, "EN");
         LocaleSettings.setLocale(AppLocale.en);
         break;
       case "fr":
-        var prefs = await SharedPreferences.getInstance();
-        prefs.setString(MyAppLanguage, "FR");
         LocaleSettings.setLocale(AppLocale.fr);
         break;
       case "de":
-        var prefs = await SharedPreferences.getInstance();
-        prefs.setString(MyAppLanguage, "DE");
         LocaleSettings.setLocale(AppLocale.de);
+        break;
+      case "it":
+        LocaleSettings.setLocale(AppLocale.it);
+        break;
+      case "es":
+        LocaleSettings.setLocale(AppLocale.es);
+        break;
+      case "hi":
+        LocaleSettings.setLocale(AppLocale.hi);
+        break;
+      case "ru":
+        LocaleSettings.setLocale(AppLocale.ru);
+        break;
+      case "pt":
+        LocaleSettings.setLocale(AppLocale.pt);
+        break;
+      case "zh":
+        LocaleSettings.setLocale(AppLocale.zh);
+        break;
+      default:
+        LocaleSettings.setLocale(AppLocale.en);
         break;
     }
     // Here we notify listeners that theme changed
     // so UI have to be rebuild
     notifyListeners();
     // Save selected theme into SharedPreferences
-    var prefs = await SharedPreferences.getInstance();
     prefs.setInt(_langPreference, preferredLanguage);
   }
 

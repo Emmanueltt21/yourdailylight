@@ -18,6 +18,7 @@ import '../models/Userdata.dart';
 import 'package:google_sign_in/google_sign_in.dart'; // Explicitly adding this import
 //import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'email_otp_screen.dart';
 
@@ -34,6 +35,7 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenRouteState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _isPasswordObscured = true;
 
   //final fb = FacebookLogin();
   GoogleSignInAccount? _currentUser;
@@ -82,6 +84,38 @@ class LoginScreenRouteState extends State<LoginScreen> {
       String? email, String password, String? name, String type) async {
     Alerts.showProgressDialog(context, t.processingpleasewait);
     try {
+      // Use Firebase auth for standard email/password login so it matches
+      // forgot-password/reset flow.
+      if (type.isEmpty) {
+        final AuthService authService = AuthService();
+        final userCredential =
+            await authService.signInWithEmailAndPassword(email!, password);
+        final firebaseUser = userCredential?.user;
+
+        Provider.of<AppStateManager>(context, listen: false).setUserData(
+          Userdata(
+            name: firebaseUser?.displayName ?? email.split('@').first,
+            email: firebaseUser?.email ?? email,
+            avatar: "",
+            coverPhoto: "",
+            gender: "",
+            dateOfBirth: "",
+            phone: "",
+            aboutMe: "",
+            location: "",
+            qualification: "",
+            facebook: "",
+            twitter: "",
+            linkdln: "",
+            activated: 0,
+          ),
+        );
+
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        return;
+      }
+
       var data = {
         "email": email,
         "password": password,
@@ -109,6 +143,13 @@ class LoginScreenRouteState extends State<LoginScreen> {
         }
         //print(res);
       }
+    } on FirebaseAuthException catch (e) {
+      Navigator.of(context).pop();
+      Alerts.show(
+        context,
+        t.error,
+        e.message ?? "Failed to authenticate user",
+      );
     } catch (exception) {
       Navigator.of(context).pop();
       Alerts.show(context, t.error, exception.toString());
@@ -355,7 +396,7 @@ class LoginScreenRouteState extends State<LoginScreen> {
               TextField(
                 controller: passwordController,
                 keyboardType: TextInputType.text,
-                obscureText: true,
+                obscureText: _isPasswordObscured,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
                     borderSide:
@@ -364,6 +405,18 @@ class LoginScreenRouteState extends State<LoginScreen> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide:
                         BorderSide(color: Colors.blueGrey[400]!, width: 2),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordObscured
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordObscured = !_isPasswordObscured;
+                      });
+                    },
                   ),
                 ),
               ),

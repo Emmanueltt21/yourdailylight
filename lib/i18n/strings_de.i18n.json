@@ -284,7 +284,6 @@
   "clearconversationhintone": "Durch diese Aktion werden alle Ihre Gespräche gelöscht ",
   "clearconversationhinttwo": ".\n  ",
   "facebookloginerror": "Beim Anmeldevorgang ist ein Fehler aufgetreten.\n",
-
   "mylibrary": "Meine Bibliothek",
   "prayer_request": "Gebetsanliegen oder Zeugnis",
   "mySubscription": "Mein Abonnement",
@@ -314,8 +313,28 @@
   "details": "Einzelheiten",
   "added_bookmark": "Zum Lesezeichen hinzugefügt",
   "removed_bookmark": "Aus Lesezeichen entfernt",
-  "delete_account":"Konto löschen",
-  "appDescriptionSupport":"Ihre Partnerschaft durch Ihre Spende an Lighthouse Global Missions ermöglicht es uns, mehr zu bewirken, indem wir Gottes Auftrag erfüllen und Sein lebensveränderndes Wort sowie die wunderwirkende Kraft des Heiligen Geistes in die ganze Welt bringen.\nUnd jedes Opfer, das Sie bringen, wird vom Herrn reich belohnt und vervielfacht, so wie Er es in Seinem Wort zugesichert hat (Bibelstellen: Markus 10,29–30; Lukas 6,38)."
-
-
+  "delete_account": "Konto löschen",
+  "appDescriptionSupport": "Ihre Partnerschaft durch Ihre Spende an Lighthouse Global Missions ermöglicht es uns, mehr zu bewirken, indem wir Gottes Auftrag erfüllen und Sein lebensveränderndes Wort sowie die wunderwirkende Kraft des Heiligen Geistes in die ganze Welt bringen.\nUnd jedes Opfer, das Sie bringen, wird vom Herrn reich belohnt und vervielfacht, so wie Er es in Seinem Wort zugesichert hat (Bibelstellen: Markus 10,29–30; Lukas 6,38).",
+  "giving_via_paypal": "Spenden über PayPal",
+  "click_to_give": "Zum Spenden klicken",
+  "additional_giving": "Weitere Spendenoptionen",
+  "email": "E-Mail",
+  "aboutcontent_para_1": "Lighthouse Global Missions folgt Gottes Ruf, das Licht Jesu Christi zu den Völkern zu bringen. Die tägliche Andacht „Dein tägliches Licht\" (orig.Your Daily Light) ist eine der Möglichkeiten, wie wir diesem Ruf folgen, um das Evangelium Jesu Christi und das erleuchtende Wort Gottes zu Menschen auf der ganzen Welt zu tragen. Diese Andacht bringt Menschen täglich Gottes Wort für ein siegreiches und erfülltes Leben in Christus, damit sie in der Erkenntnis Gottes wachsen, in der Kraft des Heiligen Geistes wandeln, ihren Lebenszweck entdecken und Gottes Ruf für ihr Leben erfüllen können.",
+  "aboutcontent_para_2": "Wir freuen uns, dass du die App „Your Daily Light“ nutzt, die dir kostenlosen Zugang zu einer täglichen Dosis von Gottes Wort für deine geistliche Nahrung und Entwicklung bietet. Wir ermutigen dich auch, die Wirkung dieser Andacht in deinem Leben mit anderen zu teilen, andere zum Herunterladen der App einzuladen und dazu beizutragen, dass wir mehr Menschen zur Ehre Gottes erreichen. Klicke direkt auf die Schaltfläche „Teilen“ in der Anwendung und lade andere ein, die App noch heute herunterzuladen.",
+  "aboutcontent_para_3": "Auf der Startseite der App findest du zudem saisonale prophetische Botschaften darüber, was Gott sagt, kannst dich über Veranstaltungen des Dienstes auf dem Laufenden halten, echte Lebenszeugnisse lesen und Möglichkeiten entdecken, Teil dessen zu sein, was Gott durch Lighthouse Global Missions tut.",
+  "aboutcontent_para_4": "Du kannst auch deine Zeugnisse teilen und Gebetsanliegen über den Bereich „Zeugnisse und Gebete” einreichen. Wir freuen uns, wenn du uns erzählst, wie „Your Daily Light” dein Leben beeinflusst hat, und beten gerne mit dir für deine Anliegen. Im integrierten Buchladen kannst du weiteres Lesematerial finden, das dein Wachstum fördert.",
+  "aboutcontent_para_5": "Die Your Daily Light App ist nur dank der Großzügigkeit von Menschen wie dir, die uns finanziell unterstützen, kostenlos und für ein weltweites Publikum zugänglich. Wir haben auch viele andere Bereiche, in denen jede Spende einen Unterschied macht. Auch du kannst dich dieser Mission anschließen, indem du für diesen Dienst spendest. Und Gott, der verspricht, jedes Opfer für seine Zwecke zu belohnen, wird dich reichlich mit einer Vervielfachung deiner Spende und mit vielfältigen Segnungen beschenken. Deine Spende wird in vielen Leben etwas bewirken. Unter „Spenden und Partnerschaft” findest du Möglichkeiten, wie du spenden kannst.",
+  "aboutcontent_para_6a": "Erfahre mehr über Lighthouse Global Missions unter ",
+  "aboutcontent_para_6b": "oder",
+  "aboutcontent_para_7a": "Abonniere unseren Newsletter unter ",
+  "aboutcontent_para_7b": " um auf dem Laufenden zu bleiben und dich an dem zu beteiligen, was Gott tut. ",
+  "aboutcontent_para_8a": "Sie können sich auch unter folgender Adresse an Pastor Simon wenden:",
+  "apptagline": "Andachts-App für tägliche Erleuchtung und geistliches Wachstum",
+  "seebankdetails": "Überweisungsdetails anzeigen",
+  "via_bank": "Über Bank",
+  "bank_details": "Überweisungsdetails",
+  "account_name": "Kontoname",
+  "bank": "Bank",
+  "iban": "IBAN",
+  "myProfile": "Mein Profil"
 }

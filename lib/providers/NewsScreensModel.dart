@@ -94,7 +94,8 @@ class NewScreensModel with ChangeNotifier {
         // If the server did return a 200 OK response,
         // then parse the JSON.
         dynamic res = jsonDecode(response.data);
-        // print('NEWS res ---->> ${res}');
+         print('NEWS res ---->> ${res}');
+         print('NEWS_response.data ---->> ${response.data}');
 
           // News.fromJson(res['news']);
      //  List<News>? mediaList = parseSliderMedia(res);

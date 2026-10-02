@@ -118,8 +118,10 @@ class _SettingsPageState extends State<SettingsPage> {
     appManager = Provider.of<AppStateManager>(context);
     Userdata? userdata = appManager.userdata;
     bool themeSwitch = appManager.themeData == appThemeData[AppTheme.Dark];
-    String language = appLanguageData[
-    AppLanguage.values[appManager.preferredLanguage]]!['name']!;
+    final _curLangData = appLanguageData[
+    AppLanguage.values[appManager.preferredLanguage]]!;
+    String language = _curLangData['name']!;
+    String languageFlag = _curLangData['flag']!;
 
     return Scaffold(
       appBar: AppBar(
@@ -149,19 +151,22 @@ class _SettingsPageState extends State<SettingsPage> {
                             itemCount: appLanguageData.length,
                             itemBuilder:
                                 (BuildContext context, int index) {
-                              var selected = appLanguageData[AppLanguage
-                                  .values[index]]!['name'] ==
-                                  language;
+                              final _langEntry = appLanguageData[AppLanguage
+                                  .values[index]]!;
+                              var selected = _langEntry['name'] == language;
                               return ListTile(
-                                trailing: selected
-                                    ? Icon(Icons.check)
-                                    : Container(
-                                  height: 0,
-                                  width: 0,
+                                leading: Text(
+                                  _langEntry['flag']!,
+                                  style: TextStyle(fontSize: 24),
                                 ),
+                                trailing: selected
+                                    ? Icon(Icons.check, color: MyColors.primary)
+                                    : SizedBox(height: 0, width: 0),
                                 title: Text(
-                                  appLanguageData[AppLanguage
-                                      .values[index]]!['name']!,
+                                  _langEntry['name']!,
+                                  style: TextStyle(
+                                    fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                                  ),
                                 ),
                                 onTap: () {
                                   appManager.setAppLanguage(index);
@@ -187,7 +192,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         )),
                     Spacer(),
                     Text(
-                      language,
+                      '${languageFlag}  ${language}',
                       style: TextStyles.subhead(context).copyWith(
                           color: MyColors.primary, fontSize: 13),
                     ),

@@ -265,45 +265,54 @@ class _BranchesPageBodyState extends State<DevotionalsPageBody> {
 
   Future<void> translateItems() async {
     try {
-
-      if(widget.lang =="EN"){
-        setState(() {
-          isLoading = false;
-          devotionals  = devotionals;
-        });
-
-      } else if(widget.lang =="DE"){
-        setState(() {
-          isLoading = false;
-          Devotionals devT = Devotionals(
-            title: '',
-            content: devotionals?.german_content,
-          );
-          devotionals  = devT;
-
-        });
-      } else if(widget.lang =="FR"){
-        setState(() {
-          isLoading = false;
-          Devotionals devT = Devotionals(
-            title: '',
-            content: devotionals?.french_content,
-          );
-          devotionals  = devT;
-
-        });
-      } else {
-        // If the server did not return a 200 OK response,
-        // then throw an exception.
-        setState(() {
-          isLoading = false;
-          isError = true;
-          print(devotionals);
-        });
+      String? chosenContent;
+      switch (widget.lang) {
+        case "DE":
+          chosenContent = devotionals?.german_content;
+          break;
+        case "FR":
+          chosenContent = devotionals?.french_content;
+          break;
+        case "IT":
+          chosenContent = devotionals?.italian_content;
+          break;
+        case "ES":
+          chosenContent = devotionals?.spanish_content;
+          break;
+        case "HI":
+          chosenContent = devotionals?.hindi_content;
+          break;
+        case "RU":
+          chosenContent = devotionals?.russian_content;
+          break;
+        case "PT":
+          chosenContent = devotionals?.portuguese_content;
+          break;
+        case "ZH":
+          chosenContent = devotionals?.mandarin_content;
+          break;
+        default:
+          chosenContent = devotionals?.content;
+          break;
       }
 
+      final effectiveContent = (chosenContent != null && chosenContent.trim().isNotEmpty)
+          ? chosenContent
+          : devotionals?.content;
+
+      setState(() {
+        isLoading = false;
+        devotionals = Devotionals(
+          title: devotionals?.title,
+          content: effectiveContent,
+          author: devotionals?.author,
+          thumbnail: devotionals?.thumbnail,
+          biblereading: devotionals?.biblereading,
+          confession: devotionals?.confession,
+          studies: devotionals?.studies,
+        );
+      });
     } catch (exception) {
-      // I get no exception here
       print(exception);
       setState(() {
         isLoading = false;
@@ -315,14 +324,11 @@ class _BranchesPageBodyState extends State<DevotionalsPageBody> {
   @override
   void initState() {
     Future.delayed(const Duration(milliseconds: 0), () {
-      if(widget.lang =="EN"){
+      if (widget.lang == "EN" || widget.lang == null) {
         loadItems();
-      }else if(widget.lang =="FR"){
-        loadItemsTranslated();
-      } else if(widget.lang =="DE"){
+      } else {
         loadItemsTranslated();
       }
-
     });
     super.initState();
   }
