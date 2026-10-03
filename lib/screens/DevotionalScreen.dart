@@ -265,51 +265,104 @@ class _BranchesPageBodyState extends State<DevotionalsPageBody> {
 
   Future<void> translateItems() async {
     try {
+      String? chosenTitle;
       String? chosenContent;
+      String? chosenBibleReading;
+      String? chosenConfession;
+      String? chosenStudies;
+
       switch (widget.lang) {
         case "DE":
+          chosenTitle = devotionals?.german_title;
           chosenContent = devotionals?.german_content;
+          chosenBibleReading = devotionals?.german_bible_reading;
+          chosenConfession = devotionals?.german_confession;
+          chosenStudies = devotionals?.german_studies;
           break;
         case "FR":
+          chosenTitle = devotionals?.french_title;
           chosenContent = devotionals?.french_content;
+          chosenBibleReading = devotionals?.french_bible_reading;
+          chosenConfession = devotionals?.french_confession;
+          chosenStudies = devotionals?.french_studies;
           break;
         case "IT":
+          chosenTitle = devotionals?.italian_title;
           chosenContent = devotionals?.italian_content;
+          chosenBibleReading = devotionals?.italian_bible_reading;
+          chosenConfession = devotionals?.italian_confession;
+          chosenStudies = devotionals?.italian_studies;
           break;
         case "ES":
+          chosenTitle = devotionals?.spanish_title;
           chosenContent = devotionals?.spanish_content;
+          chosenBibleReading = devotionals?.spanish_bible_reading;
+          chosenConfession = devotionals?.spanish_confession;
+          chosenStudies = devotionals?.spanish_studies;
           break;
         case "HI":
+          chosenTitle = devotionals?.hindi_title;
           chosenContent = devotionals?.hindi_content;
+          chosenBibleReading = devotionals?.hindi_bible_reading;
+          chosenConfession = devotionals?.hindi_confession;
+          chosenStudies = devotionals?.hindi_studies;
           break;
         case "RU":
+          chosenTitle = devotionals?.russian_title;
           chosenContent = devotionals?.russian_content;
+          chosenBibleReading = devotionals?.russian_bible_reading;
+          chosenConfession = devotionals?.russian_confession;
+          chosenStudies = devotionals?.russian_studies;
           break;
         case "PT":
+          chosenTitle = devotionals?.portuguese_title;
           chosenContent = devotionals?.portuguese_content;
+          chosenBibleReading = devotionals?.portuguese_bible_reading;
+          chosenConfession = devotionals?.portuguese_confession;
+          chosenStudies = devotionals?.portuguese_studies;
           break;
         case "ZH":
+          chosenTitle = devotionals?.mandarin_title;
           chosenContent = devotionals?.mandarin_content;
+          chosenBibleReading = devotionals?.mandarin_bible_reading;
+          chosenConfession = devotionals?.mandarin_confession;
+          chosenStudies = devotionals?.mandarin_studies;
           break;
         default:
+          chosenTitle = devotionals?.title;
           chosenContent = devotionals?.content;
+          chosenBibleReading = devotionals?.biblereading;
+          chosenConfession = devotionals?.confession;
+          chosenStudies = devotionals?.studies;
           break;
       }
 
+      final effectiveTitle = (chosenTitle != null && chosenTitle.trim().isNotEmpty)
+          ? chosenTitle
+          : devotionals?.title;
       final effectiveContent = (chosenContent != null && chosenContent.trim().isNotEmpty)
           ? chosenContent
           : devotionals?.content;
+      final effectiveBibleReading = (chosenBibleReading != null && chosenBibleReading.trim().isNotEmpty)
+          ? chosenBibleReading
+          : devotionals?.biblereading;
+      final effectiveConfession = (chosenConfession != null && chosenConfession.trim().isNotEmpty)
+          ? chosenConfession
+          : devotionals?.confession;
+      final effectiveStudies = (chosenStudies != null && chosenStudies.trim().isNotEmpty)
+          ? chosenStudies
+          : devotionals?.studies;
 
       setState(() {
         isLoading = false;
         devotionals = Devotionals(
-          title: devotionals?.title,
+          title: effectiveTitle,
           content: effectiveContent,
           author: devotionals?.author,
           thumbnail: devotionals?.thumbnail,
-          biblereading: devotionals?.biblereading,
-          confession: devotionals?.confession,
-          studies: devotionals?.studies,
+          biblereading: effectiveBibleReading,
+          confession: effectiveConfession,
+          studies: effectiveStudies,
         );
       });
     } catch (exception) {

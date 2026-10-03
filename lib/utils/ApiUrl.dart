@@ -1,7 +1,7 @@
 class ApiUrl {
   static const String BASEURL = "https://app.yourdailylight.org/dailylight/";   //LIVE Server
 
-  //static const String BASEURL = "http://192.168.1.122/dailylightapp_backend/";   //LOCAL HOSTED Server
+ // static const String BASEURL = "http://192.168.7.6/dailylightapp_backend/";   //LOCAL HOSTED Server
 
 
     //static const String BASEURL = "https://testdailylight.yourdailylight.org/dailylight/";   //test dailylight Server
@@ -11,8 +11,6 @@ class ApiUrl {
   static const String PRIVACY = "https://sites.google.com/view/dailylight01/privacy_policy";
   static const String ABOUT = "https://sites.google.com/view/dailylight01/aboutus";
 
- // static const String DeepLUrl = "https://api.deepl.com/v2/translate";
-  //static const String DeepLAPI_ProKey = "f192525c-93cd-aceb-1154-a8bdd645c9b2";
 
 
   static const String donationPage = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3G57JHYW9RNG6&source=url";
@@ -35,9 +33,11 @@ class ApiUrl {
   static String DailyWebNews = "https://news.yourdailylight.org/";
 
 
-  static String appFacebookLink = "https://www.facebook.com/YourDailyLight";
-  static String appYoutubeLink = "https://www.facebook.com/YourDailyLight";
-  static String appInstagramLink = "https://instagram.com/yourdailylight_devotional?igshid=OGQ5ZDc2ODk2ZA==";
+
+
+  static String appFacebookLink = "https://www.facebook.com/LGMissions";
+  static String appYoutubeLink = "https://www.youtube.com/@LGMISSIONS";
+  static String appInstagramLink = "https://www.instagram.com/lgmissions";
   static String appContactDeleteAcc = "https://sites.google.com/view/dailylight01/home";
 
   static String appPaypal_Url = "https://paypal.me/LGmissions?country.x=DE&locale.x=en_US";

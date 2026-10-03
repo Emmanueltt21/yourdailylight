@@ -25,7 +25,8 @@ class RegisterScreenRouteState extends State<RegisterScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final repeatPasswordController = TextEditingController();
-
+  bool _isPasswordObscured = true;
+  bool _isRepeatPasswordObscured = true;
 
   verifyFormAndSubmit() {
     String _name = nameController.text.trim();
@@ -44,7 +45,6 @@ class RegisterScreenRouteState extends State<RegisterScreen> {
     }
   }
 
-
   Future<void> registerUser(String email, String name, String password) async {
     Alerts.showProgressDialog(context, t.processingpleasewait);
     try {
@@ -60,36 +60,25 @@ class RegisterScreenRouteState extends State<RegisterScreen> {
             }
           }));
       if (response.statusCode == 200) {
-        // Navigator.pop(context);
-        // If the server did return a 200 OK response,
-        // then parse the JSON.
         Navigator.of(context).pop();
         print(response.body);
         Map<String, dynamic> res = json.decode(response.body);
         if (res["status"] == "error") {
           Alerts.show(context, t.error, res["message"]);
         } else {
-
           Navigator.push(
               context, MaterialPageRoute(builder: (context) =>
               EmailOtpScreen(email: email, password: password)));
-        //  Alerts.show(context, t.success, res["message"] + message ?? 'Signup failed');
-
         }
         print(res);
       }
     } catch (exception) {
-      // Navigator.pop(context);
-      // I get no exception here
       print(exception);
     }
   }
 
-
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
@@ -99,169 +88,259 @@ class RegisterScreenRouteState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Scaffold(
       resizeToAvoidBottomInset: true,
-      //backgroundColor: Colors.white,
-      appBar:
-          PreferredSize(child: Container(), preferredSize: Size.fromHeight(0)),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          width: double.infinity,
-          //height: double.infinity,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Container(
-                height: 15,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 0, 0, 0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      color: MyColors.primary.withOpacity(0.12),
+                      shape: BoxShape.circle,
+                    ),
                     child: Icon(
-                      Icons.arrow_back,
+                      Icons.person_add_alt_1_rounded,
+                      size: 38,
+                      color: MyColors.primary,
                     ),
                   ),
                 ),
-              ),
-              Container(
-                height: 25,
-              ),
-              Column(
-                children: [
-                  Text(t.appname,
-                      style: TextStyles.title(context).copyWith(
+                const SizedBox(height: 16),
+                Text(
+                  t.appname,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.title(context).copyWith(
+                    color: MyColors.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  t.createaccount,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.subhead(context).copyWith(
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    fontSize: 15,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  t.fullname,
+                  style: TextStyles.caption(context).copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: nameController,
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                    hintText: "John Doe",
+                    prefixIcon: Icon(Icons.person_outline_rounded, color: MyColors.primary),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    filled: true,
+                    fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: MyColors.primary, width: 1.5),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Text(
+                  t.emailaddress,
+                  style: TextStyles.caption(context).copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    hintText: "example@domain.com",
+                    prefixIcon: Icon(Icons.email_outlined, color: MyColors.primary),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    filled: true,
+                    fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: MyColors.primary, width: 1.5),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Text(
+                  t.password,
+                  style: TextStyles.caption(context).copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: passwordController,
+                  keyboardType: TextInputType.text,
+                  obscureText: _isPasswordObscured,
+                  decoration: InputDecoration(
+                    hintText: "••••••••",
+                    prefixIcon: Icon(Icons.lock_outline_rounded, color: MyColors.primary),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    filled: true,
+                    fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: MyColors.primary, width: 1.5),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordObscured
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        color: Colors.grey[600],
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordObscured = !_isPasswordObscured;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Text(
+                  t.repeatpassword,
+                  style: TextStyles.caption(context).copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: repeatPasswordController,
+                  keyboardType: TextInputType.text,
+                  obscureText: _isRepeatPasswordObscured,
+                  decoration: InputDecoration(
+                    hintText: "••••••••",
+                    prefixIcon: Icon(Icons.lock_reset_rounded, color: MyColors.primary),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    filled: true,
+                    fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: MyColors.primary, width: 1.5),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isRepeatPasswordObscured
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        color: Colors.grey[600],
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isRepeatPasswordObscured = !_isRepeatPasswordObscured;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 28),
+                SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: MyColors.primary,
+                      foregroundColor: Colors.white,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: () {
+                      verifyFormAndSubmit();
+                    },
+                    child: Text(
+                      t.register,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Already have an account? ",
+                      style: TextStyle(
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        fontSize: 14,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(LoginScreen.routeName);
+                      },
+                      child: Text(
+                        t.alreadyhaveanaccount,
+                        style: TextStyle(
                           color: MyColors.primary,
-                          fontWeight: FontWeight.bold)),
-                  Container(height: 5),
-                  Text(t.createaccount,
-                      style: TextStyles.subhead(context).copyWith()),
-                ],
-              ),
-              Container(height: 40),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(t.fullname,
-                    style: TextStyles.caption(context).copyWith()),
-              ),
-              TextField(
-                controller: nameController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 1),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 2),
-                  ),
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Container(height: 25),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(t.emailaddress,
-                    style: TextStyles.caption(context).copyWith()),
-              ),
-              TextField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 1),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 2),
-                  ),
-                ),
-              ),
-              Container(height: 25),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(t.password,
-                    style: TextStyles.caption(context).copyWith()),
-              ),
-              TextField(
-                controller: passwordController,
-                keyboardType: TextInputType.text,
-                obscureText: true,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 1),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 2),
-                  ),
-                ),
-              ),
-              Container(height: 25),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(t.repeatpassword,
-                    style: TextStyles.caption(context).copyWith()),
-              ),
-              TextField(
-                controller: repeatPasswordController,
-                obscureText: true,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 1),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 2),
-                  ),
-                ),
-              ),
-              Container(height: 25),
-              Container(
-                width: double.infinity,
-                height: 40,
-                child: TextButton(
-                  child: Text(
-                    t.register,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: TextButton.styleFrom(
-                    backgroundColor: MyColors.primary,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20)),
-                  ),
-                  onPressed: () {
-                    verifyFormAndSubmit();
-                  },
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                child: TextButton(
-                  child: Text(
-                    t.alreadyhaveanaccount,
-                    style: TextStyle(color: MyColors.primary),
-                  ),
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed(LoginScreen.routeName);
-                  },
-                ),
-              ),
-              Container(height: 20),
-            ],
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),

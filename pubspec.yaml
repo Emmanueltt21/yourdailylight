@@ -2,7 +2,7 @@ name: yourdailylight
 description: "Your Daily Light App"
 
 
-version: 1.1.80+80
+version: 1.1.82+82
 
 environment:
   #sdk: ^3.6.1

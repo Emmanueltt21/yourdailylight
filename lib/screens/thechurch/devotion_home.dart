@@ -215,43 +215,73 @@ class _DevotionalsPageBodyState extends State<DevotionalsPageBody> {
   Devotionals _processForLanguageAndClean(Devotionals data, String lang) {
     String? chosenTitle;
     String? chosenContent;
+    String? chosenBibleReading;
+    String? chosenConfession;
+    String? chosenStudies;
 
     switch (lang) {
       case "DE":
         chosenTitle = data.german_title;
         chosenContent = data.german_content;
+        chosenBibleReading = data.german_bible_reading;
+        chosenConfession = data.german_confession;
+        chosenStudies = data.german_studies;
         break;
       case "FR":
         chosenTitle = data.french_title;
         chosenContent = data.french_content;
+        chosenBibleReading = data.french_bible_reading;
+        chosenConfession = data.french_confession;
+        chosenStudies = data.french_studies;
         break;
       case "IT":
         chosenTitle = data.italian_title;
         chosenContent = data.italian_content;
+        chosenBibleReading = data.italian_bible_reading;
+        chosenConfession = data.italian_confession;
+        chosenStudies = data.italian_studies;
         break;
       case "ES":
         chosenTitle = data.spanish_title;
         chosenContent = data.spanish_content;
+        chosenBibleReading = data.spanish_bible_reading;
+        chosenConfession = data.spanish_confession;
+        chosenStudies = data.spanish_studies;
         break;
       case "HI":
         chosenTitle = data.hindi_title;
         chosenContent = data.hindi_content;
+        chosenBibleReading = data.hindi_bible_reading;
+        chosenConfession = data.hindi_confession;
+        chosenStudies = data.hindi_studies;
         break;
       case "RU":
         chosenTitle = data.russian_title;
         chosenContent = data.russian_content;
+        chosenBibleReading = data.russian_bible_reading;
+        chosenConfession = data.russian_confession;
+        chosenStudies = data.russian_studies;
         break;
       case "PT":
         chosenTitle = data.portuguese_title;
         chosenContent = data.portuguese_content;
+        chosenBibleReading = data.portuguese_bible_reading;
+        chosenConfession = data.portuguese_confession;
+        chosenStudies = data.portuguese_studies;
         break;
       case "ZH":
         chosenTitle = data.mandarin_title;
         chosenContent = data.mandarin_content;
+        chosenBibleReading = data.mandarin_bible_reading;
+        chosenConfession = data.mandarin_confession;
+        chosenStudies = data.mandarin_studies;
         break;
       default: // EN
         chosenTitle = data.title;
         chosenContent = data.content;
+        chosenBibleReading = data.biblereading;
+        chosenConfession = data.confession;
+        chosenStudies = data.studies;
     }
 
     final effectiveTitle = (chosenTitle != null && chosenTitle.trim().isNotEmpty)
@@ -260,15 +290,24 @@ class _DevotionalsPageBodyState extends State<DevotionalsPageBody> {
     final effectiveContent = (chosenContent != null && chosenContent.trim().isNotEmpty)
         ? chosenContent
         : data.content;
+    final effectiveBibleReading = (chosenBibleReading != null && chosenBibleReading.trim().isNotEmpty)
+        ? chosenBibleReading
+        : data.biblereading;
+    final effectiveConfession = (chosenConfession != null && chosenConfession.trim().isNotEmpty)
+        ? chosenConfession
+        : data.confession;
+    final effectiveStudies = (chosenStudies != null && chosenStudies.trim().isNotEmpty)
+        ? chosenStudies
+        : data.studies;
 
     return Devotionals(
       title: effectiveTitle,
       author: data.author,
       thumbnail: data.thumbnail,
-      biblereading: _cleanHtml(data.biblereading),
+      biblereading: _cleanHtml(effectiveBibleReading),
       content: _cleanHtml(effectiveContent),
-      confession: _cleanHtml(data.confession),
-      studies: _cleanHtml(data.studies),
+      confession: _cleanHtml(effectiveConfession),
+      studies: _cleanHtml(effectiveStudies),
     );
   }
 

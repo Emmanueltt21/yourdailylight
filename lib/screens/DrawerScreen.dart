@@ -9,7 +9,7 @@ import 'package:yourdailylight/screens/thechurch/giving_partnership.dart';
 import 'package:yourdailylight/screens/thechurch/my_subscription.dart';
 import 'package:yourdailylight/screens/thechurch/mylibrary.dart';
 import 'package:yourdailylight/screens/thechurch/prayer_request.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:yourdailylight/screens/thechurch/profile_home.dart';
 import '../models/Userdata.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,10 +45,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
 
   Future<void> launchUrl(String url, {bool forceWebView = false}) async {
-    await launch(url, forceWebView: forceWebView, enableJavaScript: true,universalLinksOnly:true).catchError((e) {
+    try {
+      await url_launcher.launchUrl(Uri.parse(url));
+    } catch (e) {
       log(e);
       toast('Invalid URL: $url');
-    });
+    }
   }
 
   String storeBaseURL() {
@@ -319,6 +321,26 @@ class _DrawerScreenState extends State<DrawerScreen> {
         builder: (context) => BrowserTabScreen(title: title, url: url),
       ),
     );
+  }
+
+  Future<void> openSocialMediaLink(BuildContext context, String title, String url) async {
+    final Uri uri = Uri.parse(url);
+    try {
+      final bool launched = await url_launcher.launchUrl(
+        uri,
+        mode: url_launcher.LaunchMode.externalNonBrowserApplication,
+      );
+      if (!launched) {
+        if (mounted) {
+          openBrowserTab(context, title, url);
+        }
+      }
+    } catch (e) {
+      debugPrint("Could not launch native app for $url: $e");
+      if (mounted) {
+        openBrowserTab(context, title, url);
+      }
+    }
   }
 
   openBrowserTabOld(String title, String url) async {
@@ -977,8 +999,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     children: <Widget>[
                       InkWell(
                         onTap: () {
-                          //openBrowserTab(homeProvider!.data['facebook_page'] as String);
-                          openBrowserTab(context, t.facebook, ApiUrl.appFacebookLink);
+                          openSocialMediaLink(context, t.facebook, ApiUrl.appFacebookLink);
                         },
                         child: Container(
                           child: Image.asset(Img.get('img_social_facebook.png')),
@@ -989,8 +1010,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       Container(width: 10),
                       InkWell(
                         onTap: () {
-                          //openBrowserTab(homeProvider!.data['youtube_page'] as String);
-                          openBrowserTab(context, t.facebook, ApiUrl.appFacebookLink);
+                          openSocialMediaLink(context, "YouTube", ApiUrl.appYoutubeLink);
                         },
                         child: Container(
                           child: Image.asset(Img.get('img_social_youtube.png')),
@@ -1001,7 +1021,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     //  Container(width: 10),
                       /*InkWell(
                         onTap: () {
-                         // openBrowserTab(homeProvider!.data['twitter_page'] as String);
+                         // openSocialMediaLink(context, "Twitter", ApiUrl.appTwitterLink);
                         },
                         child: Container(
                           child: Image.asset(Img.get('img_social_twitter.png')),
@@ -1012,8 +1032,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       Container(width: 10),
                       InkWell(
                         onTap: () {
-                         // openBrowserTab(homeProvider!.data['instagram_page'] as String);
-                          openBrowserTab(context, t.facebook, ApiUrl.appInstagramLink);
+                          openSocialMediaLink(context, "Instagram", ApiUrl.appInstagramLink);
                         },
                         child: Container(
                           child: Image.asset(Img.get('img_social_instagram.png')),

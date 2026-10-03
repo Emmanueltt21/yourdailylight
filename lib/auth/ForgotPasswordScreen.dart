@@ -79,89 +79,145 @@ class ForgotPasswordScreenRouteState extends State<ForgotPasswordScreen> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
     emailController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.white,
-      appBar:
-          PreferredSize(child: Container(), preferredSize: Size.fromHeight(0)),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 40),
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Container(height: 85),
-            Container(height: 5),
-            Text(t.appname,
-                style: TextStyles.title(context).copyWith(
-                    color: MyColors.primary, fontWeight: FontWeight.bold)),
-            Container(height: 15),
-            Text(t.enteremailaddresstoresetpassword,
-                style: TextStyles.subhead(context).copyWith(
-                  color: Colors.blueGrey[300],
-                )),
-            Container(height: 50),
-            TextField(
-              controller: emailController,
-              keyboardType: TextInputType.text,
-              style: TextStyle(color: Colors.black),
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.blueGrey[400]!, width: 1),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(LoginScreen.routeName);
+                    },
+                  ),
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Colors.blueGrey[400]!, width: 2),
+                const SizedBox(height: 24),
+                Center(
+                  child: Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      color: MyColors.primary.withOpacity(0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.lock_reset_rounded,
+                      size: 38,
+                      color: MyColors.primary,
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 20),
+                Text(
+                  t.appname,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.title(context).copyWith(
+                    color: MyColors.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  t.enteremailaddresstoresetpassword,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.subhead(context).copyWith(
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    fontSize: 15,
+                  ),
+                ),
+                const SizedBox(height: 36),
+                Text(
+                  t.emailaddress,
+                  style: TextStyles.caption(context).copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    hintText: "example@domain.com",
+                    prefixIcon: Icon(Icons.email_outlined, color: MyColors.primary),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    filled: true,
+                    fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: MyColors.primary, width: 1.5),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 28),
+                SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: MyColors.primary,
+                      foregroundColor: Colors.white,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: () {
+                      verifyFormAndSubmit();
+                    },
+                    child: Text(
+                      t.resetpassword,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(LoginScreen.routeName);
+                    },
+                    child: Text(
+                      t.backtologin,
+                      style: TextStyle(
+                        color: MyColors.primary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
-            Container(height: 25),
-            Container(
-              width: double.infinity,
-              height: 40,
-              child: ElevatedButton(
-                child: Text(
-                  t.resetpassword,
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: TextButton.styleFrom(
-                  backgroundColor: MyColors.primary,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(20)),
-                ),
-                onPressed: () {
-                  verifyFormAndSubmit();
-                },
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              child: TextButton(
-                child: Text(
-                  t.backtologin,
-                  style: TextStyle(color: MyColors.primary),
-                ),
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                ),
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushReplacementNamed(LoginScreen.routeName);
-                },
-              ),
-            ),
-            Container(height: 20),
-          ],
+          ),
         ),
       ),
     );

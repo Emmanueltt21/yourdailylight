@@ -1,7 +1,6 @@
 import 'package:yourdailylight/auth/ForgotPasswordScreen.dart';
 import 'package:yourdailylight/auth/RegisterScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../providers/AppStateManager.dart';
 import '../i18n/strings.g.dart';
@@ -15,14 +14,13 @@ import '../utils/ApiUrl.dart';
 import 'package:http/http.dart' as http;
 import 'package:email_validator/email_validator.dart';
 import '../models/Userdata.dart';
-import 'package:google_sign_in/google_sign_in.dart'; // Explicitly adding this import
-//import 'package:flutter_login_facebook/flutter_login_facebook.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'email_otp_screen.dart';
 
-final GoogleSignIn googleSignIn = GoogleSignIn.instance; // Changed to singleton instance
+final GoogleSignIn googleSignIn = GoogleSignIn.instance;
 
 class LoginScreen extends StatefulWidget {
   static const routeName = "/login";
@@ -37,7 +35,6 @@ class LoginScreenRouteState extends State<LoginScreen> {
   final passwordController = TextEditingController();
   bool _isPasswordObscured = true;
 
-  //final fb = FacebookLogin();
   GoogleSignInAccount? _currentUser;
 
   verifyFormAndSubmit() {
@@ -53,39 +50,28 @@ class LoginScreenRouteState extends State<LoginScreen> {
     }
   }
 
-
   Future<void> checkEmailVerification(BuildContext cnxt, Map<String, dynamic> res) async {
-   //  bool isVerified = await AuthService().isEmailVerified();
     final AuthService _authService = AuthService();
     bool isVerified = await _authService.isEmailVerified();
     if (isVerified) {
       print('Email is verified.');
-      //Alerts.showSuccessRegAlertDialog(cnxt);
-      // Navigate to main app screen or unlock features
       Provider.of<AppStateManager>(context, listen: false)
           .setUserData(Userdata.fromJson(res["user"]));
 
       Navigator.of(context).pop();
-
     } else {
       print('Email not verified.');
-      Alerts.showToast(context,   "Email not verified \n Check your Mail box and click on the link to get verify");
-      // Prompt the user to verify their email
+      Alerts.showToast(context, "Email not verified \n Check your Mail box and click on the link to get verify");
       Navigator.push(
           context, MaterialPageRoute(builder: (context) =>
           EmailOtpScreen(email: emailController.text.trim(), password: passwordController.text)));
     }
   }
 
-
-
-
   Future<void> loginUser(
       String? email, String password, String? name, String type) async {
     Alerts.showProgressDialog(context, t.processingpleasewait);
     try {
-      // Use Firebase auth for standard email/password login so it matches
-      // forgot-password/reset flow.
       if (type.isEmpty) {
         final AuthService authService = AuthService();
         final userCredential =
@@ -125,23 +111,16 @@ class LoginScreenRouteState extends State<LoginScreen> {
       final response = await http.post(Uri.parse(ApiUrl.LOGIN),
           body: jsonEncode({"data": data}));
       if (response.statusCode == 200) {
-        // Navigator.pop(context);
-        // If the server did return a 200 OK response,
-        // then parse the JSON.
         Navigator.of(context).pop();
         print(response.body);
         Map<String, dynamic> res = json.decode(response.body);
         if (res["status"] == "error") {
           Alerts.show(context, t.error, res["message"]);
         } else {
-          print(res["user"]);
-          //Alerts.show(context, Strings.success, res["message"]);
           Provider.of<AppStateManager>(context, listen: false)
               .setUserData(Userdata.fromJson(res["user"]));
-         //checkEmailVerification(context ,res);
           Navigator.of(context).pop();
         }
-        //print(res);
       }
     } on FirebaseAuthException catch (e) {
       Navigator.of(context).pop();
@@ -153,117 +132,23 @@ class LoginScreenRouteState extends State<LoginScreen> {
     } catch (exception) {
       Navigator.of(context).pop();
       Alerts.show(context, t.error, exception.toString());
-      // Navigator.pop(context);
-      // I get no exception here
       print(exception);
     }
   }
 
+  Future<Null> loginWithFacebook() async {}
 
+  Future<void> _updateLoginInfo() async {}
 
-  Future<Null> loginWithFacebook() async {
-    /*final FacebookLoginResult result =
-        await facebookSignIn.logIn(['email', 'public_profile']);
-
-    switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        final FacebookAccessToken accessToken = result.accessToken;
-        print('''
-         Logged in!
-         
-         Token: ${accessToken.token}
-         User id: ${accessToken.userId}
-         Expires: ${accessToken.expires}
-         Permissions: ${accessToken.permissions}
-         Declined permissions: ${accessToken.declinedPermissions}
-         ''');
-        var graphResponse = await http.get(Uri.parse(
-            'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${accessToken.token}'));
-        Map<String, dynamic> profile = json.decode(graphResponse.body);
-        print(profile);
-        loginUser(profile['email'], "", profile['name'], t.facebook);
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        Toast.show('Login cancelled by the user.', context);
-        break;
-      case FacebookLoginStatus.error:
-        Toast.show(t.facebookloginerror + ': ${result.errorMessage}', context);
-        break;
-    }*/
-/*
-    await fb.logIn(permissions: [
-      FacebookPermission.publicProfile,
-      FacebookPermission.email,
-    ]);
-    await _updateLoginInfo();*/
-  }
-
-  Future<void> _updateLoginInfo() async {
-   /* final token = await fb.accessToken;
-    FacebookUserProfile? profile;
-
-    if (token != null) {
-      profile = await fb.getUserProfile();
-      if (token.permissions.contains(FacebookPermission.email.name)) {
-        String? email = await fb.getUserEmail();
-        loginUser(email, "", profile!.name, t.facebook);
-      } else {
-        Alerts.showToast(
-          context,
-          t.facebookloginerror + ': Failed to get email permissions',
-        );
-      }
-    } else {
-      Alerts.showToast(
-        context,
-        t.facebookloginerror + ': Failed to get user details',
-      );
-    }*/
-  }
-
-  Future<void> initPlatformState() async {
-  /*  SignInApple.handleAppleSignInCallBack(
-        onCompleteWithSignIn: (AppleIdUser user) async {
-      print("flutter receiveCode: \n");
-      print(user.authorizationCode);
-      print("flutter receiveToken \n");
-      print(user.identifyToken);
-
-      if (user.mail != null || user.mail != "") {
-        loginUser(user.mail ?? "Apple User", "", user.name ?? "", "Apple");
-      }
-    }, onCompleteWithError: (AppleSignInErrorCode code) async {
-      var errorMsg = "unknown";
-      switch (code) {
-        case AppleSignInErrorCode.canceled:
-          errorMsg = "user canceled request";
-          break;
-        case AppleSignInErrorCode.failed:
-          errorMsg = "request fail";
-          break;
-        case AppleSignInErrorCode.invalidResponse:
-          errorMsg = "request invalid response";
-          break;
-        case AppleSignInErrorCode.notHandled:
-          errorMsg = "request not handled";
-          break;
-        case AppleSignInErrorCode.unknown:
-          errorMsg = "request fail unknown";
-          break;
-      }
-      print(errorMsg);
-    });*/
-  }
+  Future<void> initPlatformState() async {}
 
   @override
   void initState() {
     super.initState();
     if (Platform.isIOS) {
-      //check for ios if developing for both android & ios
       initPlatformState();
     }
 
-    // Initialize GoogleSignIn
     unawaited(
       googleSignIn.initialize().then((_) {
         googleSignIn.authenticationEvents
@@ -286,7 +171,6 @@ class LoginScreenRouteState extends State<LoginScreen> {
     setState(() {
       _currentUser = null;
     });
-    // You might want to add additional sign-out logic here, e.g., Firebase signOut
   }
 
   Future<void> _handleAuthenticationEvent(
@@ -305,15 +189,12 @@ class LoginScreenRouteState extends State<LoginScreen> {
   Future<void> _handleAuthenticationError(Object e) async {
     setState(() {
       _currentUser = null;
-      // Handle error, maybe show a toast or alert
       print("Google Sign-In Error: $e");
     });
   }
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -321,222 +202,212 @@ class LoginScreenRouteState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      //backgroundColor: Colors.white,
-      appBar:
-          PreferredSize(child: Container(), preferredSize: Size.fromHeight(0)),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          width: double.infinity,
-          //height: double.infinity,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Container(
-                height: 15,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 0, 0, 0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Icon(
-                      Icons.arrow_back,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                height: 25,
-              ),
-              Column(
-                children: [
-                  Text(t.appname,
-                      style: TextStyles.title(context).copyWith(
-                          color: MyColors.primary,
-                          fontWeight: FontWeight.bold)),
-                  Container(height: 5),
-                  Text(t.signintocontinue,
-                      style: TextStyles.subhead(context).copyWith()),
-                ],
-              ),
-              Container(height: 25),
-              Container(height: 5),
-              Container(height: 50),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(t.emailaddress,
-                    style: TextStyles.caption(context).copyWith()),
-              ),
-              TextField(
-                controller: emailController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 1),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 2),
-                  ),
-                ),
-              ),
-              Container(height: 25),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(t.password,
-                    style: TextStyles.caption(context).copyWith()),
-              ),
-              TextField(
-                controller: passwordController,
-                keyboardType: TextInputType.text,
-                obscureText: _isPasswordObscured,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 1),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueGrey[400]!, width: 2),
-                  ),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordObscured
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                    ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
                     onPressed: () {
-                      setState(() {
-                        _isPasswordObscured = !_isPasswordObscured;
-                      });
+                      Navigator.of(context).pop();
                     },
                   ),
                 ),
-              ),
-              Container(height: 8),
-              Container(
-                width: double.infinity,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed(ForgotPasswordScreen.routeName);
-                  },
-                  child: Text(
-                    t.forgotpassword,
-                    style: TextStyle(color: MyColors.primary, fontSize: 15),
-                  ),
-                ),
-              ),
-              Container(height: 20),
-              Container(
-                width: double.infinity,
-                height: 40,
-                child: ElevatedButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: MyColors.primary,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20)),
-                  ),
-                  onPressed: () {
-                    verifyFormAndSubmit();
-                  },
-                  child: Text(
-                    t.signin,
-                    style: TextStyle(color: Colors.white),
+                const SizedBox(height: 20),
+                Center(
+                  child: Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      color: MyColors.primary.withOpacity(0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.light_mode_rounded,
+                      size: 38,
+                      color: MyColors.primary,
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed(RegisterScreen.routeName);
-                  },
-                  child: Text(
-                    t.signinforanaccount,
-                    style: TextStyle(color: MyColors.primary),
+                const SizedBox(height: 16),
+                Text(
+                  t.appname,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.title(context).copyWith(
+                    color: MyColors.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26,
                   ),
                 ),
-              ),
-              Container(height: 25),
-              /*Center(
-                child: Text(
-                  t.orloginwith,
-                  style: TextStyle(color: Colors.red),
+                const SizedBox(height: 6),
+                Text(
+                  t.signintocontinue,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.subhead(context).copyWith(
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    fontSize: 15,
+                  ),
                 ),
-              ),
-              Container(height: 15),
-              Column(
-                children: <Widget>[
-                  Container(
-                    width: double.infinity,
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                      ),
+                const SizedBox(height: 36),
+                Text(
+                  t.emailaddress,
+                  style: TextStyles.caption(context).copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    hintText: "example@domain.com",
+                    prefixIcon: Icon(Icons.email_outlined, color: MyColors.primary),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    filled: true,
+                    fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: MyColors.primary, width: 1.5),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  t.password,
+                  style: TextStyles.caption(context).copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: passwordController,
+                  keyboardType: TextInputType.text,
+                  obscureText: _isPasswordObscured,
+                  decoration: InputDecoration(
+                    hintText: "••••••••",
+                    prefixIcon: Icon(Icons.lock_outline_rounded, color: MyColors.primary),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    filled: true,
+                    fillColor: isDark ? Colors.grey[900] : Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: MyColors.primary, width: 1.5),
+                    ),
+                    suffixIcon: IconButton(
                       icon: Icon(
-                        LineAwesomeIcons.facebook,
-                        color: Colors.white,
-                        size: 20,
-                      ), //`Icon` to display
-                      label: Text(
-                        t.facebook,
-                        style: TextStyle(color: Colors.white),
-                      ), //`Text` to display
+                        _isPasswordObscured
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        color: Colors.grey[600],
+                      ),
                       onPressed: () {
-                        loginWithFacebook();
+                        setState(() {
+                          _isPasswordObscured = !_isPasswordObscured;
+                        });
                       },
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.red[400],
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(ForgotPasswordScreen.routeName);
+                    },
+                    child: Text(
+                      t.forgotpassword,
+                      style: TextStyle(
+                        color: MyColors.primary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
                       ),
-                      icon: Icon(
-                        LineAwesomeIcons.google_plus,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 28),
+                SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: MyColors.primary,
+                      foregroundColor: Colors.white,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: () {
+                      verifyFormAndSubmit();
+                    },
+                    child: Text(
+                      t.signin,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        size: 20,
-                      ), //`Icon` to display
-                      label: Text(
-                        t.google,
-                        style: TextStyle(color: Colors.white),
-                      ), //`Text` to display
-                      onPressed: () {
-                        _handleSignIn();
-                      },
-                    ),
-                  ),
-                  Visibility(
-                    visible: Platform.isIOS ? true : false,
-                    child: Container(
-                      width: double.infinity,
-                      child: AppleSignInSystemButton(
-                        width: 250,
-                        height: 50,
-                        buttonStyle: AppleSignInSystemButtonStyle.black,
                       ),
                     ),
                   ),
-                ],
-              ),*/
-              Container(height: 15),
-            ],
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account? ",
+                      style: TextStyle(
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        fontSize: 14,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(RegisterScreen.routeName);
+                      },
+                      child: Text(
+                        t.signinforanaccount,
+                        style: TextStyle(
+                          color: MyColors.primary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),
