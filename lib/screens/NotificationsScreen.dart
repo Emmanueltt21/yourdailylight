@@ -18,10 +18,7 @@ class NotificationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => InboxProvider()..loadItems(),
-      child: _NotificationsScaffold(),
-    );
+    return _NotificationsScaffold();
   }
 }
 
@@ -37,6 +34,12 @@ class _NotificationsScaffoldState extends State<_NotificationsScaffold> {
   void initState() {
     super.initState();
     _refreshController = RefreshController(initialRefresh: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = Provider.of<InboxProvider>(context, listen: false);
+      if (provider.items.isEmpty) {
+        provider.loadItems();
+      }
+    });
   }
 
   @override
@@ -64,7 +67,7 @@ class _NotificationsScaffoldState extends State<_NotificationsScaffold> {
       appBar: AppBar(
         title: Row(
           children: [
-            Text(t.inbox),
+            Text(t.notifications, style: TextStyle(color: Colors.white),),
             if (provider.unreadCount > 0) ...[
               SizedBox(width: 8),
               Container(
@@ -85,9 +88,7 @@ class _NotificationsScaffoldState extends State<_NotificationsScaffold> {
           if (provider.unreadCount > 0)
             TextButton(
               onPressed: () async {
-                for (final item in provider.items) {
-                  if (item.id != null) await provider.markAsRead(item.id!);
-                }
+                await provider.markAllAsRead();
               },
               child: Text('Mark all read', style: TextStyle(color: Colors.white, fontSize: 13)),
             ),

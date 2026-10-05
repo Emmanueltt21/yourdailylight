@@ -16,7 +16,7 @@ String enumName(AppLanguage anyEnum) {
 }
 
 final appLanguageData = {
-  AppLanguage.English:    {"value": "en", "name": "English",    "flag": "🇬🇧"},
+  AppLanguage.English:    {"value": "en", "name": "English",    "flag": "🇺🇸"},
   AppLanguage.French:     {"value": "fr", "name": "French",     "flag": "🇫🇷"},
   AppLanguage.German:     {"value": "de", "name": "German",     "flag": "🇩🇪"},
   AppLanguage.Italian:    {"value": "it", "name": "Italian",    "flag": "🇮🇹"},

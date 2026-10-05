@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -189,6 +190,20 @@ class NotificationManager {
       ),
       payload: payload,
     );
+  }
+
+  static Future<void> updateAppBadge(int count) async {
+    try {
+      if (await FlutterAppBadger.isAppBadgeSupported()) {
+        if (count > 0) {
+          FlutterAppBadger.updateBadgeCount(count);
+        } else {
+          FlutterAppBadger.removeBadge();
+        }
+      }
+    } catch (e) {
+      print("⚠️ [NotificationManager] Error updating app badge: $e");
+    }
   }
 }
 

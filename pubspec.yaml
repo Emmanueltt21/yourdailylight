@@ -2,7 +2,7 @@ name: yourdailylight
 description: "Your Daily Light App"
 
 
-version: 1.1.82+82
+version: 1.1.83+83
 
 environment:
   #sdk: ^3.6.1
@@ -115,6 +115,8 @@ dependencies:
   #wakelock: any
   wakelock_plus: ^1.5.2
   package_info_plus: ^9.0.1
+  flutter_app_badger: ^1.5.0
+  shared_preferences: ^2.5.2
 
   #Daily update
   timezone: ^0.11.0

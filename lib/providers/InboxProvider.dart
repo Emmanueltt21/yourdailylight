@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/Inbox.dart';
+import '../service/NotificationManager.dart';
 import '../utils/ApiUrl.dart';
 
 class InboxProvider extends ChangeNotifier {
@@ -26,10 +27,15 @@ class InboxProvider extends ChangeNotifier {
     _loadReadIds();
   }
 
+  Future<void> updateAppBadge() async {
+    await NotificationManager.updateAppBadge(unreadCount);
+  }
+
   Future<void> _loadReadIds() async {
     final prefs = await SharedPreferences.getInstance();
     final stored = prefs.getStringList('inbox_read_ids') ?? [];
     _readIds = stored.map((e) => int.tryParse(e) ?? -1).toSet();
+    await updateAppBadge();
     notifyListeners();
   }
 
@@ -45,7 +51,23 @@ class InboxProvider extends ChangeNotifier {
     if (_readIds.contains(id)) return;
     _readIds.add(id);
     await _saveReadIds();
+    await updateAppBadge();
     notifyListeners();
+  }
+
+  Future<void> markAllAsRead() async {
+    bool changed = false;
+    for (final item in _items) {
+      if (item.id != null && !_readIds.contains(item.id)) {
+        _readIds.add(item.id!);
+        changed = true;
+      }
+    }
+    if (changed) {
+      await _saveReadIds();
+      await updateAppBadge();
+      notifyListeners();
+    }
   }
 
   Future<void> loadItems() async {
@@ -67,6 +89,7 @@ class InboxProvider extends ChangeNotifier {
         List<Inbox> fetched = _parseInbox(res);
         isLastPage = res['isLastPage'] == true;
         _items = fetched;
+        await updateAppBadge();
       } else {
         isError = true;
       }
@@ -94,6 +117,7 @@ class InboxProvider extends ChangeNotifier {
         List<Inbox> more = _parseInbox(res);
         isLastPage = res['isLastPage'] == true;
         _items.addAll(more);
+        await updateAppBadge();
         notifyListeners();
       }
     } catch (e) {

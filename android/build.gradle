@@ -29,6 +29,20 @@ subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {
+    plugins.withId('com.android.library') {
+        if (!android.hasProperty('namespace') || android.namespace == null) {
+            if (project.name == 'flutter_app_badger') {
+                android.namespace = 'fr.g123k.flutterappbadge.flutterappbadger'
+            } else if (project.group) {
+                android.namespace = project.group
+            } else {
+                android.namespace = "com.example.${project.name.replaceAll('-', '_')}"
+            }
+        }
+    }
+}
+
+subprojects {
     project.evaluationDependsOn(":app")
 }
 

@@ -1,9 +1,11 @@
-import '../utils/TimUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:provider/provider.dart';
 import '../models/Inbox.dart';
+import '../providers/InboxProvider.dart';
 import '../utils/TextStyles.dart';
+import '../utils/TimUtil.dart';
 import 'NoitemScreen.dart';
 import '../i18n/strings.g.dart';
 
@@ -22,20 +24,26 @@ class _InboxViewerScreenState extends State<InboxViewerScreen> {
 
   @override
   void initState() {
-    /*Future.delayed(const Duration(milliseconds: 0), () {
-      loadItems();
-    });*/
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.inbox?.id != null && mounted) {
+        try {
+          Provider.of<InboxProvider>(context, listen: false).markAsRead(widget.inbox!.id!);
+        } catch (e) {
+          debugPrint("Error marking inbox item as read in viewer: $e");
+        }
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.inbox),
+        title: Text(t.notifications, style: TextStyle(color: Colors.white),),
       ),
       body: Padding(
-        padding: EdgeInsets.only(top: 12),
+        padding: const EdgeInsets.only(top: 12),
         child: SingleChildScrollView(
           child: getEventsBody(),
         ),
@@ -45,7 +53,7 @@ class _InboxViewerScreenState extends State<InboxViewerScreen> {
 
   Widget getEventsBody() {
     if (isLoading) {
-      return Container(
+      return const SizedBox(
         height: 600,
         child: Center(
           child: CupertinoActivityIndicator(
@@ -54,7 +62,7 @@ class _InboxViewerScreenState extends State<InboxViewerScreen> {
         ),
       );
     } else if (isError || widget.inbox == null) {
-      return Container(
+      return SizedBox(
         height: 600,
         child: Center(
           child: NoitemScreen(
@@ -65,9 +73,9 @@ class _InboxViewerScreenState extends State<InboxViewerScreen> {
               }),
         ),
       );
-    } else
+    } else {
       return Container(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 25),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 25),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -78,23 +86,22 @@ class _InboxViewerScreenState extends State<InboxViewerScreen> {
                   style: TextStyles.headline(context)
                       .copyWith(fontWeight: FontWeight.bold)),
             ),
-            Container(height: 5),
+            const SizedBox(height: 5),
             Align(
               alignment: Alignment.centerLeft,
               child: Text(TimUtil.formatFullDatestamp(widget.inbox!.date!),
                   textAlign: TextAlign.justify,
                   style: TextStyles.subhead(context).copyWith(fontSize: 16)),
             ),
-            Container(height: 20),
-            Container(height: 20),
+            const SizedBox(height: 20),
             HtmlWidget(
               widget.inbox!.message!,
-              //webView: false,
               textStyle: TextStyles.medium(context).copyWith(fontSize: 20),
             ),
-            Container(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       );
+    }
   }
 }

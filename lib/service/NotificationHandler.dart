@@ -11,6 +11,7 @@ import 'package:yourdailylight/models/Inbox.dart';
 import 'package:yourdailylight/models/Userdata.dart';
 import 'package:yourdailylight/models/UserEvents.dart';
 import 'package:yourdailylight/providers/AudioPlayerModel.dart';
+import 'package:yourdailylight/providers/InboxProvider.dart';
 import 'package:yourdailylight/providers/events.dart';
 import 'package:yourdailylight/audio_player/player_page.dart';
 import 'package:yourdailylight/video_player/VideoPlayer.dart';
@@ -172,6 +173,14 @@ class NotificationHandler {
   }
 
   static void _navigateInbox(Inbox inbox) {
+    if (navigatorKey.currentContext != null && inbox.id != null) {
+      try {
+        final provider = Provider.of<InboxProvider>(navigatorKey.currentContext!, listen: false);
+        provider.markAsRead(inbox.id!);
+      } catch (e) {
+        print("Error marking inbox as read from NotificationHandler: $e");
+      }
+    }
     navigatorKey.currentState!.pushNamed(InboxViewerScreen.routeName,
         arguments: ScreenArguements(
           position: 0,
